@@ -1,0 +1,64 @@
+package fenix.product.unlimitedadmin.modules.home;
+
+import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.ModuleConfig;
+import fenix.product.unlimitedadmin.api.interfaces.IConfig;
+
+import java.util.Arrays;
+
+public enum HomeModuleConfig implements IConfig {
+    HOME_LIMIT("groups.default", -1, "how many homes player in group can contains: 0 - no homes, -1 - unlimited");
+    private final Object value;
+    private final String path;
+    private final String description;
+    private final boolean optional;
+    private static ModuleConfig config;
+
+    public static void init(HomeModule module) {
+        config = UnlimitedAdmin.getInstance().getModuleConfig(module);
+        config.load(Arrays.asList(values()));
+    }
+
+    HomeModuleConfig(String path, Object val, String description) {
+        this.path = path;
+        this.value = val;
+        this.description = description;
+        this.optional = false;
+    }
+
+    HomeModuleConfig(String path, Object val, String description, boolean optional) {
+        this.path = path;
+        this.value = val;
+        this.description = description;
+        this.optional = optional;
+    }
+
+    public int getInt() {
+        return config.getInt(getPath());
+    }
+
+    public boolean getBoolean() {
+        return config.getBoolean(getPath());
+    }
+
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public Object getDefaultValue() {
+        return value;
+    }
+
+    @Override
+    public boolean isOptional() {
+        return optional;
+    }
+}
