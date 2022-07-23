@@ -15,5 +15,5 @@ public interface PermissionPlugin {
 
     PermissionStatus havePermission(Player p, String permission);
 
-    PermissionStatus canExecuteCommand(CommandSender p, String permission);
+    PermissionStatus havePermissionOrOp(CommandSender p, String permission);
 }

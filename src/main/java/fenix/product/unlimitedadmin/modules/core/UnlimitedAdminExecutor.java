@@ -37,7 +37,6 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
             }
         });
         command.setPermissionMessage(plugin, "No you are not admin, try later... hah");
-        command.setPermission(plugin, command.getCommandPermission());
     }
 
 
@@ -59,8 +58,11 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
         while (argsString.size() > this.command.getMaxArgsSize()) {
             argsString.remove(argsString.size() - 1);
         }
-        this.command.onCommand(sender, argsString);
-        return false;
+        final boolean b = this.command.onCommand(sender, argsString);
+        if (!b) {
+            sender.sendMessage(this.command.getUsageText());
+        }
+        return true;
     }
 
 

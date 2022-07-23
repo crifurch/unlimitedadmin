@@ -13,7 +13,8 @@ public enum UnlimitedAdminConfig {
     WORLDS_MODULE_ENABLED("modules.worldManager", true, "WorldManager Module provide abilities to create custom worlds"),
     TELEPORT_MODULE_ENABLED("modules.teleport", true, "Teleport Module provide abilities teleporting online/offline players"),
     SPAWN_MODULE_ENABLED("modules.spawn", true, "Create spawn points on your server"),
-    HOME_MODULE_ENABLED("modules.home", true, "Create home points on your server");
+    HOME_MODULE_ENABLED("modules.home", true, "Create home points on your server"),
+    PLAYER_STATUS_MODULE_ENABLED("modules.playerstatus", true, "Manipulating whit player status");
 
     private final Object value;
     private final String path;

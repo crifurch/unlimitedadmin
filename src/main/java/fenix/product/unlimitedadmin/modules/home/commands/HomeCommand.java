@@ -10,7 +10,10 @@ import fenix.product.unlimitedadmin.modules.home.data.Home;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +22,20 @@ public class HomeCommand implements ICommand {
 
     public HomeCommand(HomeModule module) {
         this.module = module;
+    }
+
+    @Override
+    public List<String> getPermissions() {
+        return Collections.singletonList(getCommandPermission() + ".other");
+    }
+
+    @Override
+    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+        if (!(sender instanceof Player))
+            return ICommand.super.getTabCompletion(sender, i);
+        final UUID uniqueId = ((Player) sender).getUniqueId();
+        module.getHomes();
+        return Arrays.asList();
     }
 
     @Override
@@ -43,7 +60,7 @@ public class HomeCommand implements ICommand {
             homeName = argsString.get(0);
         }
         if (argsString.size() > 1) {
-            if (PermissionsProvider.getInstance().canExecuteCommand(sender, getCommandPermission() + ".other") != PermissionStatus.PERMISSION_TRUE) {
+            if (PermissionsProvider.getInstance().havePermissionOrOp(sender, getCommandPermission() + ".other") != PermissionStatus.PERMISSION_TRUE) {
                 sender.sendMessage("You can't teleport other player");
                 return true;
             }

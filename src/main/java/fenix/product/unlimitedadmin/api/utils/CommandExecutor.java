@@ -4,10 +4,12 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandExecutor implements org.bukkit.command.CommandExecutor {
     protected final UnlimitedAdmin plugin;
@@ -59,7 +62,11 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         while (argsString.size() > this.command.getMaxArgsSize()) {
             argsString.remove(argsString.size() - 1);
         }
-        return this.command.onCommand(sender, argsString);
+        final boolean b = this.command.onCommand(sender, argsString);
+        if(!b){
+            sender.sendMessage(this.command.getUsageText());
+        }
+        return true;
     }
 
 
@@ -103,17 +110,24 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
             final List<String> completions = new ArrayList<>();
             if (!executor.havePermissions(sender, executor.getCommand())
-                    || args.length >= executor.getCommand().getMaxArgsSize()) {
+                    || args.length > executor.getCommand().getMaxArgsSize()) {
                 return completions;
             }
             List<String> tabCompletions = executor.command.getTabCompletion(sender, args.length - 1);
-            if (tabCompletions == null && executor.command.isNicknamesCompletionsAllowed()) {
-                tabCompletions = new ArrayList<>(executor.plugin.getPlayersMapModule().getPlayers());
+            if (tabCompletions == null
+                    && executor.command.isNicknamesCompletionsAllowed()
+            ) {
+                if (PermissionsProvider.getInstance().havePermissionOrOp(sender,
+                        ICommand.baseCommandPermission + ".completion.offline") == PermissionStatus.PERMISSION_TRUE) {
+                    tabCompletions = executor.plugin.getPlayersMapModule().getPlayers().stream()
+                            .map(cachedPlayer -> cachedPlayer.name).collect(Collectors.toList());
+                } else {
+                    tabCompletions = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
+                }
             }
             if (tabCompletions != null) {
                 StringUtil.copyPartialMatches(args[args.length - 1], tabCompletions, completions);
             }
-            Collections.sort(completions);
             return completions;
         }
     }

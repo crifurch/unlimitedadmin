@@ -17,6 +17,10 @@ public interface ICommand {
     @NotNull
     String getName();
 
+    default String getUsageText() {
+        return "/" + getName();
+    }
+
     default List<String> getPermissions() {
         return Collections.emptyList();
     }
@@ -28,7 +32,7 @@ public interface ICommand {
     }
 
     default boolean isAutoSetPermission() {
-        return false;
+        return true;
     }
 
     default byte getMaxArgsSize() {
@@ -44,12 +48,6 @@ public interface ICommand {
         final PluginCommand command = plugin.getCommand(getName());
         assert command != null;
         command.setExecutor(executor);
-    }
-
-    default org.bukkit.command.@NotNull CommandExecutor getCommandExecutor(JavaPlugin plugin) {
-        final PluginCommand command = plugin.getCommand(getName());
-        assert command != null;
-        return command.getExecutor();
     }
 
     default void setTabCompleter(JavaPlugin plugin, TabCompleter completer) {

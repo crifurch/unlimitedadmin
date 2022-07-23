@@ -1,10 +1,12 @@
 package fenix.product.unlimitedadmin.modules.home;
 
+import fenix.product.unlimitedadmin.GlobalConstants;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.modules.home.commands.HomeCommand;
+import fenix.product.unlimitedadmin.modules.home.commands.InviteCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.SetHomeCommand;
 import fenix.product.unlimitedadmin.modules.home.data.Home;
 import fenix.product.unlimitedadmin.utils.PlayerUtils;
@@ -34,6 +36,7 @@ public class HomeModule implements IModule, Listener {
         HomeModuleConfig.init(this);
         commands.add(new SetHomeCommand(this));
         commands.add(new HomeCommand(this));
+        commands.add(new InviteCommand(this));
     }
 
 
@@ -75,6 +78,22 @@ public class HomeModule implements IModule, Listener {
         return false;
     }
 
+    public boolean addParticipant(UUID player, @Nullable UUID owner, String name) {
+        final List<Home> homes = getOwnerHomes(player);
+        Home home = null;
+        for (Home i : homes) {
+            if (name.equals(i.getName())) {
+                home = i;
+            }
+        }
+
+        if (home == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public void setHome(@NotNull Player player, @NotNull String name, @NotNull Location position) {
         final Home home = new Home(player.getUniqueId() + "@" + name, new ArrayList<>(), name, position);
         home.addOwner(player.getUniqueId().toString());
@@ -103,14 +122,42 @@ public class HomeModule implements IModule, Listener {
         return homes;
     }
 
+    public List<Home> getOwnerHomes(UUID player) {
+        final List<Home> homes = getHomes();
+        homes.removeIf(home -> !home.isOwner(player.toString()));
+        return homes;
+    }
+
     @Nullable
     public Home getHome(UUID player, String name) {
-        final List<Home> homes = getHomes(player);
+        UUID playerUUID = player;
+        if (name.contains(":")) {
+            final String[] split = name.split(":");
+            playerUUID = plugin.getPlayersMapModule().getPlayerUUID(split[0]);
+            name = split[1];
+        }
+        List<Home> homes = getHomes(player);
         for (Home i : homes) {
             if (name.equals(i.getName())) {
+                if (playerUUID != null && !i.isOwner(playerUUID.toString())) {
+                    continue;
+                }
                 return i;
             }
         }
+
+        if (playerUUID == null) {
+            final UUID playerUUID1 = plugin.getPlayersMapModule().getPlayerUUID(name);
+            if (playerUUID1 != null) {
+                homes = getOwnerHomes(player);
+                for (Home i : homes) {
+                    if (name.equals(GlobalConstants.defaultEntryName) && i.isParticipant(player.toString())) {
+                        return i;
+                    }
+                }
+            }
+        }
+
         return null;
     }
 

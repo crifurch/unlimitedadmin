@@ -3,8 +3,8 @@ package fenix.product.unlimitedadmin.modules.spawn.commands;
 import fenix.product.unlimitedadmin.GlobalConstants;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
+import fenix.product.unlimitedadmin.modules.core.AdditionalPermissions;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,8 +37,9 @@ public class SpawnCommand implements ICommand {
         if (argsString.size() > 0) {
             spawnName = argsString.get(0);
         }
+        final PermissionsProvider instance = PermissionsProvider.getInstance();
         if (argsString.size() > 1) {
-            if (PermissionsProvider.getInstance().canExecuteCommand(sender, getCommandPermission() + ".other") != PermissionStatus.PERMISSION_TRUE) {
+            if (instance.havePermissionOrOp(sender, AdditionalPermissions.OTHER.getPermissionForCommand(this)).isDeniedOrUnset()) {
                 sender.sendMessage("You can't teleport other player");
                 return true;
             }
@@ -55,8 +56,12 @@ public class SpawnCommand implements ICommand {
             }
             playerUuid = ((Player) sender).getUniqueId();
         }
-        if (!module.teleportPlayerToSpawn(playerUuid, spawnName)) {
-            sender.sendMessage("No spawn set" + (spawnName.equals(GlobalConstants.defaultEntryName) ? "" : ":" + spawnName));
+        if (instance.havePermissionOrOp(sender, getCommandPermission() + "." + spawnName).isPermittedOrUnset()) {
+            if (!module.teleportPlayerToSpawn(playerUuid, spawnName)) {
+                sender.sendMessage("No spawn set" + (spawnName.equals(GlobalConstants.defaultEntryName) ? "" : ":" + spawnName));
+            }
+        } else {
+            sender.sendMessage("only player can teleport to spawn");
         }
         return true;
     }

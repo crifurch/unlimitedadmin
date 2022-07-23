@@ -85,7 +85,7 @@ public class VaultPermissions implements PermissionPlugin {
     }
 
     @Override
-    public PermissionStatus canExecuteCommand(CommandSender p, String permission) {
+    public PermissionStatus havePermissionOrOp(CommandSender p, String permission) {
         if (p.isOp()) {
             return PermissionStatus.PERMISSION_TRUE;
         }

@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.home.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import fenix.product.unlimitedadmin.modules.home.HomeModuleConfig;
@@ -31,15 +32,14 @@ public class SetHomeCommand implements ICommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> argsString) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("only player can own this command");
+            sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
             return true;
         }
         String name = GlobalConstants.defaultEntryName;
         if (argsString.size() > 0) {
             name = argsString.get(0);
         }
-        final List<Home> homes = module.getHomes(((Player) sender).getUniqueId());
-        homes.removeIf(home -> home.isOwner(((Player) sender).getUniqueId().toString()));
+        final List<Home> homes = module.getOwnerHomes(((Player) sender).getUniqueId());
         int allowedHomes = HomeModuleConfig.HOME_LIMIT.getInt();
 
         if (allowedHomes < 0) {
@@ -57,6 +57,7 @@ public class SetHomeCommand implements ICommand {
             }
         }
         module.setHome((Player) sender, name, ((Player) sender).getLocation());
+        sender.sendMessage("home was set");
         return true;
     }
 }
