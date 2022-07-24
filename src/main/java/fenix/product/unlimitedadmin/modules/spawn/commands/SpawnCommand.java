@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.spawn.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -21,6 +22,11 @@ public class SpawnCommand implements ICommand {
     }
 
     @Override
+    public String getUsageText() {
+        return ICommand.super.getUsageText() + "[spawn] [player]";
+    }
+
+    @Override
     public @NotNull String getName() {
         return "spawn";
     }
@@ -33,35 +39,39 @@ public class SpawnCommand implements ICommand {
     @Override
     public boolean onCommand(CommandSender sender, List<String> argsString) {
         String spawnName = GlobalConstants.defaultEntryName;
-        UUID playerUuid;
+        UUID playerUuid = null;
         if (argsString.size() > 0) {
             spawnName = argsString.get(0);
         }
         final PermissionsProvider instance = PermissionsProvider.getInstance();
         if (argsString.size() > 1) {
             if (instance.havePermissionOrOp(sender, AdditionalPermissions.OTHER.getPermissionForCommand(this)).isDeniedOrUnset()) {
-                sender.sendMessage("You can't teleport other player");
+                sender.sendMessage(LangConfig.NO_PERMISSIONS_USE_ON_OTHER.getText());
                 return true;
             }
             UUID player = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(1));
             if (player == null) {
-                sender.sendMessage("No such player found");
+                sender.sendMessage(LangConfig.NO_SUCH_PLAYER.getText());
                 return true;
             }
             playerUuid = player;
-        } else {
+        }
+
+        if (playerUuid == null) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage("only player can teleport to spawn");
+                sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
                 return true;
             }
             playerUuid = ((Player) sender).getUniqueId();
         }
+
+
         if (instance.havePermissionOrOp(sender, getCommandPermission() + "." + spawnName).isPermittedOrUnset()) {
             if (!module.teleportPlayerToSpawn(playerUuid, spawnName)) {
                 sender.sendMessage("No spawn set" + (spawnName.equals(GlobalConstants.defaultEntryName) ? "" : ":" + spawnName));
             }
         } else {
-            sender.sendMessage("only player can teleport to spawn");
+            sender.sendMessage("You can not teleport");
         }
         return true;
     }

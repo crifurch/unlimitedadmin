@@ -32,6 +32,7 @@ public class WorldListeners implements Listener {
     @EventHandler
     public void initWorld(WorldInitEvent event) {
         World world = event.getWorld();
+        //todo get per world
         world.setKeepSpawnInMemory(false);
     }
 }

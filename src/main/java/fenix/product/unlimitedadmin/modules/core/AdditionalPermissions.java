@@ -3,7 +3,8 @@ package fenix.product.unlimitedadmin.modules.core;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 
 public enum AdditionalPermissions {
-    OTHER("other");
+    OTHER("other"),
+    SAFE_ON_LOGIN("safe_on_login");
 
     private final String permission;
 

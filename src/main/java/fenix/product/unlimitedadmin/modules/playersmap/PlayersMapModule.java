@@ -41,7 +41,7 @@ public class PlayersMapModule implements IModule, Listener {
         } else {
             setted.lastSign = now;
         }
-        playerMap.sort(Comparator.comparing(o -> ((CachedPlayer)o).lastSign).reversed());
+        playerMap.sort(Comparator.comparing(o -> ((CachedPlayer) o).lastSign).reversed());
         try {
             save();
         } catch (IOException e) {
@@ -88,7 +88,7 @@ public class PlayersMapModule implements IModule, Listener {
             playerMap.add(new CachedPlayer(split[1], split[0], LocalDateTime.parse(text, dtf)));
         }
         fileReader.close();
-        playerMap.sort(Comparator.comparing(o -> ((CachedPlayer)o).lastSign).reversed());
+        playerMap.sort(Comparator.comparing(o -> ((CachedPlayer) o).lastSign).reversed());
     }
 
     private void save() throws IOException {
@@ -113,8 +113,8 @@ public class PlayersMapModule implements IModule, Listener {
         return new ArrayList<>(playerMap);
     }
 
-    public Iterable<String> getPlayersUUID() {
-        return playerMap.stream().map(cachedPlayer -> cachedPlayer.uuid).collect(Collectors.toList());
+    public Iterable<UUID> getPlayersUUID() {
+        return playerMap.stream().map(cachedPlayer -> UUID.fromString(cachedPlayer.uuid)).collect(Collectors.toList());
     }
 
     @Nullable
@@ -122,6 +122,16 @@ public class PlayersMapModule implements IModule, Listener {
         for (CachedPlayer p : playerMap) {
             if (p.name.equals(name)) {
                 return UUID.fromString(p.uuid);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public String getPlayerName(UUID id) {
+        for (CachedPlayer p : playerMap) {
+            if (p.uuid.equals(id.toString())) {
+                return p.name;
             }
         }
         return null;

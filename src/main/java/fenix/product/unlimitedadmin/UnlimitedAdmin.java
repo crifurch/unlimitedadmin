@@ -73,9 +73,7 @@ public final class UnlimitedAdmin extends JavaPlugin {
         }
 
         for (IModule module : rawModules) {
-            getLogger().info("We try register command for module " + module.getName());
             for (ICommand command : module.getCommands()) {
-                getLogger().info("We try register command " + command.getName());
                 final PluginCommand pluginCommand = CommandsRegister.getInstance().registerCommand(command);
                 pluginCommand.setExecutor(new CommandExecutor(this, command));
 

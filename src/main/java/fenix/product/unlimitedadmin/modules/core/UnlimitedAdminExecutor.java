@@ -22,10 +22,10 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
         super(plugin, new BaseAdminCommand() {
             @Override
             public boolean onCommand(CommandSender sender, List<String> argsString) {
-                final String module = argsString.get(0).toLowerCase();
                 final List<String> args = new ArrayList<>(argsString);
+                final String module = args.get(0).toLowerCase();
                 args.remove(0);
-                final String commandName = args.get(0);
+                final String commandName = args.get(0).toLowerCase();
                 args.remove(0);
                 for (IModule i : plugin.getModules()) {
                     if (i.getName().equals(module)) {
@@ -54,7 +54,6 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
             return false;
         }
         final List<String> argsString = new ArrayList<>(Arrays.asList(args));
-        argsString.remove(0);
         while (argsString.size() > this.command.getMaxArgsSize()) {
             argsString.remove(argsString.size() - 1);
         }

@@ -10,6 +10,6 @@ public enum PermissionStatus {
     }
 
     public boolean isDeniedOrUnset() {
-        return this == PERMISSION_TRUE || this == PERMISSION_UNSET;
+        return this == PERMISSION_FALSE || this == PERMISSION_UNSET;
     }
 }

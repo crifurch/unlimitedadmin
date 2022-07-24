@@ -10,6 +10,8 @@ import java.util.Collections;
 public enum LangConfig {
     ERROR_WHILE_COMMAND("error_while_command", "Error when executing command"),
     NO_SUCH_PLAYER("no_such_player", "No such player"),
+    OFFLINE_PLAYER("offline_player", "Player is offline"),
+    NO_SUCH_WORLD("no_such_world", "No such world"),
     NO_PERMISSIONS_USE_ON_OTHER("no_permissions_use_on_other", "You can not use this command on this player"),
     ONLY_FOR_PLAYER_COMMAND("only_for_player_command", "Only player can run this command whit this arguments");
 

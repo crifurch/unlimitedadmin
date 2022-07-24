@@ -79,7 +79,7 @@ public class HomeModule implements IModule, Listener {
     }
 
     public boolean addParticipant(UUID player, @Nullable UUID owner, String name) {
-        final List<Home> homes = getOwnerHomes(player);
+        final List<Home> homes = getOwnerHomes(owner);
         Home home = null;
         for (Home i : homes) {
             if (name.equals(i.getName())) {
@@ -89,6 +89,9 @@ public class HomeModule implements IModule, Listener {
 
         if (home == null) {
             return false;
+        } else {
+            home.addPlayer(player.toString());
+            writeHomeToConfig(home);
         }
 
         return true;

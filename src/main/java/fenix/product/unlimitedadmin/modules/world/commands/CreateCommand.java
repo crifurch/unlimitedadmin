@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -23,6 +24,11 @@ public class CreateCommand implements ICommand {
         supportedEnvironment.put("NORMAL", World.Environment.NORMAL);
         supportedEnvironment.put("END", World.Environment.THE_END);
         supportedEnvironment.put("NETHER", World.Environment.NETHER);
+    }
+
+    @Override
+    public String getUsageText() {
+        return ("Usage /una " + manager.getName() + " create <name> <NORMAL|END|NETHER> ");
     }
 
     public CreateCommand(WorldManager manager) {
@@ -46,20 +52,20 @@ public class CreateCommand implements ICommand {
             return true;
         }
         if (argsString.size() < 2) {
-            sender.sendMessage("Usage /una " + manager.getName() + " create");
-            return false;
+            sender.sendMessage(getUsageText());
+            return true;
         }
         final String envString = argsString.get(1).toUpperCase();
         World.Environment env = supportedEnvironment.get(envString);
         if (env == null) {
             sender.sendMessage("Unsupported world type");
-            return false;
+            return true;
         }
         String error;
 
         isBusy = true;
         try {
-            error = manager.createWorld(argsString.get(0), env, WorldType.NORMAL);
+            error = manager.createWorld(argsString.get(0).toLowerCase(Locale.ROOT), env, WorldType.NORMAL);
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.toString());
             error = "Error when creating world " + argsString.get(0);
@@ -68,7 +74,7 @@ public class CreateCommand implements ICommand {
         if (error != null) {
             sender.sendMessage(error);
             return false;
-        }else{
+        } else {
             sender.sendMessage("World " + argsString.get(0) + " created");
         }
         return true;

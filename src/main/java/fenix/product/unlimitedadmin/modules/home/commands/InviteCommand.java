@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +57,15 @@ public class InviteCommand implements ICommand {
 
         if (module.addParticipant(playerToAdd, ((Player) sender).getUniqueId(), name)) {
             sender.sendMessage("Player successful invited");
+            String finalName = name;
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                        if (playerToAdd.equals(player.getUniqueId())) {
+                            player.sendMessage("You invited to " +
+                                    UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerName(((Player) sender).getUniqueId()) +
+                                    "(" + finalName + ") home");
+                        }
+                    }
+            );
         } else {
             sender.sendMessage("Player not invited");
         }

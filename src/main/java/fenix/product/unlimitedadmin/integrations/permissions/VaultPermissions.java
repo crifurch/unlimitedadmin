@@ -54,11 +54,13 @@ public class VaultPermissions implements PermissionPlugin {
         return chat.getPlayerGroups(p);
     }
 
-
-    //todo check for unset Permission
     @Override
     public PermissionStatus havePermission(Player p, String permission) {
-        return VaultPermissions.permission.has(p, permission) ? PermissionStatus.PERMISSION_TRUE : PermissionStatus.PERMISSION_FALSE;
+        return p.isPermissionSet(permission) ? (VaultPermissions.permission.playerHas(p, permission) ?
+                PermissionStatus.PERMISSION_TRUE :
+                PermissionStatus.PERMISSION_FALSE
+        )
+                : PermissionStatus.PERMISSION_UNSET;
     }
 
     @Override
