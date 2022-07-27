@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class TpPosCommand implements ICommand {
     private final UnlimitedAdmin plugin;
@@ -44,6 +45,11 @@ public class TpPosCommand implements ICommand {
                 result.add(s.toString());
             }
             return result;
+        }
+        if (i == 3) {
+            final List<String> collect = Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList());
+            collect.add(0, "current");
+            return collect;
         }
 
         return ICommand.super.getTabCompletion(sender, i);
@@ -94,7 +100,7 @@ public class TpPosCommand implements ICommand {
             if (argsString.size() > 3) {
                 if (!argsString.get(3).equals("current")) {
                     final ArrayList<World> worlds = new ArrayList<>(Bukkit.getWorlds());
-                    worlds.removeIf(world -> !world.getEnvironment().name().equals(argsString.get(3)));
+                    worlds.removeIf(world -> !world.getName().equals(argsString.get(3)));
                     if (worlds.isEmpty()) {
                         sender.sendMessage(LangConfig.NO_SUCH_WORLD.getText());
                         return true;
@@ -117,11 +123,19 @@ public class TpPosCommand implements ICommand {
 
     private double mapPos(double coordinate, String add) {
         if (add.startsWith("~")) {
-            if(add.length()<=1){
+            if (add.length() <= 1) {
                 return coordinate;
             }
-            return coordinate + Double.parseDouble(add.substring(1));
+            try {
+                return coordinate + Double.parseDouble(add.substring(1));
+            } catch (Exception e) {
+                return coordinate + Integer.parseInt(add.substring(1));
+            }
         }
-        return Double.parseDouble(add.substring(1));
+        try {
+            return Double.parseDouble(add);
+        } catch (Exception e) {
+            return Integer.parseInt(add);
+        }
     }
 }

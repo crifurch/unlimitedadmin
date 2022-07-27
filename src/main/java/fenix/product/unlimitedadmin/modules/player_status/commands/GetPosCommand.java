@@ -46,7 +46,7 @@ public class GetPosCommand implements ICommand {
         if (location == null) {
             sender.sendMessage(LangConfig.ERROR_WHILE_COMMAND.getText());
         } else {
-            sender.sendMessage(location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getWorld().getEnvironment().name());
+            sender.sendMessage((int)location.getX() + " " + (int)location.getY() + " " + (int)location.getZ() + " " + location.getWorld().getName());
         }
 
         return true;

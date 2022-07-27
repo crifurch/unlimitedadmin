@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin.utils;
 
+import fenix.product.unlimitedadmin.modules.playersmap.PlayerDataHelper;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.tag.CompoundTag;
@@ -15,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,12 +24,10 @@ public class PlayerUtils {
 
     @Nullable
     private static Player getOnlinePlayer(UUID player) {
-        for (Player i : Bukkit.getOnlinePlayers()) {
-            if (i.getUniqueId().equals(player)) {
-                return i;
-            }
-        }
-        return null;
+        final Player player1 = Bukkit.getServer().getPlayer(player);
+        if (player1 == null || !player1.isOnline())
+            return null;
+        return player1;
     }
 
     @Nullable
@@ -73,7 +70,10 @@ public class PlayerUtils {
         rotation.clear();
         rotation.add(new FloatTag(location.getYaw()));
         rotation.add(new FloatTag(location.getPitch()));
-        ((CompoundTag) tag.getTag()).putString("Dimension", location.getWorld().getEnvironment().name());
+        final boolean b = PlayerDataHelper.setPlayerWorld(uuid, location.getWorld());
+        if (!b) {
+            return false;
+        }
 
         return savePlayerData(uuid, tag);
     }
@@ -88,13 +88,11 @@ public class PlayerUtils {
         NamedTag tag = getPlayerData(uuid);
         final ListTag<DoubleTag> pos = (ListTag<DoubleTag>) ((CompoundTag) tag.getTag()).getListTag("Pos");
         final ListTag<FloatTag> rotation = (ListTag<FloatTag>) ((CompoundTag) tag.getTag()).getListTag("Rotation");
-        final String dimension = ((CompoundTag) tag.getTag()).getString("Dimension");
-        final List<World> worlds = new ArrayList<>(Bukkit.getWorlds());
-        worlds.removeIf(world -> !world.getEnvironment().name().equals(dimension));
-        if (worlds.isEmpty()) {
+        final World playerWorld = PlayerDataHelper.getPlayerWorld(uuid);
+        if (playerWorld == null) {
             return null;
         }
-        return new Location(worlds.get(0), pos.get(0).asDouble(), pos.get(1).asDouble(),
+        return new Location(playerWorld, pos.get(0).asDouble(), pos.get(1).asDouble(),
                 pos.get(2).asDouble(), rotation.get(0).asFloat(), rotation.get(1).asFloat());
     }
 

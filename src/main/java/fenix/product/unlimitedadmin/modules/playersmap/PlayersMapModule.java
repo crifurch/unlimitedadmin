@@ -3,16 +3,21 @@ package fenix.product.unlimitedadmin.modules.playersmap;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.modules.playersmap.data.CachedPlayer;
+import fenix.product.unlimitedadmin.utils.PlayerUtils;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import javax.annotation.Nullable;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getServer;
@@ -23,9 +28,10 @@ public class PlayersMapModule implements IModule, Listener {
 
     private final List<CachedPlayer> playerMap = new ArrayList<>();
     private final File mapFile;
+    protected final File playerDataFolder;
 
     @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event) {
+    public void onPlayerLogin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         LocalDateTime now = LocalDateTime.now();
         CachedPlayer setted = null;
@@ -47,10 +53,24 @@ public class PlayersMapModule implements IModule, Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        final World playerWorld = PlayerDataHelper.getPlayerWorld(player.getUniqueId());
+        if (player.getWorld() != playerWorld && playerWorld != null) {
+            final Location location = player.getLocation();
+            location.setWorld(playerWorld);
+            UnlimitedAdmin.getInstance().getLogger().log(Level.WARNING, "teleport player from " + player.getLocation() + " to " + location);
+            PlayerUtils.setLocation(player.getUniqueId(), location);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerLogout(PlayerQuitEvent event) {
+        final Player player = event.getPlayer();
+        PlayerDataHelper.setPlayerWorld(player.getUniqueId(), player.getWorld());
     }
 
     public PlayersMapModule(UnlimitedAdmin plugin) {
         mapFile = new File(plugin.getDataFolder().getAbsolutePath() + "/playerMap.csv");
+        playerDataFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/playersData");
         if (!mapFile.exists()) {
             try {
                 //noinspection ResultOfMethodCallIgnored
@@ -58,6 +78,10 @@ public class PlayersMapModule implements IModule, Listener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        if (!playerDataFolder.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            playerDataFolder.mkdir();
         }
         try {
             load();
@@ -135,6 +159,24 @@ public class PlayersMapModule implements IModule, Listener {
             }
         }
         return null;
+    }
+
+    public boolean containsPlayer(UUID id) {
+        for (CachedPlayer p : playerMap) {
+            if (p.uuid.equals(id.toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsPlayer(String nickname) {
+        for (CachedPlayer p : playerMap) {
+            if (p.name.equals(nickname)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

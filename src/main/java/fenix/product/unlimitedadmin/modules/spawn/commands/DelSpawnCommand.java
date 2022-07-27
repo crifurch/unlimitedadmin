@@ -5,7 +5,9 @@ import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +26,11 @@ public class DelSpawnCommand implements ICommand {
     @Override
     public byte getMaxArgsSize() {
         return 1;
+    }
+
+    @Override
+    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+        return new ArrayList<>(module.getSpawns());
     }
 
     @Override

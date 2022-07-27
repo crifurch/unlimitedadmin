@@ -4,13 +4,17 @@ import fenix.product.unlimitedadmin.GlobalConstants;
 import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.core.AdditionalPermissions;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +38,20 @@ public class SpawnCommand implements ICommand {
     @Override
     public byte getMaxArgsSize() {
         return 2;
+    }
+
+    @Override
+    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+        final PermissionsProvider instance = PermissionsProvider.getInstance();
+        if (i == 0) {
+            final List<String> spawns = new ArrayList<>(module.getSpawns());
+            spawns.removeIf(s -> instance.havePermissionOrOp(sender, getCommandPermission() + "." + s).isPermittedOrUnset());
+            return spawns;
+        }
+        if (i == 1 && instance.havePermissionOrOp(sender, AdditionalPermissions.OTHER.getPermissionForCommand(this)) == PermissionStatus.PERMISSION_TRUE) {
+            return null;
+        }
+        return Collections.emptyList();
     }
 
     @Override
