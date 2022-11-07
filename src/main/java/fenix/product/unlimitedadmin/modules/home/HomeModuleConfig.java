@@ -7,7 +7,9 @@ import fenix.product.unlimitedadmin.api.interfaces.IConfig;
 import java.util.Arrays;
 
 public enum HomeModuleConfig implements IConfig {
-    HOME_LIMIT("groups.default", -1, "how many homes player in group can contains: 0 - no homes, -1 - unlimited");
+    HOME_LIMIT("groups.default", -1, "how many homes player in group can contains: 0 - no homes, -1 - unlimited"),
+
+    PREFERS_TELEPORT_ON_DEATH("prefer_teleport_on_death", true, "if player died and respawned, he teleport to home");
     private final Object value;
     private final String path;
     private final String description;

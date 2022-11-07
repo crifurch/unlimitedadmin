@@ -16,8 +16,11 @@ public class PlayerStatusModule implements IModule {
     public PlayerStatusModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
         this.commands.add(new HealCommand());
+        this.commands.add(new HealAllCommand());
         this.commands.add(new KillCommand());
+        this.commands.add(new KillAllCommand());
         this.commands.add(new FeedCommand());
+        this.commands.add(new FeedAllCommand());
         this.commands.add(new FlyCommand());
         this.commands.add(new GetPosCommand());
     }

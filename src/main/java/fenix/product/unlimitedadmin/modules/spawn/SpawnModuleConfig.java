@@ -16,7 +16,7 @@ public enum SpawnModuleConfig {
 
     PREFERRED_FIRST_SPAWN("teleport_first_spawn", true, "if player first joined teleport to main spawn", false),
 
-    PREVENT_TELEPORT_ON_DEATH("prevent_teleport_on_death", true, "if player died and respawned, he teleport to spawn", false);
+    PREFER_TELEPORT_ON_DEATH("prefer_teleport_on_death", true, "if player died and respawned, he teleport to spawn", false);
 
 
 

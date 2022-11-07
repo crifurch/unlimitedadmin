@@ -35,7 +35,7 @@ public class SpawnModule implements IModule {
         commands.add(new SpawnCommand(this));
         commands.add(new DelSpawnCommand(this));
         commands.add(new ListSpawnCommand(this));
-        if (SpawnModuleConfig.PREVENT_TELEPORT_ON_DEATH.getBoolean()) {
+        if (SpawnModuleConfig.PREFER_TELEPORT_ON_DEATH.getBoolean()) {
             plugin.getServer().getPluginManager().registerEvents(new SpawnDeathListener(this), plugin);
         }
         if (SpawnModuleConfig.PREFERRED_FIRST_SPAWN.getBoolean()) {

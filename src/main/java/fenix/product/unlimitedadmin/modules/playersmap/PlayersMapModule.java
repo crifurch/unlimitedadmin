@@ -3,7 +3,9 @@ package fenix.product.unlimitedadmin.modules.playersmap;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.modules.playersmap.data.CachedPlayer;
+import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
 import fenix.product.unlimitedadmin.utils.PlayerUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -34,6 +36,7 @@ public class PlayersMapModule implements IModule, Listener {
         final Player player = event.getPlayer();
         LocalDateTime now = LocalDateTime.now();
         CachedPlayer setted = null;
+        boolean isFirstJoin = false;
         for (CachedPlayer i : playerMap) {
             if (i.uuid.equals(player.getUniqueId().toString())) {
                 setted = i;
@@ -43,6 +46,7 @@ public class PlayersMapModule implements IModule, Listener {
         if (setted == null) {
             final CachedPlayer cachedPlayer = new CachedPlayer(player.getUniqueId().toString(), player.getName(), now);
             playerMap.add(cachedPlayer);
+            isFirstJoin = true;
         } else {
             setted.lastSign = now;
         }
@@ -57,6 +61,9 @@ public class PlayersMapModule implements IModule, Listener {
             final Location location = player.getLocation();
             location.setWorld(playerWorld);
             PlayerUtils.setLocation(player.getUniqueId(), location);
+        }
+        if (isFirstJoin) {
+            Bukkit.getPluginManager().callEvent(new PlayerFirstJoinEvent(player));
         }
     }
 

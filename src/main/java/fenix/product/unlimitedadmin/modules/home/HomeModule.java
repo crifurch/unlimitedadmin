@@ -9,6 +9,7 @@ import fenix.product.unlimitedadmin.modules.home.commands.HomeCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.InviteCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.SetHomeCommand;
 import fenix.product.unlimitedadmin.modules.home.data.Home;
+import fenix.product.unlimitedadmin.modules.home.listeners.HomeDeathListener;
 import fenix.product.unlimitedadmin.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,6 +38,9 @@ public class HomeModule implements IModule, Listener {
         commands.add(new SetHomeCommand(this));
         commands.add(new HomeCommand(this));
         commands.add(new InviteCommand(this));
+        if (HomeModuleConfig.PREFERS_TELEPORT_ON_DEATH.getBoolean()) {
+            plugin.getServer().getPluginManager().registerEvents(new HomeDeathListener(this), plugin);
+        }
     }
 
 

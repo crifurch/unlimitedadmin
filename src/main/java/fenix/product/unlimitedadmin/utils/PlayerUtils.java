@@ -18,6 +18,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerUtils {
@@ -50,6 +54,35 @@ public class PlayerUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    public static void setLocationDelayed(UUID player, Location location, int delay) {
+        ScheduledExecutorService executor =
+                Executors.newScheduledThreadPool(4);
+        executor.schedule(
+                () -> {
+                    PlayerUtils.setLocation(player, location);
+                },
+                delay,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    public static void setLocationDelayed(Player player, Location location, int delay) {
+        ScheduledExecutorService executor =
+                Executors.newScheduledThreadPool(4);
+        executor.schedule(
+                () -> {
+                    PlayerUtils.setLocation(player, location);
+                },
+                delay,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    public static boolean setLocation(Player player, Location location) {
+        return setLocation(player.getUniqueId(), location);
     }
 
     public static boolean setLocation(UUID uuid, Location location) {
