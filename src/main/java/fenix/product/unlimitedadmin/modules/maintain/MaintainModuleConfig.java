@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.modules.spawn;
+package fenix.product.unlimitedadmin.modules.maintain;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
@@ -7,28 +7,22 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum SpawnModuleConfig {
-    MULTISPAWNS("multispawns", true, "can server have spawns with names", false),
-    SPAWN_LIMIT("spawns_count", -1, "how many spawns server can contains: 0 - no spawns, -1 - unlimited", false),
-
-    PREFERRED_FIRST_SPAWN("teleport_first_spawn", true, "if player first joined teleport to main spawn", false),
-
-    PREVENT_TELEPORT_ON_DEATH("prevent_teleport_on_death", true, "if player died and respawned, he teleport to spawn", false);
-
-
-
+public enum MaintainModuleConfig {
+    IN_MAINTAIN("in_maintain", false, "is server in maintain(kick all players without permission or if not op)", false),
+    LOCKED_WORLDS("locked_world", new ArrayList<String>(), "list of locked worlds(teleport to main world all players without permission or if not op)", false);
 
     private final Object value;
     private final String path;
     private final String description;
     private final boolean optional;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("spawn", "config.yml"));
+    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("maintain", "config.yml"));
 
-    SpawnModuleConfig(String path, Object val, String description, boolean optional) {
+    MaintainModuleConfig(String path, Object val, String description, boolean optional) {
         this.path = path;
         this.value = val;
         this.description = description;
@@ -78,7 +72,7 @@ public enum SpawnModuleConfig {
 
     public static void save() {
         StringBuilder header = new StringBuilder();
-        for (SpawnModuleConfig c : values()) {
+        for (MaintainModuleConfig c : values()) {
             header.append(c.getPath()).append(": ").append(c.getDescription()).append(System.lineSeparator());
             if (!cfg.contains(c.getPath())) {
                 c.set(c.getDefaultValue(), false);

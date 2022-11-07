@@ -29,7 +29,7 @@ public class DelSpawnCommand implements ICommand {
     }
 
     @Override
-    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
         return new ArrayList<>(module.getSpawns());
     }
 

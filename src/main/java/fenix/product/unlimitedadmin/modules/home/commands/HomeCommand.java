@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class HomeCommand implements ICommand {
     final HomeModule module;
@@ -30,12 +30,11 @@ public class HomeCommand implements ICommand {
     }
 
     @Override
-    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
         if (!(sender instanceof Player))
-            return ICommand.super.getTabCompletion(sender, i);
+            return ICommand.super.getTabCompletion(sender, args, i);
         final UUID uniqueId = ((Player) sender).getUniqueId();
-        module.getHomes();
-        return Arrays.asList();
+        return module.getHomes(uniqueId).stream().map(Home::getName).collect(Collectors.toList());
     }
 
     @Override

@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +62,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             argsString.remove(argsString.size() - 1);
         }
         final boolean b = this.command.onCommand(sender, argsString);
-        if(!b){
+        if (!b) {
             sender.sendMessage(this.command.getUsageText());
         }
         return true;
@@ -113,7 +112,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                     || args.length > executor.getCommand().getMaxArgsSize()) {
                 return completions;
             }
-            List<String> tabCompletions = executor.command.getTabCompletion(sender, args.length - 1);
+            List<String> tabCompletions = executor.command.getTabCompletion(sender, args, args.length - 1);
             if (tabCompletions == null
                     && executor.command.isNicknamesCompletionsAllowed()
             ) {

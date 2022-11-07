@@ -41,7 +41,7 @@ public class SpawnCommand implements ICommand {
     }
 
     @Override
-    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
         final PermissionsProvider instance = PermissionsProvider.getInstance();
         if (i == 0) {
             final List<String> spawns = new ArrayList<>(module.getSpawns());

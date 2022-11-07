@@ -1,39 +1,29 @@
-package fenix.product.unlimitedadmin;
+package fenix.product.unlimitedadmin.modules.shop;
 
+import fenix.product.unlimitedadmin.LangConfig;
+import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 
-public enum LangConfig {
-    ERROR_WHILE_COMMAND("error_while_command", "Error when executing command"),
-    NO_SUCH_PLAYER("no_such_player", "No such player"),
-    OFFLINE_PLAYER("offline_player", "Player is offline"),
-    NO_SUCH_WORLD("no_such_world", "No such world"),
-    NO_PERMISSIONS_USE_ON_OTHER("no_permissions_use_on_other", "You can not use this command on this player"),
-    ONLY_FOR_PLAYER_COMMAND("only_for_player_command", "Only player can run this command whit this arguments"),
-    SERVER_IN_MAINTAIN_MODE("server_in_maintain_mode", "Server in maintain mode now"),
-    SERVER_NOT_IN_MAINTAIN_MODE("server_in_maintain_mode", "Server in work mode now"),
-    WORLD_LOCKED_FOR_ENTERING("world_locked_for_entering", "World locked for entering"),
-    NO_WORLD_FOUND("no_world_found", "No world found"),
-    WORLD_IS_LOCKED("world_is_locked", "World %s is locked"),
-    WORLD_IS_UNLOCKED("world_is_unlocked", "World %s is unlocked"),
-    DONATION_AMOUNT("donation_amount", "Caps amount: %s"),
-    NO_COMMAND_FOUND("no_command_found", "No command found");
-
+public enum ShopModuleConfig {
+    SHOP_DONATE_URL("url", "https://api.capscraft.com/shop/donate/%s"),
+    SHOP_DONATE_PAGE_URL("url_for_donate_page", "https://capscraft.com?donate=%s"),
+    SHOP_NICKNAME_FIELD_KEY("nickname_field", "nickname"),
+    SHOP_AMOUNT_FIELD_KEY("amount_field", "amount");
 
     private final String value;
     private final String path;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Collections.singletonList("lang.yml"));
+    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("donation_shop", "config.yml"));
 
-    LangConfig(String path, String val) {
+    ShopModuleConfig(String path, String value) {
         this.path = path;
-        this.value = val;
+        this.value = value;
     }
-
     public String getText(Object... args) {
         final String string = cfg.getString(path);
         if (string == null) {
@@ -50,10 +40,6 @@ public enum LangConfig {
         return string;
     }
 
-    @Override
-    public String toString() {
-        return getText();
-    }
 
     public static void load() {
         reload(false);
@@ -61,7 +47,7 @@ public enum LangConfig {
     }
 
     public static void save() {
-        for (LangConfig c : values()) {
+        for (ShopModuleConfig c : values()) {
             if (!cfg.contains(c.path)) {
                 c.set(c.value, false);
             }

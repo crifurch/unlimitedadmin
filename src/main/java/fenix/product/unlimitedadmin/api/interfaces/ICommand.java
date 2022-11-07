@@ -40,7 +40,7 @@ public interface ICommand {
     }
 
     @Nullable
-    default List<String> getTabCompletion(CommandSender sender, int i) {
+    default List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
         return null;
     }
 

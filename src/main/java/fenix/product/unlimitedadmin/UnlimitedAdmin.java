@@ -7,8 +7,10 @@ import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
 import fenix.product.unlimitedadmin.api.utils.CommandsRegister;
 import fenix.product.unlimitedadmin.modules.core.UnlimitedAdminExecutor;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
+import fenix.product.unlimitedadmin.modules.maintain.MaintainModule;
 import fenix.product.unlimitedadmin.modules.player_status.PlayerStatusModule;
 import fenix.product.unlimitedadmin.modules.playersmap.PlayersMapModule;
+import fenix.product.unlimitedadmin.modules.shop.ShopModule;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import fenix.product.unlimitedadmin.modules.tablist.TabListModule;
 import fenix.product.unlimitedadmin.modules.teleporting.TeleportingModule;
@@ -16,7 +18,9 @@ import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,8 @@ public final class UnlimitedAdmin extends JavaPlugin {
         return INSTANCE;
     }
 
+    private String mainWorldName = "overworld";
+
     @Override
     public void onEnable() {
         INSTANCE = this;
@@ -42,7 +48,10 @@ public final class UnlimitedAdmin extends JavaPlugin {
         LangConfig.load();
         commandExecutor = new UnlimitedAdminExecutor(this);
         loadModules();
+
+
     }
+
 
     @Override
     public void onDisable() {
@@ -54,6 +63,9 @@ public final class UnlimitedAdmin extends JavaPlugin {
         //optional modules
         if (UnlimitedAdminConfig.WORLDS_MODULE_ENABLED.getBoolean()) {
             modules.add(new WorldManager(this));
+        }
+        if (UnlimitedAdminConfig.MAINTAIN_MODULE_ENABLED.getBoolean()) {
+            modules.add(new MaintainModule(this));
         }
         //raw optional nodules
         if (UnlimitedAdminConfig.TABLIST_MODULE_ENABLED.getBoolean()) {
@@ -71,12 +83,15 @@ public final class UnlimitedAdmin extends JavaPlugin {
         if (UnlimitedAdminConfig.PLAYER_STATUS_MODULE_ENABLED.getBoolean()) {
             rawModules.add(new PlayerStatusModule(this));
         }
+        if(UnlimitedAdminConfig.SHOP_MODULE_ENABLED.getBoolean()) {
+            rawModules.add(new ShopModule(this));
+        }
+
 
         for (IModule module : rawModules) {
             for (ICommand command : module.getCommands()) {
                 final PluginCommand pluginCommand = CommandsRegister.getInstance().registerCommand(command);
                 pluginCommand.setExecutor(new CommandExecutor(this, command));
-
             }
         }
     }
@@ -113,5 +128,27 @@ public final class UnlimitedAdmin extends JavaPlugin {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public ModuleConfig getModuleConfig(IModule module) {
         return new ModuleConfig(getModuleConfigFile(module));
+    }
+
+    private void setMainWoldName() {
+        final File file = new File("server.properties");
+        if (file.exists()) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.startsWith("level-name")) {
+                        mainWorldName = line.split("=")[1];
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String getMainWorldName() {
+        return mainWorldName;
     }
 }

@@ -17,7 +17,6 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getServer;
@@ -57,7 +56,6 @@ public class PlayersMapModule implements IModule, Listener {
         if (player.getWorld() != playerWorld && playerWorld != null) {
             final Location location = player.getLocation();
             location.setWorld(playerWorld);
-            UnlimitedAdmin.getInstance().getLogger().log(Level.WARNING, "teleport player from " + player.getLocation() + " to " + location);
             PlayerUtils.setLocation(player.getUniqueId(), location);
         }
     }

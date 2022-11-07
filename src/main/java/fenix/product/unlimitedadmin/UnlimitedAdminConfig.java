@@ -14,7 +14,9 @@ public enum UnlimitedAdminConfig {
     TELEPORT_MODULE_ENABLED("modules.teleport", true, "Teleport Module provide abilities teleporting online/offline players"),
     SPAWN_MODULE_ENABLED("modules.spawn", true, "Create spawn points on your server"),
     HOME_MODULE_ENABLED("modules.home", true, "Create home points on your server"),
-    PLAYER_STATUS_MODULE_ENABLED("modules.playerstatus", true, "Manipulating whit player status");
+    PLAYER_STATUS_MODULE_ENABLED("modules.playerstatus", true, "Manipulating whit player status"),
+    MAINTAIN_MODULE_ENABLED("modules.maintain", true, "Manage your server when maintain"),
+    SHOP_MODULE_ENABLED("modules.shop", true, "Manage your donate shop");
 
     private final Object value;
     private final String path;
@@ -30,11 +32,6 @@ public enum UnlimitedAdminConfig {
 
     public boolean getBoolean() {
         return cfg.getBoolean(path);
-    }
-
-
-    public ConfigurationSection getConfigurationSection() {
-        return cfg.getConfigurationSection(path);
     }
 
     public static void load() {

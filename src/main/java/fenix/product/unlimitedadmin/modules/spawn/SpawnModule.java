@@ -8,17 +8,18 @@ import fenix.product.unlimitedadmin.modules.spawn.commands.DelSpawnCommand;
 import fenix.product.unlimitedadmin.modules.spawn.commands.ListSpawnCommand;
 import fenix.product.unlimitedadmin.modules.spawn.commands.SetSpawnCommand;
 import fenix.product.unlimitedadmin.modules.spawn.commands.SpawnCommand;
+import fenix.product.unlimitedadmin.modules.spawn.listeners.SpawnDeathListener;
+import fenix.product.unlimitedadmin.modules.spawn.listeners.SpawnLoginListener;
 import fenix.product.unlimitedadmin.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class SpawnModule implements IModule, Listener {
+public class SpawnModule implements IModule {
 
     private static YamlConfiguration cfg;
     private static File f;
@@ -34,8 +35,13 @@ public class SpawnModule implements IModule, Listener {
         commands.add(new SpawnCommand(this));
         commands.add(new DelSpawnCommand(this));
         commands.add(new ListSpawnCommand(this));
+        if (SpawnModuleConfig.PREVENT_TELEPORT_ON_DEATH.getBoolean()) {
+            plugin.getServer().getPluginManager().registerEvents(new SpawnDeathListener(this), plugin);
+        }
+        if (SpawnModuleConfig.PREFERRED_FIRST_SPAWN.getBoolean()) {
+            plugin.getServer().getPluginManager().registerEvents(new SpawnLoginListener(this), plugin);
+        }
     }
-
 
     @Override
     public String getName() {

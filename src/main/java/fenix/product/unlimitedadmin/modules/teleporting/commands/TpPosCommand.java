@@ -34,7 +34,7 @@ public class TpPosCommand implements ICommand {
     }
 
     @Override
-    public @Nullable List<String> getTabCompletion(CommandSender sender, int i) {
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
         if (i < 3) {
             List<String> result = new ArrayList<>();
             for (int it = i; it < 3; it++) {
@@ -52,7 +52,7 @@ public class TpPosCommand implements ICommand {
             return collect;
         }
 
-        return ICommand.super.getTabCompletion(sender, i);
+        return ICommand.super.getTabCompletion(sender, args, i);
     }
 
     @Override
