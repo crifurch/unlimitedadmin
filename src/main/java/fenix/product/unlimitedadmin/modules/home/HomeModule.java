@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.modules.home.commands.DelHomeCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.HomeCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.InviteCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.SetHomeCommand;
@@ -38,6 +39,7 @@ public class HomeModule implements IModule, Listener {
         commands.add(new SetHomeCommand(this));
         commands.add(new HomeCommand(this));
         commands.add(new InviteCommand(this));
+        commands.add(new DelHomeCommand(this));
         if (HomeModuleConfig.PREFERS_TELEPORT_ON_DEATH.getBoolean()) {
             plugin.getServer().getPluginManager().registerEvents(new HomeDeathListener(this), plugin);
         }

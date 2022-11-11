@@ -1,8 +1,11 @@
 package fenix.product.unlimitedadmin.modules.spawn.listeners;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
+import fenix.product.unlimitedadmin.modules.spawn.events.RespawnTeleportEvent;
 import fenix.product.unlimitedadmin.utils.PlayerUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,8 +25,12 @@ public class SpawnDeathListener implements Listener {
     public void onPlayerDeath(PlayerRespawnEvent event) {
         final Location spawnLocation = module.getSpawnLocation(GlobalConstants.defaultEntryName);
         if (spawnLocation != null) {
-            event.setRespawnLocation(spawnLocation);
-            PlayerUtils.setLocationDelayed(event.getPlayer(), spawnLocation, 1000);
+            final RespawnTeleportEvent event1 = new RespawnTeleportEvent(event.getPlayer());
+            Bukkit.getPluginManager().callEvent(event1);
+            if(!event1.isCancelled()) {
+                event.setRespawnLocation(spawnLocation);
+                PlayerUtils.setLocationDelayed(event.getPlayer(), spawnLocation, 600);
+            }
         }
     }
 }

@@ -21,7 +21,11 @@ public enum LangConfig {
     WORLD_IS_LOCKED("world_is_locked", "World %s is locked"),
     WORLD_IS_UNLOCKED("world_is_unlocked", "World %s is unlocked"),
     DONATION_AMOUNT("donation_amount", "Caps amount: %s"),
-    NO_COMMAND_FOUND("no_command_found", "No command found");
+    NO_COMMAND_FOUND("no_command_found", "No command found"),
+
+    HOME_CREATED("home.created", "Home %s was created"),
+    NO_SUCH_HOME("home.notFound", "Home %s not found"),
+    HOME_DELETED("home.deleted", "Home %s was deleted");
 
 
     private final String value;

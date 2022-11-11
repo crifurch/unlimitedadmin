@@ -20,7 +20,7 @@ public class SpawnLoginListener implements Listener {
     public void onPlayerLogin(PlayerFirstJoinEvent event) {
         final Location spawnLocation = module.getSpawnLocation(GlobalConstants.defaultEntryName);
         if (spawnLocation != null) {
-            PlayerUtils.setLocationDelayed(event.getPlayer(), spawnLocation, 1000);
+            PlayerUtils.setLocationDelayed(event.getPlayer(), spawnLocation, 400);
         }
     }
 }
