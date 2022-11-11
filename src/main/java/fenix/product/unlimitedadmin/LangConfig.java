@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.util.Collections;
 
 public enum LangConfig {
-    ERROR_WHILE_COMMAND("error_while_command", "Error when executing command"),
-    NO_SUCH_PLAYER("no_such_player", "No such player"),
-    OFFLINE_PLAYER("offline_player", "Player is offline"),
+    ERROR_WHILE_COMMAND("command.errorWhileExecute", "Error when executing command"),
+    ONLY_FOR_PLAYER_COMMAND("command.onlyForUser", "Only player can run this command whit this arguments"),
+    NO_SUCH_PLAYER("player.notFound", "No such player"),
+    OFFLINE_PLAYER("player.isOffline", "Player is offline"),
     NO_SUCH_WORLD("no_such_world", "No such world"),
     NO_PERMISSIONS_USE_ON_OTHER("no_permissions_use_on_other", "You can not use this command on this player"),
-    ONLY_FOR_PLAYER_COMMAND("only_for_player_command", "Only player can run this command whit this arguments"),
     SERVER_IN_MAINTAIN_MODE("server_in_maintain_mode", "Server in maintain mode now"),
     SERVER_NOT_IN_MAINTAIN_MODE("server_in_maintain_mode", "Server in work mode now"),
     WORLD_LOCKED_FOR_ENTERING("world_locked_for_entering", "World locked for entering"),

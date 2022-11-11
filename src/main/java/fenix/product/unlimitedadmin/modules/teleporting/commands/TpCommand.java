@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.teleporting.commands;
 
 import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.exceptions.CommandNotEnoughArgsException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -28,6 +29,11 @@ public class TpCommand implements ICommand {
     }
 
     @Override
+    public byte getMinArgsSize() {
+        return 1;
+    }
+
+    @Override
     public byte getMaxArgsSize() {
         return 2;
     }
@@ -38,13 +44,10 @@ public class TpCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public boolean onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException {
         UUID targetPlayer = null;
         UUID tpTo;
-        if (argsString.size() < 1) {
-            sender.sendMessage(getUsageText());
-            return true;
-        }
+        assertArgsSize(argsString);
         if (argsString.size() > 1) {
             tpTo = plugin.getPlayersMapModule().getPlayerUUID(argsString.get(1));
             if (tpTo == null) {

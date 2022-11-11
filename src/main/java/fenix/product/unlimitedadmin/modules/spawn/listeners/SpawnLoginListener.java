@@ -16,7 +16,7 @@ public class SpawnLoginListener implements Listener {
         this.module = module;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerFirstJoinEvent event) {
         final Location spawnLocation = module.getSpawnLocation(GlobalConstants.defaultEntryName);
         if (spawnLocation != null) {

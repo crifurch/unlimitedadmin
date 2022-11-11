@@ -31,7 +31,7 @@ public class PlayersMapModule implements IModule, Listener {
     private final File mapFile;
     protected final File playerDataFolder;
 
-    @EventHandler
+    @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR)
     public void onPlayerLogin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         LocalDateTime now = LocalDateTime.now();

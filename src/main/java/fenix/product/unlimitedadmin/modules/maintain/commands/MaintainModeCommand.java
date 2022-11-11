@@ -44,7 +44,7 @@ public class MaintainModeCommand implements ICommand {
             return true;
         }
         final String s = argsString.get(0);
-        final boolean aTrue = s.equals("1") || s.equals("true");
+        final boolean aTrue = s.equalsIgnoreCase("1") || s.equalsIgnoreCase("true");
         module.setMaintainMode(aTrue);
         if (aTrue) {
             sender.sendMessage(LangConfig.SERVER_IN_MAINTAIN_MODE.getText());

@@ -45,7 +45,7 @@ public class SpawnCommand implements ICommand {
         final PermissionsProvider instance = PermissionsProvider.getInstance();
         if (i == 0) {
             final List<String> spawns = new ArrayList<>(module.getSpawns());
-            spawns.removeIf(s -> instance.havePermissionOrOp(sender, getCommandPermission() + "." + s).isPermittedOrUnset());
+            spawns.removeIf(s -> !instance.havePermissionOrOp(sender, getCommandPermission() + "." + s).isPermittedOrUnset());
             return spawns;
         }
         if (i == 1 && instance.havePermissionOrOp(sender, AdditionalPermissions.OTHER.getPermissionForCommand(this)) == PermissionStatus.PERMISSION_TRUE) {

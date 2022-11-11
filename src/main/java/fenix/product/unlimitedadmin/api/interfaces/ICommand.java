@@ -1,9 +1,12 @@
 package fenix.product.unlimitedadmin.api.interfaces;
 
+import fenix.product.unlimitedadmin.api.exceptions.CommandNotEnoughArgsException;
+import fenix.product.unlimitedadmin.api.exceptions.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,38 +14,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public interface ICommand {
-    String baseCommandPermission = "unlimitedadmin.commands.";
+public interface ICommand extends ICommandDataProvider {
 
-    @NotNull
-    String getName();
 
     default String getUsageText() {
         return "/" + getName();
     }
 
-    default List<String> getPermissions() {
-        return Collections.emptyList();
-    }
 
-    boolean onCommand(CommandSender sender, List<String> argsString);
-
-    default boolean isNicknamesCompletionsAllowed() {
-        return true;
-    }
-
-    default boolean isAutoSetPermission() {
-        return true;
-    }
-
-    default byte getMaxArgsSize() {
-        return Byte.MAX_VALUE;
-    }
-
-    @Nullable
-    default List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
-        return null;
-    }
+    boolean onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException, CommandOnlyForUserException;
 
     default void setCommandExecutor(JavaPlugin plugin, CommandExecutor executor) {
         final PluginCommand command = plugin.getCommand(getName());
@@ -74,7 +54,15 @@ public interface ICommand {
         command.setPermission(permission);
     }
 
-    default String getCommandPermission() {
-        return baseCommandPermission + getName();
+    default void assertArgsSize(List<String> argsString) throws CommandNotEnoughArgsException {
+        if (argsString.size() != getMinArgsSize()) {
+            throw new CommandNotEnoughArgsException(getUsageText());
+        }
+    }
+
+    default void assertSenderIsPlayer(CommandSender sender) throws CommandOnlyForUserException {
+        if (!(sender instanceof Player)) {
+            throw new CommandOnlyForUserException();
+        }
     }
 }

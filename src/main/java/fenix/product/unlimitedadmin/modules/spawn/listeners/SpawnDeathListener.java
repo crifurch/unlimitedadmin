@@ -18,7 +18,7 @@ public class SpawnDeathListener implements Listener {
         this.module = module;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerRespawnEvent event) {
         final Location spawnLocation = module.getSpawnLocation(GlobalConstants.defaultEntryName);
         if (spawnLocation != null) {

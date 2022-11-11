@@ -57,9 +57,14 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
         while (argsString.size() > this.command.getMaxArgsSize()) {
             argsString.remove(argsString.size() - 1);
         }
-        final boolean b = this.command.onCommand(sender, argsString);
-        if (!b) {
-            sender.sendMessage(this.command.getUsageText());
+        try {
+            final boolean b = this.command.onCommand(sender, argsString);
+            if (!b) {
+                sender.sendMessage(this.command.getUsageText());
+            }
+        } catch (Exception e) {
+            sender.sendMessage(e.getMessage());
+            return false;
         }
         return true;
     }

@@ -1,10 +1,12 @@
 package fenix.product.unlimitedadmin.modules.home.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
+import fenix.product.unlimitedadmin.modules.core.AdditionalPermissions;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import fenix.product.unlimitedadmin.modules.home.data.Home;
 import org.bukkit.command.CommandSender;
@@ -59,13 +61,14 @@ public class HomeCommand implements ICommand {
             homeName = argsString.get(0);
         }
         if (argsString.size() > 1) {
-            if (PermissionsProvider.getInstance().havePermissionOrOp(sender, getCommandPermission() + ".other") != PermissionStatus.PERMISSION_TRUE) {
+            if (PermissionsProvider.getInstance().havePermissionOrOp(sender,
+                    AdditionalPermissions.OTHER.getPermissionForCommand(this)) != PermissionStatus.PERMISSION_TRUE) {
                 sender.sendMessage("You can't teleport other player");
                 return true;
             }
             UUID player = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(1));
             if (player == null) {
-                sender.sendMessage("No such player found");
+                sender.sendMessage(LangConfig.NO_SUCH_PLAYER.getText());
                 return true;
             }
             playerUuid = player;
@@ -77,7 +80,7 @@ public class HomeCommand implements ICommand {
             playerUuid = homePlayerUuid;
         }
         if (playerUuid == null) {
-            sender.sendMessage("only player can teleport to spawn");
+            sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
             return true;
         }
 

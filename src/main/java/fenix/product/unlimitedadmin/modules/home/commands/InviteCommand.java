@@ -48,7 +48,7 @@ public class InviteCommand implements ICommand {
         String name = GlobalConstants.defaultEntryName;
         UUID playerToAdd = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(0));
         if (playerToAdd == null) {
-            sender.sendMessage("Unknown player");
+            sender.sendMessage(LangConfig.NO_SUCH_PLAYER.getText());
             return true;
         }
         if (argsString.size() > 1) {
