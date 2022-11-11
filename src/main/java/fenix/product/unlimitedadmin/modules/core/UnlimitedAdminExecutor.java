@@ -1,6 +1,8 @@
 package fenix.product.unlimitedadmin.modules.core;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.exceptions.CommandNotEnoughArgsException;
+import fenix.product.unlimitedadmin.api.exceptions.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
@@ -21,7 +23,7 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
     public UnlimitedAdminExecutor(UnlimitedAdmin plugin) {
         super(plugin, new BaseAdminCommand() {
             @Override
-            public boolean onCommand(CommandSender sender, List<String> argsString) {
+            public boolean onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException, CommandNotEnoughArgsException {
                 final List<String> args = new ArrayList<>(argsString);
                 final String module = args.get(0).toLowerCase();
                 args.remove(0);

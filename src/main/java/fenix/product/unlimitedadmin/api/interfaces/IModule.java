@@ -1,5 +1,7 @@
 package fenix.product.unlimitedadmin.api.interfaces;
 
+import fenix.product.unlimitedadmin.api.exceptions.CommandNotEnoughArgsException;
+import fenix.product.unlimitedadmin.api.exceptions.CommandOnlyForUserException;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -11,7 +13,7 @@ public interface IModule {
         return Collections.emptyList();
     }
 
-    default boolean runCommand(String name, CommandSender sender, List<String> args) {
+    default boolean runCommand(String name, CommandSender sender, List<String> args) throws CommandOnlyForUserException, CommandNotEnoughArgsException {
         for (ICommand command : getCommands()) {
             if (command.getName().equals(name)) {
                 return command.onCommand(sender, args);
