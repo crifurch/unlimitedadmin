@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin.modules.world.commands;
 
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import fenix.product.unlimitedadmin.modules.world.gui.WorldManagerGui;
@@ -23,14 +24,13 @@ public class GuiCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        if(sender.isOp()||sender.hasPermission("unlimitedadmin.worlds.gui")){
-            if(!(sender instanceof HumanEntity)){
-                sender.sendMessage("Only player can open gui");
-            }else{
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException {
+        if (sender.isOp() || sender.hasPermission("unlimitedadmin.worlds.gui")) {
+            if (!(sender instanceof HumanEntity)) {
+                throw new CommandOnlyForUserException();
+            } else {
                 new WorldManagerGui(manager).openInventory((HumanEntity) sender);
             }
         }
-        return false;
     }
 }

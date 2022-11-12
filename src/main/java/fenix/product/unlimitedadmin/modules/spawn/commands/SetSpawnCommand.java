@@ -1,7 +1,9 @@
 package fenix.product.unlimitedadmin.modules.spawn.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
-import fenix.product.unlimitedadmin.LangConfig;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandPermissionException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModuleConfig;
@@ -30,11 +32,8 @@ public class SetSpawnCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
-            return true;
-        }
+    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+        assertSenderIsPlayer(sender);
         String name = GlobalConstants.defaultEntryName;
         if (argsString.size() > 0) {
             name = argsString.get(0);
@@ -44,18 +43,15 @@ public class SetSpawnCommand implements ICommand {
             allowedSpawns = Integer.MAX_VALUE;
         }
         if (allowedSpawns == 0) {
-            sender.sendMessage("server disable spawns");
-            return true;
+            throw new CommandPermissionException();
         }
         final Set<String> spawns = module.getSpawns();
         if (!spawns.contains(name)) {
             if (spawns.size() >= allowedSpawns) {
-                sender.sendMessage("no more spawn can be created");
-                return true;
+                throw new CommandPermissionException();
             }
         }
         module.setSpawn(name, ((Player) sender).getLocation());
-        sender.sendMessage("spawn was created");
-        return true;
+        sender.sendMessage(LangConfig.SPAWN_CREATED.getText(name));
     }
 }

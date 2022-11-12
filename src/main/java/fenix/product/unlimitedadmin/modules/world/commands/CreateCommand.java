@@ -1,5 +1,8 @@
 package fenix.product.unlimitedadmin.modules.world.commands;
 
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -27,6 +30,11 @@ public class CreateCommand implements ICommand {
     }
 
     @Override
+    public byte getMinArgsSize() {
+        return 2;
+    }
+
+    @Override
     public String getUsageText() {
         return ("Usage /una " + manager.getName() + " create <name> <NORMAL|END|NETHER> ");
     }
@@ -46,37 +54,28 @@ public class CreateCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
         if (isBusy) {
-            sender.sendMessage("Can't create world now, another world creating now");
-            return true;
+            throw new CommandErrorException(LangConfig.WORLD_CREATION_BUSY.getText());
         }
-        if (argsString.size() < 2) {
-            sender.sendMessage(getUsageText());
-            return true;
-        }
+        assertArgsSize(argsString);
         final String envString = argsString.get(1).toUpperCase();
         World.Environment env = supportedEnvironment.get(envString);
         if (env == null) {
-            sender.sendMessage("Unsupported world type");
-            return true;
+            throw new CommandErrorException(LangConfig.WORLD_UNSUPPORTED_ENVIRONMENT.getText(envString));
         }
-        String error;
 
         isBusy = true;
         try {
-            error = manager.createWorld(argsString.get(0).toLowerCase(Locale.ROOT), env, WorldType.NORMAL);
+            final String error = manager.createWorld(argsString.get(0).toLowerCase(Locale.ROOT), env, WorldType.NORMAL);
+            if (error != null) {
+                throw new CommandErrorException(error);
+            }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.toString());
-            error = "Error when creating world " + argsString.get(0);
+            isBusy = false;
+            throw new CommandErrorException(LangConfig.WORLD_CREATION_ERROR.getText(argsString.get(0)));
         }
-        isBusy = false;
-        if (error != null) {
-            sender.sendMessage(error);
-            return false;
-        } else {
-            sender.sendMessage("World " + argsString.get(0) + " created");
-        }
-        return true;
+        sender.sendMessage(LangConfig.WORLD_CREATED.getText(argsString.get(0)));
     }
 }

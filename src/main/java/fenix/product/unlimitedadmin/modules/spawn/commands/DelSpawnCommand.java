@@ -1,6 +1,8 @@
 package fenix.product.unlimitedadmin.modules.spawn.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import org.bukkit.command.CommandSender;
@@ -34,17 +36,16 @@ public class DelSpawnCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandErrorException {
         String name = GlobalConstants.defaultEntryName;
         if (argsString.size() > 0) {
             name = argsString.get(0);
         }
         final Set<String> spawns = module.getSpawns();
         if (!spawns.contains(name)) {
-            sender.sendMessage("no spawn with name " + name);
-            return true;
+            throw new CommandErrorException(LangConfig.NO_SUCH_SPAWN.getText(name));
         }
         module.deleteSpawn(name);
-        return true;
+        sender.sendMessage(LangConfig.SPAWN_DELETED.getText(name));
     }
 }

@@ -2,6 +2,8 @@ package fenix.product.unlimitedadmin.modules.home;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
@@ -71,12 +73,13 @@ public class HomeModule implements IModule, Listener {
         }
     }
 
-    public boolean deleteHome(@NotNull UUID player, @NotNull String name) {
-        final String path = player + "@" + name;
+    public boolean deleteHome(@NotNull UUID uuid, @NotNull String name) {
+        final String path = uuid + "@" + name;
         if (cfg.contains(path)) {
             cfg.set(path, null);
             try {
                 cfg.save(f);
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -178,6 +181,18 @@ public class HomeModule implements IModule, Listener {
         return false;
     }
 
+    @Nullable
+    public String parseHomeName(@NotNull Player owner, @NotNull String name) throws NotifibleException {
+        if (name.contains(":")) {
+            final String[] split = name.split(":");
+            final UUID playerUUID = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(split[0]);
+            if (split.length != 2 || playerUUID == null) {
+                throw new NotifibleException(LangConfig.NO_SUCH_HOME.getText(""));
+            }
+            return playerUUID + ":" + split[1];
+        }
+        return owner.getUniqueId() + ":" + name;
+    }
 
     @Override
     public List<ICommand> getCommands() {

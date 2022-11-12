@@ -1,14 +1,16 @@
 package fenix.product.unlimitedadmin.modules.world.commands;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import fenix.product.unlimitedadmin.api.utils.CollectionUtils;
+import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,9 +27,16 @@ public class ListCommand implements ICommand {
         return "list";
     }
 
+    @Override
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
+        if (i == 0) {
+            return Arrays.asList("custom", "standard", "all");
+        }
+        return ICommand.super.getTabCompletion(sender, args, i);
+    }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) {
         int wide = 1;
         if (argsString.size() > 0) {
             if ("custom".equalsIgnoreCase(argsString.get(0))) {
@@ -52,7 +61,6 @@ public class ListCommand implements ICommand {
             result.append("\n");
         });
         sender.sendMessage(result.toString());
-        return true;
     }
 
 

@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.maintain.commands;
 
-import fenix.product.unlimitedadmin.LangConfig;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.maintain.MaintainModule;
 import org.bukkit.command.CommandSender;
@@ -33,16 +34,18 @@ public class MaintainModeCommand implements ICommand {
     }
 
     @Override
+    public byte getMinArgsSize() {
+        return 1;
+    }
+
+    @Override
     public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
         return Arrays.asList("1", "0", "true", "false");
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        if (argsString.size() < 1) {
-            sender.sendMessage(getUsageText());
-            return true;
-        }
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException {
+        assertArgsSize(argsString);
         final String s = argsString.get(0);
         final boolean aTrue = s.equalsIgnoreCase("1") || s.equalsIgnoreCase("true");
         module.setMaintainMode(aTrue);
@@ -51,6 +54,5 @@ public class MaintainModeCommand implements ICommand {
         } else {
             sender.sendMessage(LangConfig.SERVER_NOT_IN_MAINTAIN_MODE.getText());
         }
-        return true;
     }
 }

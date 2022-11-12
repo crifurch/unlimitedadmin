@@ -1,7 +1,7 @@
 package fenix.product.unlimitedadmin.modules.maintain;
 
-import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;

@@ -1,8 +1,8 @@
 package fenix.product.unlimitedadmin.modules.core;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.exceptions.CommandNotEnoughArgsException;
-import fenix.product.unlimitedadmin.api.exceptions.CommandOnlyForUserException;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
+import fenix.product.unlimitedadmin.api.exceptions.module.ModuleNotFoundException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
@@ -23,7 +23,8 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
     public UnlimitedAdminExecutor(UnlimitedAdmin plugin) {
         super(plugin, new BaseAdminCommand() {
             @Override
-            public boolean onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException, CommandNotEnoughArgsException {
+            public void onCommand(CommandSender sender, List<String> argsString)
+                    throws NotifibleException {
                 final List<String> args = new ArrayList<>(argsString);
                 final String module = args.get(0).toLowerCase();
                 args.remove(0);
@@ -31,11 +32,10 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
                 args.remove(0);
                 for (IModule i : plugin.getModules()) {
                     if (i.getName().equals(module)) {
-                        return i.runCommand(commandName, sender, args);
+                        i.runCommand(commandName, sender, args);
                     }
                 }
-                sender.sendMessage("No such module");
-                return true;
+                throw new ModuleNotFoundException();
             }
         });
         command.setPermissionMessage(plugin, "No you are not admin, try later... hah");
@@ -55,18 +55,11 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
         if (args.length < 2) {
             return false;
         }
-        final List<String> argsString = new ArrayList<>(Arrays.asList(args));
-        while (argsString.size() > this.command.getMaxArgsSize()) {
-            argsString.remove(argsString.size() - 1);
-        }
+        final List<String> argsString = Arrays.asList(args).subList(0, Math.min(args.length, this.command.getMinArgsSize()));
         try {
-            final boolean b = this.command.onCommand(sender, argsString);
-            if (!b) {
-                sender.sendMessage(this.command.getUsageText());
-            }
-        } catch (Exception e) {
+            this.command.onCommand(sender, argsString);
+        } catch (NotifibleException e) {
             sender.sendMessage(e.getMessage());
-            return false;
         }
         return true;
     }

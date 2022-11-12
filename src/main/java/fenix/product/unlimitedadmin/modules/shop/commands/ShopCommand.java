@@ -3,14 +3,12 @@ package fenix.product.unlimitedadmin.modules.shop.commands;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.shop.CommandsShopConfig;
 import fenix.product.unlimitedadmin.modules.shop.ShopModule;
-import fenix.product.unlimitedadmin.modules.shop.data.CommandValueTemplate;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ShopCommand implements ICommand {
     private final ShopModule module;
@@ -42,8 +40,7 @@ public class ShopCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) {
 
-        return true;
     }
 }

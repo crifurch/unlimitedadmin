@@ -1,5 +1,8 @@
 package fenix.product.unlimitedadmin.modules.world.commands;
 
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import org.bukkit.Bukkit;
@@ -18,35 +21,38 @@ public class DeleteCommand implements ICommand {
     }
 
     @Override
+    public byte getMinArgsSize() {
+        return 1;
+    }
+
+    @Override
+    public byte getMaxArgsSize() {
+        return 1;
+    }
+
+    @Override
     public @NotNull String getName() {
         return "remove";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
         if (isBusy) {
-            sender.sendMessage("Can't delete world now, another world deleting now");
-            return true;
+            throw new CommandErrorException(LangConfig.WORLD_DELETION_BUSY.getText());
         }
-        if(argsString.size()<1){
-            return false;
-        }
-        String error;
+        assertArgsSize(argsString);
 
         isBusy = true;
         try {
-            error = manager.deleteWorld(argsString.get(0));
+            final String error = manager.deleteWorld(argsString.get(0));
+            if (error != null) {
+                throw new CommandErrorException(error);
+            }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.toString());
-            error = "Error when creating world " + argsString.get(0);
+            isBusy = false;
+            throw new CommandErrorException(LangConfig.WORLD_DELETION_ERROR.getText(argsString.get(0)));
         }
-        isBusy = false;
-        if (error != null) {
-            sender.sendMessage(error);
-            return false;
-        }else{
-            sender.sendMessage("World " + argsString.get(0) + " deleted");
-        }
-        return true;
+        sender.sendMessage(LangConfig.WORLD_DELETED.getText(argsString.get(0)));
     }
 }

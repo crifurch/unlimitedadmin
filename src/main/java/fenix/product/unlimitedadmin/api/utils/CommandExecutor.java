@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.api.utils;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -57,18 +58,11 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         if (!havePermissions(sender, this.command)) {
             return false;
         }
-        final List<String> argsString = Arrays.asList(args);
-        while (argsString.size() > this.command.getMaxArgsSize()) {
-            argsString.remove(argsString.size() - 1);
-        }
+        final List<String> argsString = Arrays.asList(args).subList(0, Math.min(args.length, this.command.getMinArgsSize()));
         try {
-            final boolean b = this.command.onCommand(sender, argsString);
-            if (!b) {
-                sender.sendMessage(this.command.getUsageText());
-            }
-        } catch (Exception e) {
+            this.command.onCommand(sender, argsString);
+        } catch (NotifibleException e) {
             sender.sendMessage(e.getMessage());
-            return false;
         }
         return true;
     }

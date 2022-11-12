@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin;
 
+import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.ModuleConfig;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;

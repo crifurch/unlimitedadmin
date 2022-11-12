@@ -1,12 +1,11 @@
 package fenix.product.unlimitedadmin.modules.home.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
-import fenix.product.unlimitedadmin.LangConfig;
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.exceptions.CommandOnlyForUserException;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
-import fenix.product.unlimitedadmin.modules.home.HomeModuleConfig;
 import fenix.product.unlimitedadmin.modules.home.data.Home;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,35 +32,29 @@ public class DelHomeCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        try {
-            assertSenderIsPlayer(sender);
-        } catch (CommandOnlyForUserException e) {
-            throw new RuntimeException(e);
-        }
+    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+        assertSenderIsPlayer(sender);
         String name = GlobalConstants.defaultEntryName;
         if (argsString.size() > 0) {
             name = argsString.get(0);
         }
-        if (name.contains(":")) {
-            final String[] split = name.split(":");
-            if (split.length != 2) {
-                sender.sendMessage(LangConfig.NO_SUCH_HOME.getText(name));
-                return true;
-            }
-            name = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(split[0]) + ":" + split[1];
-        } else {
-            name = ((Player) sender).getUniqueId() + ":" + name;
+        name = module.parseHomeName((Player) sender, name);
+        if (name == null) {
+            throw new CommandErrorException(LangConfig.NO_SUCH_HOME.getText());
         }
         final List<Home> homes = module.getOwnerHomes(((Player) sender).getUniqueId());
-        String finalName = name;
-        final Home home = homes.stream().filter(h -> finalName.equals(h.getId() + ":" + h.getName())).findFirst().orElse(null);
+        String finalName = name.replace(':', '@');
+        final Home home = homes.stream().filter(h ->
+                finalName.equals(h.getId())
+        ).findFirst().orElse(null);
         if (home == null) {
-            sender.sendMessage(LangConfig.NO_SUCH_HOME.getText(finalName.split(":")[1]));
-            return true;
+            throw new CommandErrorException(LangConfig.NO_SUCH_HOME.getText(name.split(":")[1]));
         }
-        module.deleteHome(UUID.fromString(home.getId()), home.getName());
+
+        final boolean b = module.deleteHome(UUID.fromString(home.getUUID()), home.getName());
+        if (!b) {
+            throw new CommandErrorException();
+        }
         sender.sendMessage(LangConfig.HOME_DELETED.getText(home.getName()));
-        return true;
     }
 }

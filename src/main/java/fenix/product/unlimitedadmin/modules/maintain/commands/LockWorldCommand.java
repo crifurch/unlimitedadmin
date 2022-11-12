@@ -1,8 +1,9 @@
 package fenix.product.unlimitedadmin.modules.maintain.commands;
 
-import fenix.product.unlimitedadmin.LangConfig;
-import fenix.product.unlimitedadmin.api.exceptions.CommandNotEnoughArgsException;
-import fenix.product.unlimitedadmin.api.exceptions.CommandOnlyForUserException;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.maintain.MaintainModule;
 import org.bukkit.Bukkit;
@@ -53,7 +54,7 @@ public class LockWorldCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException, CommandOnlyForUserException {
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException, CommandOnlyForUserException, CommandErrorException {
         assertArgsSize(argsString);
         World world;
         final String lockValue;
@@ -67,8 +68,7 @@ public class LockWorldCommand implements ICommand {
             world = Bukkit.getWorld(argsString.get(0));
         }
         if (world == null) {
-            sender.sendMessage(LangConfig.NO_WORLD_FOUND.getText());
-            return true;
+            throw new CommandErrorException(LangConfig.NO_SUCH_WORLD.getText());
         }
         lock = lockValue.equalsIgnoreCase("1") || lockValue.equalsIgnoreCase("true");
         module.setLockedWorld(world, lock);
@@ -77,6 +77,5 @@ public class LockWorldCommand implements ICommand {
         } else {
             sender.sendMessage(LangConfig.WORLD_IS_UNLOCKED.getText(world.getName()));
         }
-        return true;
     }
 }

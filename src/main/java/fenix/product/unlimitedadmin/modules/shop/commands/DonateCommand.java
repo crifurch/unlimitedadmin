@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.shop.commands;
 
-import fenix.product.unlimitedadmin.LangConfig;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.shop.ShopModule;
 import fenix.product.unlimitedadmin.modules.shop.ShopModuleConfig;
@@ -45,19 +46,15 @@ public class DonateCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
-            return true;
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException {
+        assertSenderIsPlayer(sender);
+        if (argsString.size() > 0) {
+            final String amount = argsString.get(0);
+            sender.sendMessage(ShopModuleConfig.SHOP_DONATE_PAGE_URL.getText(amount));
         }
-        if (argsString.size() == 0) {
-            final PlayerDonationCache donationCache = module.getDonationCache((Player) sender);
-            sender.sendMessage(LangConfig.DONATION_AMOUNT.getText(donationCache.getAmount()));
-            return true;
-        }
-        final String amount = argsString.get(0);
-        sender.sendMessage(ShopModuleConfig.SHOP_DONATE_PAGE_URL.getText(amount));
-        return true;
+        final PlayerDonationCache donationCache = module.getDonationCache((Player) sender);
+        sender.sendMessage(LangConfig.DONATION_AMOUNT.getText(donationCache.getAmount()));
+
     }
 
 }

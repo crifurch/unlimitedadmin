@@ -66,6 +66,10 @@ public class Home {
         return location;
     }
 
+    public String getUUID() {
+        return id.split("@")[0];
+    }
+
     public String getId() {
         return id;
     }

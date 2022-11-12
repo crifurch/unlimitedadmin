@@ -1,7 +1,9 @@
 package fenix.product.unlimitedadmin.modules.home.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
-import fenix.product.unlimitedadmin.LangConfig;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandPermissionException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import fenix.product.unlimitedadmin.modules.home.HomeModuleConfig;
@@ -30,11 +32,8 @@ public class SetHomeCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
-            return true;
-        }
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException, CommandPermissionException {
+        assertSenderIsPlayer(sender);
         String name = GlobalConstants.defaultEntryName;
         if (argsString.size() > 0) {
             name = argsString.get(0);
@@ -46,18 +45,15 @@ public class SetHomeCommand implements ICommand {
             allowedHomes = Integer.MAX_VALUE;
         }
         if (allowedHomes == 0) {
-            sender.sendMessage("You can't have home");
-            return true;
+            throw new CommandPermissionException();
         }
         String finalName = name;
         if (homes.stream().noneMatch(home -> home.getName().equals(finalName))) {
             if (homes.size() >= allowedHomes) {
-                sender.sendMessage("no more homes can be created");
-                return true;
+                throw new CommandPermissionException();
             }
         }
         module.setHome((Player) sender, name, ((Player) sender).getLocation());
-        sender.sendMessage("home was set");
-        return true;
+        sender.sendMessage(LangConfig.HOME_CREATED.getText(name));
     }
 }

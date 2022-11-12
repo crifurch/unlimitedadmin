@@ -1,11 +1,11 @@
 package fenix.product.unlimitedadmin.modules.player_status.commands;
 
-import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOtherPermissionsException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
-import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
-import fenix.product.unlimitedadmin.modules.core.AdditionalPermissions;
 import fenix.product.unlimitedadmin.utils.PlayerUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,31 +21,22 @@ public class FeedCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandErrorException, CommandOtherPermissionsException, CommandOnlyForUserException {
         UUID targetPlayer = null;
         if (argsString.size() > 0) {
+            assertOtherPermission(sender);
             targetPlayer = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(0));
             if (targetPlayer == null) {
-                sender.sendMessage(LangConfig.NO_SUCH_PLAYER.getText());
-                return true;
-            } else if (PermissionsProvider.getInstance().havePermissionOrOp(sender,
-                    AdditionalPermissions.OTHER.getPermissionForCommand(this)) != PermissionStatus.PERMISSION_TRUE) {
-                sender.sendMessage(LangConfig.NO_PERMISSIONS_USE_ON_OTHER.getText());
-                return true;
+                throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText());
             }
         }
         if (targetPlayer == null) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
-                return true;
-            }
+            assertSenderIsPlayer(sender);
             targetPlayer = ((Player) sender).getUniqueId();
         }
 
         if (!PlayerUtils.setFood(targetPlayer, 100)) {
-            sender.sendMessage(LangConfig.ERROR_WHILE_COMMAND.getText());
+            throw new CommandErrorException();
         }
-
-        return true;
     }
 }

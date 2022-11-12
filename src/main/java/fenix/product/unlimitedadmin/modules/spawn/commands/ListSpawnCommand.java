@@ -28,11 +28,10 @@ public class ListSpawnCommand implements ICommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, List<String> argsString) {
         final Set<String> spawns = module.getSpawns();
         final String join = CollectionUtils.join(Arrays.asList(spawns.toArray()), "\n");
         sender.sendMessage(join);
-        return true;
     }
 }
 

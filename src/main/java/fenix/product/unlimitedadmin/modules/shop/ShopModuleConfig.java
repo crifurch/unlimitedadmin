@@ -1,6 +1,5 @@
 package fenix.product.unlimitedadmin.modules.shop;
 
-import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import org.bukkit.configuration.file.YamlConfiguration;

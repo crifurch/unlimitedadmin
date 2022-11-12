@@ -1,5 +1,6 @@
-package fenix.product.unlimitedadmin;
+package fenix.product.unlimitedadmin.api;
 
+import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -10,22 +11,36 @@ import java.util.Collections;
 public enum LangConfig {
     ERROR_WHILE_COMMAND("command.errorWhileExecute", "Error when executing command"),
     ONLY_FOR_PLAYER_COMMAND("command.onlyForUser", "Only player can run this command whit this arguments"),
-    NO_SUCH_PLAYER("player.notFound", "No such player"),
+    NO_SUCH_MODULE("module.noSuchModule", "No such module %s"),
+    NO_SUCH_COMMAND("module.noSuchCommand", "No such command %s"),
+    NO_SUCH_PLAYER("player.notFound", "No such player %s"),
     OFFLINE_PLAYER("player.isOffline", "Player is offline"),
-    NO_SUCH_WORLD("no_such_world", "No such world"),
-    NO_PERMISSIONS_USE_ON_OTHER("no_permissions_use_on_other", "You can not use this command on this player"),
-    SERVER_IN_MAINTAIN_MODE("server_in_maintain_mode", "Server in maintain mode now"),
-    SERVER_NOT_IN_MAINTAIN_MODE("server_in_maintain_mode", "Server in work mode now"),
-    WORLD_LOCKED_FOR_ENTERING("world_locked_for_entering", "World locked for entering"),
-    NO_WORLD_FOUND("no_world_found", "No world found"),
-    WORLD_IS_LOCKED("world_is_locked", "World %s is locked"),
-    WORLD_IS_UNLOCKED("world_is_unlocked", "World %s is unlocked"),
-    DONATION_AMOUNT("donation_amount", "Caps amount: %s"),
-    NO_COMMAND_FOUND("no_command_found", "No command found"),
+    NO_PERMISSIONS("permissions.no", "No permissions to do this  %s"),
+    NO_PERMISSIONS_USE_ON_OTHER("permissions.no_other", "No permissions to do this with other %s"),
+    SERVER_IN_MAINTAIN_MODE("maintain.isActive", "Server in maintain mode now"),
+    SERVER_NOT_IN_MAINTAIN_MODE("maintain.isNotActive", "Server in work mode now"),
+    WORLD_LOCKED_FOR_ENTERING("world.lockedEntire", "World locked for entering"),
+    NO_SUCH_WORLD("world.notFound", "No such world %s"),
+    WORLD_IS_LOCKED("world.isLocked", "World %s is locked"),
+    WORLD_IS_UNLOCKED("world.isUnlocked", "World %s is unlocked"),
+    WORLD_CREATION_BUSY("world.creationBusy", "Can't create world now, another world creating now"),
+    WORLD_CREATION_ERROR("world.creationError", "Error while creating world %s"),
+    WORLD_DELETION_BUSY("world.deletionBusy", "Can't delete world now, another world deleting now"),
+    WORLD_DELETION_ERROR("world.deletionError", "Error while deleting world %s"),
+    WORLD_UNSUPPORTED_ENVIRONMENT("world.unsupportedEnvironment", "World environment %s not supported"),
+    WORLD_CREATED("world.created", "World %s created"),
+    WORLD_DELETED("world.deleted", "World %s deleted"),
 
     HOME_CREATED("home.created", "Home %s was created"),
     NO_SUCH_HOME("home.notFound", "Home %s not found"),
-    HOME_DELETED("home.deleted", "Home %s was deleted");
+    HOME_DELETED("home.deleted", "Home %s was deleted"),
+
+    SPAWN_CREATED("spawn.created", "Spawn was created"),
+    NO_SUCH_SPAWN("spawn.notFound", "Spawn %s not found"),
+    SPAWN_DELETED("spawn.deleted", "Spawn %s was deleted"),
+
+    DONATION_AMOUNT("donation_amount", "Caps amount: %s"),
+    ;
 
 
     private final String value;
@@ -38,12 +53,20 @@ public enum LangConfig {
         this.value = val;
     }
 
+    public static String getTextDirectly(String path) {
+        return cfg.getString(path);
+    }
+
     public String getText(Object... args) {
         final String string = cfg.getString(path);
         if (string == null) {
             return value;
         }
-        return String.format(string, args);
+        try {
+            return String.format(string, args);
+        } catch (Exception e) {
+            return string;
+        }
     }
 
     public String getText() {
@@ -51,7 +74,16 @@ public enum LangConfig {
         if (string == null) {
             return value;
         }
-        return string;
+        try {
+            return String.format(string,"");
+        } catch (Exception e) {
+            try {
+                return String.format(string);
+            } catch (Exception e1) {
+                return string;
+            }
+        }
+
     }
 
     @Override

@@ -1,8 +1,11 @@
 package fenix.product.unlimitedadmin.modules.home.commands;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
-import fenix.product.unlimitedadmin.LangConfig;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsException;
+import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import org.bukkit.Bukkit;
@@ -31,30 +34,29 @@ public class InviteCommand implements ICommand {
     }
 
     @Override
+    public byte getMinArgsSize() {
+        return 1;
+    }
+
+    @Override
     public @NotNull String getName() {
         return "homeinvite";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, List<String> argsString) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(LangConfig.ONLY_FOR_PLAYER_COMMAND.getText());
-            return true;
-        }
-        if (argsString.size() < 1) {
-            sender.sendMessage(getUsageText());
-            return true;
-        }
+    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException,
+            CommandNotEnoughArgsException,
+            CommandErrorException {
+        assertSenderIsPlayer(sender);
+        assertArgsSize(argsString);
         String name = GlobalConstants.defaultEntryName;
         UUID playerToAdd = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(0));
         if (playerToAdd == null) {
-            sender.sendMessage(LangConfig.NO_SUCH_PLAYER.getText());
-            return true;
+            throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText());
         }
         if (argsString.size() > 1) {
             name = argsString.get(1);
         }
-
         if (module.addParticipant(playerToAdd, ((Player) sender).getUniqueId(), name)) {
             sender.sendMessage("Player successful invited");
             String finalName = name;
@@ -69,6 +71,5 @@ public class InviteCommand implements ICommand {
         } else {
             sender.sendMessage("Player not invited");
         }
-        return true;
     }
 }
