@@ -51,6 +51,7 @@ public class DonateCommand implements ICommand {
         if (argsString.size() > 0) {
             final String amount = argsString.get(0);
             sender.sendMessage(ShopModuleConfig.SHOP_DONATE_PAGE_URL.getText(amount));
+            return;
         }
         final PlayerDonationCache donationCache = module.getDonationCache((Player) sender);
         sender.sendMessage(LangConfig.DONATION_AMOUNT.getText(donationCache.getAmount()));
