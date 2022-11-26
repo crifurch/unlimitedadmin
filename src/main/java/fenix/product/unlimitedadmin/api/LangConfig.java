@@ -40,6 +40,8 @@ public enum LangConfig {
     SPAWN_DELETED("spawn.deleted", "Spawn %s was deleted"),
 
     DONATION_AMOUNT("donation_amount", "Caps amount: %s"),
+
+    CHAT_NOBODY_HEAR("chat.nobody_hear", "&4Nobody hear your message"),
     ;
 
 
@@ -75,7 +77,7 @@ public enum LangConfig {
             return value;
         }
         try {
-            return String.format(string,"");
+            return String.format(string, "");
         } catch (Exception e) {
             try {
                 return String.format(string);

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CollectionUtils {
     public static <T> List<T> removeDuplicates(List<T> list) {
-        ArrayList<T> newList = new ArrayList<T>();
+        ArrayList<T> newList = new ArrayList<>();
         for (T element : list) {
             if (!newList.contains(element)) {
                 newList.add(element);

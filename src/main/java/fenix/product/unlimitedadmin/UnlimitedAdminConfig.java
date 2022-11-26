@@ -1,7 +1,6 @@
 package fenix.product.unlimitedadmin;
 
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -16,7 +15,10 @@ public enum UnlimitedAdminConfig {
     HOME_MODULE_ENABLED("modules.home", true, "Create home points on your server"),
     PLAYER_STATUS_MODULE_ENABLED("modules.playerstatus", true, "Manipulating whit player status"),
     MAINTAIN_MODULE_ENABLED("modules.maintain", true, "Manage your server when maintain"),
-    SHOP_MODULE_ENABLED("modules.shop", true, "Manage your donate shop");
+    SHOP_MODULE_ENABLED("modules.shop", true, "Manage your donate shop"),
+
+    CHAT_MODULE_ENABLED("modules.chat", true, "Manage your chats");
+
 
     private final Object value;
     private final String path;

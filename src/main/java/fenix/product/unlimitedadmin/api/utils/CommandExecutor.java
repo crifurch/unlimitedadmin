@@ -115,12 +115,14 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             if (tabCompletions == null
                     && executor.command.isNicknamesCompletionsAllowed()
             ) {
+                tabCompletions = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName)
+                        .sorted().collect(Collectors.toList());
                 if (PermissionsProvider.getInstance().havePermissionOrOp(sender,
                         ICommand.baseCommandPermission + ".completion.offline") == PermissionStatus.PERMISSION_TRUE) {
-                    tabCompletions = executor.plugin.getPlayersMapModule().getPlayers().stream()
+                    final List<String> allPlayers = executor.plugin.getPlayersMapModule().getPlayers().stream()
                             .map(cachedPlayer -> cachedPlayer.name).collect(Collectors.toList());
-                } else {
-                    tabCompletions = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
+                    final List<String> finalTabCompletions = tabCompletions;
+                    tabCompletions.addAll(allPlayers.stream().filter(s -> !finalTabCompletions.contains(s)).collect(Collectors.toList()));
                 }
             }
             if (tabCompletions != null) {

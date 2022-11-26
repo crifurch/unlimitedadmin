@@ -57,7 +57,7 @@ public interface ICommand extends ICommandDataProvider {
     }
 
     default void assertArgsSize(List<String> argsString) throws CommandNotEnoughArgsException {
-        if (argsString.size() != getMinArgsSize()) {
+        if (argsString.size() < getMinArgsSize()) {
             throw new CommandNotEnoughArgsException(getUsageText());
         }
     }

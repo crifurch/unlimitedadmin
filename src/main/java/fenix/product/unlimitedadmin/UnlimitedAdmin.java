@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
 import fenix.product.unlimitedadmin.api.utils.CommandsRegister;
+import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.core.UnlimitedAdminExecutor;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import fenix.product.unlimitedadmin.modules.maintain.MaintainModule;
@@ -48,6 +49,7 @@ public final class UnlimitedAdmin extends JavaPlugin {
         UnlimitedAdminConfig.load();
         LangConfig.load();
         commandExecutor = new UnlimitedAdminExecutor(this);
+        setMainWoldName();
         loadModules();
 
 
@@ -84,8 +86,11 @@ public final class UnlimitedAdmin extends JavaPlugin {
         if (UnlimitedAdminConfig.PLAYER_STATUS_MODULE_ENABLED.getBoolean()) {
             rawModules.add(new PlayerStatusModule(this));
         }
-        if(UnlimitedAdminConfig.SHOP_MODULE_ENABLED.getBoolean()) {
+        if (UnlimitedAdminConfig.SHOP_MODULE_ENABLED.getBoolean()) {
             rawModules.add(new ShopModule(this));
+        }
+        if (UnlimitedAdminConfig.CHAT_MODULE_ENABLED.getBoolean()) {
+            rawModules.add(new ChatModule(this));
         }
 
 
@@ -152,4 +157,5 @@ public final class UnlimitedAdmin extends JavaPlugin {
     public String getMainWorldName() {
         return mainWorldName;
     }
+
 }

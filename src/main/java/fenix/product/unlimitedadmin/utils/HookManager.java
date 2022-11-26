@@ -15,4 +15,19 @@ public class HookManager {
         return plugin != null && plugin.isEnabled();
     }
 
+    public static boolean checkEssentials() {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+        return plugin != null && plugin.isEnabled();
+    }
+
+    public static boolean checkPurpur() {
+        try {
+            Class.forName("org.purpurmc.purpur.event.PlayerAFKEvent");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+
 }
