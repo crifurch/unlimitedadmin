@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
+    private static final Pattern NicknamePattern = Pattern.compile("^[^ ]");
     public static final String CHANNEL_PREFIX = "!notification!";
     private final ChatModule chatModule;
 
@@ -69,12 +71,15 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
             return LangConfig.CHAT_NOBODY_HEAR.getText();
         }
         targetPlayers.forEach(player -> {
-            chatModule.addForAnswer(sender, player);
             final String message1 = formatForRecipient(player, formattedMessage);
             player.sendMessage(message1);
+            if (sender == player) {
+                return;
+            }
             if (sender != null) {
                 sender.sendMessage(message1);
             }
+            chatModule.addForAnswer(sender, player);
         });
         return null;
     }

@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.core;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.module.ModuleNotFoundException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
@@ -61,6 +62,9 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
             this.command.onCommand(sender, argsString);
         } catch (NotifibleException e) {
             sender.sendMessage(PlaceHolderUtils.replaceColors(e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            sender.sendMessage(PlaceHolderUtils.replaceColors(LangConfig.ERROR_WHILE_COMMAND.getText()));
         }
         return true;
     }
