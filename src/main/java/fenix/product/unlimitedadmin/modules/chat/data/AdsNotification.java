@@ -23,7 +23,7 @@ public class AdsNotification implements Runnable {
         this.interval = 20 * interval;
         this.module = chatModule;
         this.onSendMessagesConsumer = onSendMessagesConsumer;
-        task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, interval);
+        task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, this.interval);
     }
 
     public AdsNotification(ChatModule chatModule, String message, int interval) {
