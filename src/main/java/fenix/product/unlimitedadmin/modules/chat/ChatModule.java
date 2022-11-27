@@ -4,11 +4,11 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
-import fenix.product.unlimitedadmin.modules.chat.commands.AnswerCommand;
-import fenix.product.unlimitedadmin.modules.chat.commands.MsgCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.AddNotificationCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.CancelNotificationCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.NotificationsListCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.AnswerCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.MsgCommand;
 import fenix.product.unlimitedadmin.modules.chat.data.AdsNotification;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class ChatModule implements IModule {
 
@@ -50,7 +51,7 @@ public class ChatModule implements IModule {
             commands.add(new CancelNotificationCommand(this));
             commands.add(new NotificationsListCommand(this));
             commands.add(new AddNotificationCommand(this));
-            loadNotifications();
+//            loadNotifications();
         }
 
         if (ChatModuleConfig.IS_SPY_CHAT_ENABLED.getBoolean()) {
@@ -126,7 +127,7 @@ public class ChatModule implements IModule {
                 toSend = chatChannel;
             }
             if (toSend != null) {
-                final String broadcast = toSend.broadcast(sender, messageToSend);
+                final String broadcast = toSend.broadcast(sender, messageToSend, null);
                 if (broadcast != null && sender != null) {
                     sender.sendMessage(
                             PlaceHolderUtils.replacePlayerPlaceholders(broadcast)
@@ -171,23 +172,29 @@ public class ChatModule implements IModule {
     }
 
     private void loadNotifications() {
-        final ConfigurationSection section = ChatModuleConfig.ADS_MESSAGES.getSection();
-        if (section == null) return;
-        for (String key : section.getKeys(false)) {
-            try {
-                final ConfigurationSection notificationSection = section.getConfigurationSection(key);
-                if (notificationSection == null) {
-                    continue;
+        try {
+            final ConfigurationSection section = ChatModuleConfig.ADS_MESSAGES.getSection();
+            if (section == null) return;
+            for (String key : section.getKeys(false)) {
+
+                try {
+                    final ConfigurationSection notificationSection = section.getConfigurationSection(key);
+                    if (notificationSection == null) {
+                        continue;
+                    }
+                    final String message = notificationSection.getString("message");
+                    final int time = notificationSection.getInt("time");
+                    if (message == null) {
+                        continue;
+                    }
+                    plugin.getLogger().log(Level.INFO, "Register ad " + key + " with message " + message + " and time " + time);
+                    addNotification(key, message, time);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                final String message = notificationSection.getString("message");
-                final int time = notificationSection.getInt("time");
-                if (message == null) {
-                    continue;
-                }
-                addNotification(key, message, time);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

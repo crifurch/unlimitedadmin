@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public interface IChatChanel {
@@ -31,9 +32,12 @@ public interface IChatChanel {
     }
 
     @Nullable
-    default String broadcast(@Nullable Entity sender, @NotNull String message) {
+    default String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
         final List<Player> targetPlayers = getTargetPlayers(sender, null);
         final String formattedMessage = formatMessage(sender, message);
+        if (sendMessageConsumer != null) {
+            sendMessageConsumer.accept(formattedMessage);
+        }
         if (targetPlayers.isEmpty() || (targetPlayers.size() == 1 && targetPlayers.get(0) == sender)) {
             if (sender instanceof Player) {
                 sender.sendMessage(formattedMessage);

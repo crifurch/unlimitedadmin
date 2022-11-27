@@ -12,11 +12,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PlaceHolderUtils {
+    static final Pattern PLACEHOLDER_SUFFIX = Pattern.compile("%suffix");
+
     static final Map<Integer, Pattern> PLACEHOLDER_PATTERN_CACHE = new HashMap<>();
 
     static {
         for (int i = 1; i < 10; i++) {
-            PLACEHOLDER_PATTERN_CACHE.put(i, Pattern.compile("%[a-zA-Z]+" + i));
+            PLACEHOLDER_PATTERN_CACHE.put(i, Pattern.compile("%" + i + "[a-zA-Z]+"));
         }
     }
 

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class FirewallChatChannel implements IChatChanel {
     private final IChatChanel child;
@@ -45,12 +46,15 @@ public class FirewallChatChannel implements IChatChanel {
     }
 
     @Override
-    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message) {
+    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
         if (isBlocked(sender, message)) {
+            if (sendMessageConsumer != null) {
+                sendMessageConsumer.accept(child.formatMessage(sender, message));
+            }
             return getBlockedMessage(sender, message);
         }
 
-        return child.broadcast(sender, message);
+        return child.broadcast(sender, message, sendMessageConsumer);
     }
 
     boolean isBlocked(Entity sender, String message) {

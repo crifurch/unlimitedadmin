@@ -19,6 +19,11 @@ public class AddNotificationCommand implements ICommand {
     }
 
     @Override
+    public String getUsageText() {
+        return ICommand.super.getUsageText() + " <name> <seconds> ";
+    }
+
+    @Override
     public @NotNull String getName() {
         return "addAd";
     }

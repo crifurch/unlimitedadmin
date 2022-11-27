@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DublicateChildWrapper implements IChatChanel {
     private final IChatChanel child;
@@ -33,12 +34,15 @@ public class DublicateChildWrapper implements IChatChanel {
     }
 
     @Override
-    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message) {
-        final String broadcast = child.broadcast(sender, message);
-        if (dublicator != null) {
-            dublicator.onSubhandlerMessage(sender, child, message);
-        }
-        return broadcast;
+    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
+        return child.broadcast(sender, message, s -> {
+            if (sendMessageConsumer != null) {
+                sendMessageConsumer.accept(s);
+            }
+            if (dublicator != null) {
+                dublicator.onSubhandlerMessage(sender, child, s);
+            }
+        });
     }
 
     @Override

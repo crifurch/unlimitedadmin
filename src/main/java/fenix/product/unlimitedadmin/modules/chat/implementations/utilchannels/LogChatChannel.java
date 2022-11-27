@@ -31,6 +31,7 @@ public class LogChatChannel implements ISubhandlerChannel {
         return "log";
     }
 
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public String onSubhandlerMessage(@Nullable Entity sender, IChatChanel parent, String message) {

@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.modules.chat.commands;
+package fenix.product.unlimitedadmin.modules.chat.commands.privatemessages;
 
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
@@ -28,6 +28,11 @@ public class AnswerCommand implements ICommand {
     @Override
     public @Nullable List<String> getAliases() {
         return Arrays.asList("a", "r", "reply");
+    }
+
+    @Override
+    public byte getMinArgsSize() {
+        return 1;
     }
 
     @Override

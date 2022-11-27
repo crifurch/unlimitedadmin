@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.modules.chat.commands;
+package fenix.product.unlimitedadmin.modules.chat.commands.privatemessages;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;

@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
     private static final Pattern NicknamePattern = Pattern.compile("^%[^ ]+% ");
-    public static final String CHANNEL_PREFIX = "!notification!";
+    public static final String CHANNEL_PREFIX = "!private!";
     private final ChatModule chatModule;
 
     public PrivateMessageChatChannel(ChatModule chatModule) {
@@ -50,7 +51,7 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
     }
 
     @Override
-    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message) {
+    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
         final Matcher matcher = NicknamePattern.matcher(message);
         if (!matcher.find()) {
             return LangConfig.NO_SUCH_PLAYER.getText();
@@ -74,6 +75,9 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
         }
         targetPlayers.forEach(player -> {
             final String message1 = formatForRecipient(player, formattedMessage);
+            if (sendMessageConsumer != null) {
+                sendMessageConsumer.accept(message1);
+            }
             player.sendMessage(message1);
             if (sender == player) {
                 return;
