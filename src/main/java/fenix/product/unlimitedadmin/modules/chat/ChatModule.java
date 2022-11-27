@@ -11,7 +11,7 @@ import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.Answer
 import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.MsgCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.say.SayCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.say.SayLaterCommand;
-import fenix.product.unlimitedadmin.modules.chat.data.AdsNotification;
+import fenix.product.unlimitedadmin.modules.chat.data.Notification;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
@@ -43,14 +43,14 @@ public class ChatModule implements IModule {
     private final List<IChatChanel> chatChannels = new ArrayList<>();
     private SpyChatChannel spyChatChannel;
     private LogChatChannel logChatChannel;
-    private final Map<String, AdsNotification> adsNotifications = new HashMap<>();
+    private final Map<String, Notification> adsNotifications = new HashMap<>();
     private final Map<Player, Player> answerMap = new HashMap<>();
 
     public ChatModule(@NotNull UnlimitedAdmin plugin) {
         this.plugin = plugin;
         ChatModuleConfig.init(this);
         plugin.getServer().getPluginManager().registerEvents(new ChatMessageListener(this), plugin);
-        if (ChatModuleConfig.ADS_ENABLED.getBoolean()) {
+        if (ChatModuleConfig.NOTIFICATIONS_ENABLED.getBoolean()) {
             commands.add(new CancelNotificationCommand(this));
             commands.add(new NotificationsListCommand(this));
             commands.add(new AddNotificationCommand(this));
@@ -169,7 +169,7 @@ public class ChatModule implements IModule {
         if (adsNotifications.containsKey(name)) {
             return false;
         }
-        final AdsNotification value = new AdsNotification(this, message, time, onMessage);
+        final Notification value = new Notification(this, message, time, onMessage);
         adsNotifications.put(name, value);
         value.run();
         return true;
@@ -183,7 +183,7 @@ public class ChatModule implements IModule {
         if (adsNotifications.containsKey(name)) {
             return false;
         }
-        final AdsNotification value = new AdsNotification(this, message, time, s -> {
+        final Notification value = new Notification(this, message, time, s -> {
             cancelNotification(name);
             if (onMessage != null) {
                 onMessage.accept(s);
@@ -195,7 +195,7 @@ public class ChatModule implements IModule {
     }
 
     public boolean cancelNotification(String name) {
-        final AdsNotification remove = adsNotifications.remove(name);
+        final Notification remove = adsNotifications.remove(name);
         if (remove != null) {
             remove.stop();
         }
@@ -204,7 +204,7 @@ public class ChatModule implements IModule {
 
     private void loadNotifications() {
         try {
-            final ConfigurationSection section = ChatModuleConfig.ADS_MESSAGES.getSection();
+            final ConfigurationSection section = ChatModuleConfig.NOTIFICATION_MESSAGES.getSection();
             if (section == null) return;
             for (String key : section.getKeys(false)) {
 

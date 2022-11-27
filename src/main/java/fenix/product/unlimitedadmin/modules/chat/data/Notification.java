@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.function.Consumer;
 
-public class AdsNotification implements Runnable {
+public class Notification implements Runnable {
     private final String message;
     private final int interval;
     private final ChatModule module;
@@ -17,14 +17,14 @@ public class AdsNotification implements Runnable {
 
     private BukkitTask task;
 
-    public AdsNotification(ChatModule chatModule, String message, int interval, Consumer<String> onSendMessagesConsumer) {
+    public Notification(ChatModule chatModule, String message, int interval, Consumer<String> onSendMessagesConsumer) {
         this.message = NotificationsChatChannel.CHANNEL_PREFIX + message;
         this.interval = 20 * interval;
         this.module = chatModule;
         this.onSendMessagesConsumer = onSendMessagesConsumer;
     }
 
-    public AdsNotification(ChatModule chatModule, String message, int interval) {
+    public Notification(ChatModule chatModule, String message, int interval) {
         this.message = NotificationsChatChannel.CHANNEL_PREFIX + message;
         this.interval = 20 * interval;
         this.module = chatModule;

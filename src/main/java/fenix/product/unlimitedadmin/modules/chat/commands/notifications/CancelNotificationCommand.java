@@ -18,7 +18,7 @@ public class CancelNotificationCommand implements ICommand {
 
     @Override
     public String getName() {
-        return "cancelad";
+        return "cancelnotif";
     }
 
 

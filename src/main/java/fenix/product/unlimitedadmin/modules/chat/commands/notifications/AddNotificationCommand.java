@@ -25,7 +25,7 @@ public class AddNotificationCommand implements ICommand {
 
     @Override
     public @NotNull String getName() {
-        return "addAd";
+        return "addnotif";
     }
 
     @Override
