@@ -122,7 +122,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
             ) {
                 tabCompletions = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName)
                         .sorted().collect(Collectors.toList());
-                if (PermissionsProvider.getInstance().havePermissionOrOp(sender,
+                if (PermissionsProvider.getInstance().havePermission(sender,
                         ICommand.baseCommandPermission + ".completion.offline") == PermissionStatus.PERMISSION_TRUE) {
                     final List<String> allPlayers = executor.plugin.getPlayersMapModule().getPlayers().stream()
                             .map(cachedPlayer -> cachedPlayer.name).collect(Collectors.toList());

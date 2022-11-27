@@ -27,6 +27,9 @@ public class StandardPermissions implements PermissionPlugin {
 
     @Override
     public PermissionStatus havePermission(Player p, String permission) {
+        if (p.isOp()) {
+            return PermissionStatus.PERMISSION_TRUE;
+        }
         if (!p.isPermissionSet(permission)) {
             return PermissionStatus.PERMISSION_UNSET;
         }
@@ -35,7 +38,7 @@ public class StandardPermissions implements PermissionPlugin {
     }
 
     @Override
-    public PermissionStatus havePermissionOrOp(CommandSender p, String permission) {
+    public PermissionStatus havePermission(CommandSender p, String permission) {
         if (p.isOp()) {
             return PermissionStatus.PERMISSION_TRUE;
         }

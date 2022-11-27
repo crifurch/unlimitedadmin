@@ -69,7 +69,7 @@ public interface ICommand extends ICommandDataProvider {
     }
 
     default void assertOtherPermission(CommandSender sender) throws CommandOtherPermissionsException {
-        if (PermissionsProvider.getInstance().havePermissionOrOp(sender,
+        if (PermissionsProvider.getInstance().havePermission(sender,
                 AdditionalPermissions.OTHER.getPermissionForCommand(this)) != PermissionStatus.PERMISSION_TRUE) {
             throw new CommandOtherPermissionsException();
         }

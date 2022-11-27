@@ -39,10 +39,10 @@ public class LogChatChannel implements ISubhandlerChannel {
         if (!(iChatChanel instanceof ILoggedChat)) {
             return null;
         }
+        String logPrefix = ((ILoggedChat) iChatChanel).getLogPrefix();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("[dd/MM/yyyy HH:mm:ss]");
         DateTimeFormatter dtFile = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime now = LocalDateTime.now();
-        String logPrefix = ((ILoggedChat) iChatChanel).getLogPrefix();
         String logFileName = dtFile.format(now) + ".log";
         if (logFile == null || !logFile.getName().equals(logFileName) || !logFile.exists()) {
             logFile = new File(UnlimitedAdmin.getInstance().getModuleFolder(chatModule), "logs");
@@ -58,7 +58,7 @@ public class LogChatChannel implements ISubhandlerChannel {
         }
         logFile.setWritable(true);
 
-        String formatMessage = pattern.matcher(iChatChanel.formatMessage(sender, message)).replaceAll("");
+        String formatMessage = pattern.matcher(message).replaceAll("");
         String logMessage = dtf.format(now) + " " + logPrefix + " " + formatMessage;
         try {
             BufferedWriter output = new BufferedWriter(new FileWriter(logFile, true));

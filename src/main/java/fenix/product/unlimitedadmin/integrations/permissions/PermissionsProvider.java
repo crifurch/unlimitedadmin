@@ -50,7 +50,7 @@ public class PermissionsProvider implements PermissionPlugin {
         return handler.havePermission(p, permission);
     }
 
-    public PermissionStatus havePermissionOrOp(CommandSender p, String permission) {
-        return handler.havePermissionOrOp(p, permission);
+    public PermissionStatus havePermission(CommandSender p, String permission) {
+        return handler.havePermission(p, permission);
     }
 }

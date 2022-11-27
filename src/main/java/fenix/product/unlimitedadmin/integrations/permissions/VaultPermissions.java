@@ -54,14 +54,7 @@ public class VaultPermissions implements PermissionPlugin {
         return chat.getPlayerGroups(p);
     }
 
-    @Override
-    public PermissionStatus havePermission(Player p, String permission) {
-        return p.isPermissionSet(permission) ? (VaultPermissions.permission.playerHas(p, permission) ?
-                PermissionStatus.PERMISSION_TRUE :
-                PermissionStatus.PERMISSION_FALSE
-        )
-                : PermissionStatus.PERMISSION_UNSET;
-    }
+
 
     @Override
     public String getName() {
@@ -87,7 +80,19 @@ public class VaultPermissions implements PermissionPlugin {
     }
 
     @Override
-    public PermissionStatus havePermissionOrOp(CommandSender p, String permission) {
+    public PermissionStatus havePermission(Player p, String permission) {
+        if (p.isOp()) {
+            return PermissionStatus.PERMISSION_TRUE;
+        }
+        return p.isPermissionSet(permission) ? (VaultPermissions.permission.playerHas(p, permission) ?
+                PermissionStatus.PERMISSION_TRUE :
+                PermissionStatus.PERMISSION_FALSE
+        )
+                : PermissionStatus.PERMISSION_UNSET;
+    }
+
+    @Override
+    public PermissionStatus havePermission(CommandSender p, String permission) {
         if (p.isOp()) {
             return PermissionStatus.PERMISSION_TRUE;
         }
