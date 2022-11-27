@@ -33,8 +33,10 @@ public class LocalChatChannel implements ILoggedChat, ISpiedChat {
                     return true;
                 }
                 final boolean isInSameWorlds = targetPlayer.getWorld() == player.getWorld();
-                final boolean isInRange = targetPlayer.getLocation().distanceSquared(player.getLocation()) <= squaredRadius;
-                return isInSameWorlds && isInRange;
+                if (!isInSameWorlds) {
+                    return false;
+                }
+                return targetPlayer.getLocation().distanceSquared(player.getLocation()) <= squaredRadius;
             }).collect(Collectors.toList());
         }
         return targetPlayers;

@@ -60,7 +60,7 @@ public class CommandsRegister {
         if (command.getAliases() != null) {
             aliases.addAll(command.getAliases());
         }
-        return registerCommand();
+        return registerCommand(aliases.toArray(new String[0]));
     }
 
     private static CommandMap getCommandMap() {
