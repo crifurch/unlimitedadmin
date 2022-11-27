@@ -15,10 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
-    private static final Pattern NicknamePattern = Pattern.compile("^[^ ]");
+    private static final Pattern NicknamePattern = Pattern.compile("^%[^ ]+% ");
     public static final String CHANNEL_PREFIX = "!notification!";
     private final ChatModule chatModule;
 
@@ -29,13 +30,13 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
     @NotNull
     public static String prepareMessage(@NotNull String message, Entity... receivers) {
         final String receiversNames = String.join(",", Arrays.stream(receivers).map(Entity::getName).toArray(String[]::new));
-        return CHANNEL_PREFIX + "%" + receiversNames + "%" + message;
+        return CHANNEL_PREFIX + "%" + receiversNames + "% " + message;
     }
 
     @NotNull
     public static String prepareMessage(@NotNull String message, String... receivers) {
         final String receiversNames = String.join(",", receivers);
-        return CHANNEL_PREFIX + "%" + receiversNames + "%" + message;
+        return CHANNEL_PREFIX + "%" + receiversNames + "% " + message;
     }
 
     @Override
@@ -50,20 +51,21 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
 
     @Override
     public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message) {
-        if (message.startsWith("%")) {
+        final Matcher matcher = NicknamePattern.matcher(message);
+        if (!matcher.find()) {
             return LangConfig.NO_SUCH_PLAYER.getText();
         }
-        int index = message.indexOf("%", 1);
-        final String targetName = message.substring(1, index);
+        final String receiversNames = matcher.group().substring(1, matcher.group().length() - 1);
         List<String> filteredNicknames = new ArrayList<>();
-        if (targetName.contains(",")) {
-            String[] split = targetName.split(",");
+        if (receiversNames.contains(",")) {
+            String[] split = receiversNames.split(",");
             Collections.addAll(filteredNicknames, split);
         } else {
-            filteredNicknames.add(targetName);
+            filteredNicknames.add(receiversNames);
         }
         final List<Player> targetPlayers = getTargetPlayers(sender, filteredNicknames);
-        final String formattedMessage = formatMessage(sender, message.substring(index + 1));
+        final String pureMessage = message.substring(matcher.end());
+        final String formattedMessage = formatMessage(sender, pureMessage);
         if (targetPlayers.isEmpty()) {
             if (!ChatModuleConfig.SHOW_NOBODY_HEAR_YOU_MESSAGE.getBoolean()) {
                 return null;
