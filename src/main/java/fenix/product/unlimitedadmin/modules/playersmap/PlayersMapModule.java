@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -69,6 +70,13 @@ public class PlayersMapModule implements IModule, Listener {
 
     @EventHandler
     public void onPlayerLogout(PlayerQuitEvent event) {
+        final Player player = event.getPlayer();
+        PlayerDataHelper.setPlayerWorld(player.getUniqueId(), player.getWorld());
+    }
+
+
+    @EventHandler
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
         final Player player = event.getPlayer();
         PlayerDataHelper.setPlayerWorld(player.getUniqueId(), player.getWorld());
     }
