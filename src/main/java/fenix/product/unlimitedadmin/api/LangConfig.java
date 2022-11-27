@@ -42,6 +42,7 @@ public enum LangConfig {
     DONATION_AMOUNT("donation_amount", "Caps amount: %s"),
 
     CHAT_NOBODY_HEAR("chat.nobody_hear", "&4Nobody hear your message"),
+    CHAT_NO_ONE_TO_ANSWER("chat.no_one_to_answer", "&4You have no one to answer"),
     ;
 
 

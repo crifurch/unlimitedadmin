@@ -62,7 +62,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         try {
             this.command.onCommand(sender, argsString);
         } catch (NotifibleException e) {
-            sender.sendMessage(e.getMessage());
+            sender.sendMessage(PlaceHolderUtils.replaceColors(e.getMessage()));
         }
         return true;
     }

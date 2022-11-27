@@ -4,10 +4,13 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
+import fenix.product.unlimitedadmin.modules.chat.commands.AnswerCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.MsgCommand;
 import fenix.product.unlimitedadmin.modules.chat.data.AdsNotification;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
+import fenix.product.unlimitedadmin.modules.chat.implementations.channels.PrivateMessageChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.DublicateChildWrapper;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.FirewallChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.LogChatChannel;
@@ -17,12 +20,11 @@ import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import fenix.product.unlimitedadmin.modules.chat.listeners.ChatMessageListener;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class ChatModule implements IModule {
 
@@ -34,6 +36,7 @@ public class ChatModule implements IModule {
     private SpyChatChannel spyChatChannel;
     private LogChatChannel logChatChannel;
     private List<AdsNotification> adsNotifications = new ArrayList<>();
+    private Map<Player, Player> answerMap = new HashMap<>();
 
     public ChatModule(@NotNull UnlimitedAdmin plugin) {
         this.plugin = plugin;
@@ -57,7 +60,11 @@ public class ChatModule implements IModule {
         if (ChatModuleConfig.IS_LOCAL_CHAT_ENABLED.getBoolean()) {
             addChatChannel(new LocalChatChannel());
         }
-
+        if (ChatModuleConfig.IS_PRIVATE_CHAT_ENABLED.getBoolean()) {
+            addChatChannel(new PrivateMessageChatChannel(this));
+            commands.add(new MsgCommand(this));
+            commands.add(new AnswerCommand(this));
+        }
 
     }
 
@@ -115,12 +122,25 @@ public class ChatModule implements IModule {
                 final String broadcast = toSend.broadcast(sender, messageToSend);
                 if (broadcast != null && sender != null) {
                     sender.sendMessage(
-                            PlaceHolderUtils.replacePlayerPlaceholders(null, broadcast)
+                            PlaceHolderUtils.replacePlayerPlaceholders(broadcast)
                     );
                 }
                 return;
             }
         }
+    }
+
+    public void addForAnswer(Entity sender, Player receiver) {
+        if (sender instanceof Player) {
+            answerMap.put(receiver, (Player) sender);
+        } else {
+            answerMap.remove(receiver);
+        }
+    }
+
+    @Nullable
+    public Player getForAnswer(Player receiver) {
+        return answerMap.get(receiver);
     }
 
 }

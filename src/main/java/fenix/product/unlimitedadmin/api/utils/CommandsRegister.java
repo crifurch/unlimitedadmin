@@ -9,7 +9,10 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 
 public class CommandsRegister {
@@ -17,7 +20,7 @@ public class CommandsRegister {
     private static Plugin plugin;
 
     public static CommandsRegister getInstance() {
-        if(INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new CommandsRegister();
         }
         return INSTANCE;
@@ -25,19 +28,6 @@ public class CommandsRegister {
 
     public static void init(Plugin plugin) {
         CommandsRegister.plugin = plugin;
-    }
-
-    public PluginCommand registerCommand(ICommand command) {
-        return registerCommand(command.getName());
-    }
-
-    public PluginCommand registerCommand(String... aliases) {
-        PluginCommand command = getCommand(aliases[0], plugin);
-
-        command.setAliases(Arrays.asList(aliases));
-        getCommandMap().register(plugin.getDescription().getName(), command);
-        plugin.getLogger().log(Level.INFO, "Success register command " + command.getName());
-        return command;
     }
 
     private static PluginCommand getCommand(String name, Plugin plugin) {
@@ -49,11 +39,28 @@ public class CommandsRegister {
 
             command = c.newInstance(name, plugin);
         } catch (SecurityException | InvocationTargetException | IllegalArgumentException
-                | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
+                 | IllegalAccessException | InstantiationException | NoSuchMethodException e) {
             e.printStackTrace();
         }
 
         return command;
+    }
+
+    public PluginCommand registerCommand(String... aliases) {
+        PluginCommand command = getCommand(aliases[0], plugin);
+
+        command.setAliases(Arrays.asList(aliases));
+        getCommandMap().register(plugin.getDescription().getName(), command);
+        plugin.getLogger().log(Level.INFO, "Success register command " + command.getName());
+        return command;
+    }
+
+    public PluginCommand registerCommand(ICommand command) {
+        List<String> aliases = new ArrayList<>(Collections.singletonList(command.getName()));
+        if (command.getAliases() != null) {
+            aliases.addAll(command.getAliases());
+        }
+        return registerCommand();
     }
 
     private static CommandMap getCommandMap() {

@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.api.exceptions.module.ModuleNotFoundExceptio
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
+import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -59,7 +60,7 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
         try {
             this.command.onCommand(sender, argsString);
         } catch (NotifibleException e) {
-            sender.sendMessage(e.getMessage());
+            sender.sendMessage(PlaceHolderUtils.replaceColors(e.getMessage()));
         }
         return true;
     }

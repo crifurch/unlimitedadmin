@@ -13,6 +13,12 @@ public interface ICommandDataProvider {
 
     @NotNull
     String getName();
+
+    @Nullable
+    default List<String> getAliases() {
+        return null;
+    }
+
     default byte getMaxArgsSize() {
         return Byte.MAX_VALUE;
     }

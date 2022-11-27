@@ -62,7 +62,7 @@ public interface IChatChanel {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        String format = PlaceHolderUtils.replacePlayerPlaceholders(player, getFormat());
+        String format = PlaceHolderUtils.replacePlayerPlaceholders(getFormat(), player);
         return format.replace("%message", message);
     }
 }

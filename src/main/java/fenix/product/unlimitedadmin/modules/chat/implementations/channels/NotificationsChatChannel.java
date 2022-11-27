@@ -23,6 +23,6 @@ public class NotificationsChatChannel implements ILoggedChat {
     @Override
     public String formatMessage(@Nullable Entity sender, @NotNull String message) {
         final String s = ILoggedChat.super.formatMessage(sender, message);
-        return PlaceHolderUtils.replacePlayerPlaceholders(null, s);
+        return PlaceHolderUtils.replaceColors(s);
     }
 }
