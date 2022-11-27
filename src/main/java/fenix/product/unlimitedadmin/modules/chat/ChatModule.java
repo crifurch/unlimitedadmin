@@ -51,7 +51,7 @@ public class ChatModule implements IModule {
             commands.add(new CancelNotificationCommand(this));
             commands.add(new NotificationsListCommand(this));
             commands.add(new AddNotificationCommand(this));
-//            loadNotifications();
+            loadNotifications();
         }
 
         if (ChatModuleConfig.IS_SPY_CHAT_ENABLED.getBoolean()) {
@@ -166,7 +166,7 @@ public class ChatModule implements IModule {
     public boolean cancelNotification(String name) {
         final AdsNotification remove = adsNotifications.remove(name);
         if (remove != null) {
-            remove.cancel();
+            remove.stop();
         }
         return remove != null;
     }
@@ -183,8 +183,8 @@ public class ChatModule implements IModule {
                         continue;
                     }
                     final String message = notificationSection.getString("message");
-                    final int time = notificationSection.getInt("time");
-                    if (message == null) {
+                    final int time = notificationSection.getInt("interval");
+                    if (message == null || time == 0) {
                         continue;
                     }
                     plugin.getLogger().log(Level.INFO, "Register ad " + key + " with message " + message + " and time " + time);

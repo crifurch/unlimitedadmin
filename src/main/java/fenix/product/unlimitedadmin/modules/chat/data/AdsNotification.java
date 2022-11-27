@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 
 public class AdsNotification implements Runnable {
     private final String message;
@@ -12,16 +13,18 @@ public class AdsNotification implements Runnable {
 
     private boolean running = true;
 
+    private BukkitTask task;
+
     public AdsNotification(ChatModule chatModule, String message, int interval) {
-        assert interval > 0;
         this.message = NotificationsChatChannel.CHANNEL_PREFIX + message;
         this.interval = 20 * interval;
         this.module = chatModule;
         run();
     }
 
-    public void cancel() {
+    public void stop() {
         running = false;
+        if (task != null) task.cancel();
     }
 
     public String getMessage() {
@@ -36,6 +39,11 @@ public class AdsNotification implements Runnable {
     public void run() {
         if (!running) return;
         module.broadcastMessage(null, message);
-        Bukkit.getServer().getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, interval);
+        if (interval > 0) {
+            task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, interval);
+        } else {
+            running = false;
+            task = null;
+        }
     }
 }

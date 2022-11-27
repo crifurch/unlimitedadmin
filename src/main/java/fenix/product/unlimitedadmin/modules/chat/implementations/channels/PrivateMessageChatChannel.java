@@ -56,7 +56,7 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
         if (!matcher.find()) {
             return LangConfig.NO_SUCH_PLAYER.getText();
         }
-        final String receiversNames = matcher.group().substring(1, matcher.group().length() - 1);
+        final String receiversNames = matcher.group().substring(1, matcher.group().length() - 2);
         List<String> filteredNicknames = new ArrayList<>();
         if (receiversNames.contains(",")) {
             String[] split = receiversNames.split(",");
