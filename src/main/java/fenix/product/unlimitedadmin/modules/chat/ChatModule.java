@@ -161,32 +161,36 @@ public class ChatModule implements IModule {
         return adsNotifications.keySet();
     }
 
-    public boolean addNotification(String name, String message, int time) {
-        return addNotification(name, message, time, null);
+    public boolean addCyclicNotification(String name, String message, int time) {
+        return addCyclicNotification(name, message, time, null);
     }
 
-    public boolean addNotification(String name, String message, int time, Consumer<String> onMessage) {
+    public boolean addCyclicNotification(String name, String message, int time, Consumer<String> onMessage) {
         if (adsNotifications.containsKey(name)) {
             return false;
         }
-        adsNotifications.put(name, new AdsNotification(this, message, time, onMessage));
+        final AdsNotification value = new AdsNotification(this, message, time, onMessage);
+        adsNotifications.put(name, value);
+        value.run();
         return true;
     }
 
-    public boolean addOneTimeNotification(String name, String message, int time) {
-        return addOneTimeNotification(name, message, time, null);
+    public boolean addDelayedNotification(String name, String message, int time) {
+        return addDelayedNotification(name, message, time, null);
     }
 
-    public boolean addOneTimeNotification(String name, String message, int time, Consumer<String> onMessage) {
+    public boolean addDelayedNotification(String name, String message, int time, Consumer<String> onMessage) {
         if (adsNotifications.containsKey(name)) {
             return false;
         }
-        adsNotifications.put(name, new AdsNotification(this, message, time, s -> {
+        final AdsNotification value = new AdsNotification(this, message, time, s -> {
             cancelNotification(name);
             if (onMessage != null) {
                 onMessage.accept(s);
             }
-        }));
+        });
+        adsNotifications.put(name, value);
+        value.schedule();
         return true;
     }
 
@@ -215,7 +219,7 @@ public class ChatModule implements IModule {
                         continue;
                     }
                     plugin.getLogger().log(Level.INFO, "Register ad " + key + " with message " + message + " and time " + time);
-                    addNotification(key, message, time);
+                    addCyclicNotification(key, message, time);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -56,7 +56,7 @@ public class SayLaterCommand implements ICommand {
             name = "saylater" + i;
             i++;
         }
-        if (!chatModule.addOneTimeNotification(name, message, seconds)) {
+        if (!chatModule.addDelayedNotification(name, message, seconds)) {
             throw new RuntimeException("Could not add notification");
         }
     }

@@ -14,7 +14,6 @@ public class AdsNotification implements Runnable {
     private final ChatModule module;
 
     private final Consumer<String> onSendMessagesConsumer;
-    private boolean running = true;
 
     private BukkitTask task;
 
@@ -23,7 +22,6 @@ public class AdsNotification implements Runnable {
         this.interval = 20 * interval;
         this.module = chatModule;
         this.onSendMessagesConsumer = onSendMessagesConsumer;
-        task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, this.interval);
     }
 
     public AdsNotification(ChatModule chatModule, String message, int interval) {
@@ -31,12 +29,19 @@ public class AdsNotification implements Runnable {
         this.interval = 20 * interval;
         this.module = chatModule;
         this.onSendMessagesConsumer = null;
-        task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, this.interval);
     }
 
     public void stop() {
-        running = false;
         if (task != null) task.cancel();
+    }
+
+    public void schedule() {
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(UnlimitedAdmin.getInstance(), this, 0, interval);
+    }
+
+    public void start() {
+        if (task != null) return;
+        run();
     }
 
     public String getMessage() {
@@ -49,13 +54,11 @@ public class AdsNotification implements Runnable {
 
     @Override
     public void run() {
-        if (!running) return;
         module.broadcastMessage(null, message);
         if (interval > 0) {
             task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, interval);
         } else {
-            running = false;
-            task = null;
+            stop();
         }
         if (onSendMessagesConsumer != null) onSendMessagesConsumer.accept(message);
     }

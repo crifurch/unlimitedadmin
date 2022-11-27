@@ -50,7 +50,7 @@ public class AddNotificationCommand implements ICommand {
         final String name = argsString.get(0);
         final int interval = (int) Double.parseDouble(argsString.get(1));
         final String message = String.join(" ", argsString.subList(2, argsString.size()));
-        final boolean b = chatModule.addNotification(name, message, interval);
+        final boolean b = chatModule.addCyclicNotification(name, message, interval);
         if (!b) throw new NotifibleException(LangConfig.NOTIFICATIONS_REMOVE_BEFORE_ADD.getText(name));
     }
 }
