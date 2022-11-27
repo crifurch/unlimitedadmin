@@ -43,6 +43,9 @@ public enum LangConfig {
 
     CHAT_NOBODY_HEAR("chat.nobody_hear", "&4Nobody hear your message"),
     CHAT_NO_ONE_TO_ANSWER("chat.no_one_to_answer", "&4You have no one to answer"),
+
+    NO_SUCH_NOTIFICATION("notification.no", "No such notification %s"),
+    NOTIFICATIONS_REMOVE_BEFORE_ADD("notification.remove_before_add", "Remove notification with name %s before add"),
     ;
 
 

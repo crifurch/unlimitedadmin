@@ -27,7 +27,14 @@ public enum ChatModuleConfig implements IConfig {
     PRIVATE_CHAT_FORMAT("chat.private.format", "&f[%prefix%displayname%suffix -> %prefix2%displayname2%suffix2]: &e%message", "format of private chat"),
     IS_LOG_CHAT_ENABLED("log.enabled", true, "if true, log chat will be enabled, if false, log chat will be disabled"),
     SHOW_NOBODY_HEAR_YOU_MESSAGE("show-nobody-hear-you-message", true, "if true, nobody hear you message will be shown, if false, nobody hear you message will be hidden"),
-    ADS_ENABLED("ads.enabled", true, "if true, ads will be enabled, if false, ads will be disabled"),
+    ADS_ENABLED("ads.enabled", true, "if true, ads will be enabled\n" +
+            "example of ads:\n" +
+            "  ads:\n" +
+            "    messages: \n" +
+            "      test:\n" +
+            "        message: \"&eThis is test message\"\n" +
+            "        interval: 10\n"),
+    ADS_MESSAGES("ads.messages", null, "list of ads messages", true),
 
     ;
 

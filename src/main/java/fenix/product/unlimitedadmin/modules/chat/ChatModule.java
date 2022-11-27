@@ -6,6 +6,9 @@ import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.commands.AnswerCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.MsgCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.notifications.AddNotificationCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.notifications.CancelNotificationCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.notifications.NotificationsListCommand;
 import fenix.product.unlimitedadmin.modules.chat.data.AdsNotification;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
@@ -19,6 +22,7 @@ import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import fenix.product.unlimitedadmin.modules.chat.listeners.ChatMessageListener;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,15 +39,18 @@ public class ChatModule implements IModule {
     private final List<IChatChanel> chatChannels = new ArrayList<>();
     private SpyChatChannel spyChatChannel;
     private LogChatChannel logChatChannel;
-    private List<AdsNotification> adsNotifications = new ArrayList<>();
-    private Map<Player, Player> answerMap = new HashMap<>();
+    private final Map<String, AdsNotification> adsNotifications = new HashMap<>();
+    private final Map<Player, Player> answerMap = new HashMap<>();
 
     public ChatModule(@NotNull UnlimitedAdmin plugin) {
         this.plugin = plugin;
         ChatModuleConfig.init(this);
         plugin.getServer().getPluginManager().registerEvents(new ChatMessageListener(this), plugin);
         if (ChatModuleConfig.ADS_ENABLED.getBoolean()) {
-            adsNotifications.add(new AdsNotification(this, "&etest", 10));
+            commands.add(new CancelNotificationCommand(this));
+            commands.add(new NotificationsListCommand(this));
+            commands.add(new AddNotificationCommand(this));
+            loadNotifications();
         }
 
         if (ChatModuleConfig.IS_SPY_CHAT_ENABLED.getBoolean()) {
@@ -141,6 +148,47 @@ public class ChatModule implements IModule {
     @Nullable
     public Player getForAnswer(Player receiver) {
         return answerMap.get(receiver);
+    }
+
+    public Collection<String> getNotificationNames() {
+        return adsNotifications.keySet();
+    }
+
+    public boolean addNotification(String name, String message, int time) {
+        if (adsNotifications.containsKey(name)) {
+            return false;
+        }
+        adsNotifications.put(name, new AdsNotification(this, message, time));
+        return true;
+    }
+
+    public boolean cancelNotification(String name) {
+        final AdsNotification remove = adsNotifications.remove(name);
+        if (remove != null) {
+            remove.cancel();
+        }
+        return remove != null;
+    }
+
+    private void loadNotifications() {
+        final ConfigurationSection section = ChatModuleConfig.ADS_MESSAGES.getSection();
+        if (section == null) return;
+        for (String key : section.getKeys(false)) {
+            try {
+                final ConfigurationSection notificationSection = section.getConfigurationSection(key);
+                if (notificationSection == null) {
+                    continue;
+                }
+                final String message = notificationSection.getString("message");
+                final int time = notificationSection.getInt("time");
+                if (message == null) {
+                    continue;
+                }
+                addNotification(key, message, time);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
