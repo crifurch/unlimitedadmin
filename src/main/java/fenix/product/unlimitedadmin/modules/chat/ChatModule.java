@@ -9,6 +9,8 @@ import fenix.product.unlimitedadmin.modules.chat.commands.notifications.CancelNo
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.NotificationsListCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.AnswerCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.MsgCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.say.SayCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.say.SayLaterCommand;
 import fenix.product.unlimitedadmin.modules.chat.data.AdsNotification;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
@@ -29,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class ChatModule implements IModule {
@@ -73,6 +76,9 @@ public class ChatModule implements IModule {
             commands.add(new MsgCommand(this));
             commands.add(new AnswerCommand(this));
         }
+
+        commands.add(new SayCommand(this));
+        commands.add(new SayLaterCommand(this));
 
     }
 
@@ -156,10 +162,31 @@ public class ChatModule implements IModule {
     }
 
     public boolean addNotification(String name, String message, int time) {
+        return addNotification(name, message, time, null);
+    }
+
+    public boolean addNotification(String name, String message, int time, Consumer<String> onMessage) {
         if (adsNotifications.containsKey(name)) {
             return false;
         }
-        adsNotifications.put(name, new AdsNotification(this, message, time));
+        adsNotifications.put(name, new AdsNotification(this, message, time, onMessage));
+        return true;
+    }
+
+    public boolean addOneTimeNotification(String name, String message, int time) {
+        return addOneTimeNotification(name, message, time, null);
+    }
+
+    public boolean addOneTimeNotification(String name, String message, int time, Consumer<String> onMessage) {
+        if (adsNotifications.containsKey(name)) {
+            return false;
+        }
+        adsNotifications.put(name, new AdsNotification(this, message, time, s -> {
+            cancelNotification(name);
+            if (onMessage != null) {
+                onMessage.accept(s);
+            }
+        }));
         return true;
     }
 

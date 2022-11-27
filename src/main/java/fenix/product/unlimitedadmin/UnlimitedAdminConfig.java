@@ -17,7 +17,9 @@ public enum UnlimitedAdminConfig {
     MAINTAIN_MODULE_ENABLED("modules.maintain", true, "Manage your server when maintain"),
     SHOP_MODULE_ENABLED("modules.shop", true, "Manage your donate shop"),
 
-    CHAT_MODULE_ENABLED("modules.chat", true, "Manage your chats");
+    CHAT_MODULE_ENABLED("modules.chat", true, "Manage your chats"),
+    SERVER_NAME("server", "Server", "Server name"),
+    ;
 
 
     private final Object value;
@@ -34,6 +36,10 @@ public enum UnlimitedAdminConfig {
 
     public boolean getBoolean() {
         return cfg.getBoolean(path);
+    }
+
+    public String getString() {
+        return cfg.getString(path);
     }
 
     public static void load() {

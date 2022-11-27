@@ -46,6 +46,8 @@ public enum LangConfig {
 
     NO_SUCH_NOTIFICATION("notification.no", "No such notification %s"),
     NOTIFICATIONS_REMOVE_BEFORE_ADD("notification.remove_before_add", "Remove notification with name %s before add"),
+
+    MAX_SAY_DELAY_ERROR("notification.max_say_delay_error", "Max say delay is %s"),
     ;
 
 
