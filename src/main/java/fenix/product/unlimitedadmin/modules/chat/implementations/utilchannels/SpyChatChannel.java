@@ -34,7 +34,11 @@ public class SpyChatChannel implements ISubhandlerChannel {
             return null;
         }
         final List<Player> parentTargetPlayers = parent.getTargetPlayers(sender, null);
-        final String formattedMessage = formatMessage(sender, ((ISpiedChat) iChatChanel).getSpyPrefix() + " " + iChatChanel.formatMessage(sender, message));
+        String parentFormattedMessage = iChatChanel.formatMessage(sender, message);
+        if (ChatModuleConfig.SPY_CHAT_SHOW_CHANNEL.getBoolean()) {
+            parentFormattedMessage = ((ISpiedChat) iChatChanel).getSpyPrefix() + " " + parentFormattedMessage;
+        }
+        final String formattedMessage = formatMessage(sender, parentFormattedMessage);
         getTargetPlayers(sender, null).forEach(targetPlayer -> {
             if (parentTargetPlayers.contains(targetPlayer)) {
                 return;

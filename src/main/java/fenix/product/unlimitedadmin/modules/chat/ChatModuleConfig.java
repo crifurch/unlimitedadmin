@@ -11,7 +11,7 @@ import java.util.Arrays;
 public enum ChatModuleConfig implements IConfig {
     IS_GLOBAL_CHAT_WORLD_WIDE("chat.global.world-wide", true, "if true, global chat will be world wide, if false, global chat will be only in world where sender is"),
     IS_GLOBAL_CHAT_ENABLED("chat.global.enabled", true, "if true, global chat will be enabled, if false, global chat will be disabled"),
-    GLOBAL_CHAT_FORMAT("chat.global.format", "&f%prefix%displayname%suffix: &e%message", "format of global chat"),
+    GLOBAL_CHAT_FORMAT("chat.global.format", "%prefix%displayname%suffix: &e%message", "format of global chat"),
     GLOBAL_CHAT_PREFIX("chat.global.prefix", "!", "prefix of global chat"),
     IS_LOCAL_CHAT_ENABLED("chat.local.enabled", true, "if true, local chat will be enabled, if false, local chat will be disabled"),
     LOCAL_CHAT_FORMAT("chat.local.format", "%prefix%displayname%suffix: &f%message", "format of local chat"),
@@ -20,6 +20,7 @@ public enum ChatModuleConfig implements IConfig {
 
     IS_SPY_CHAT_ENABLED("chat.spy.enabled", true, "if true ops and users with permission(permission: " + UnlimitedAdminPermissionsList.CHAT_SPY + ") can see all local and private messages"),
     SPY_CHAT_FORMAT("chat.spy.format", "&e[SPY] &f%message", "format of spy chat"),
+    SPY_CHAT_SHOW_CHANNEL("chat.spy.show-channel", true, "if true, spy chat will show channel of message, if false"),
 
     IS_PRIVATE_CHAT_ENABLED("chat.private.enabled", true, "if true, private chat will be enabled, if false, private chat will be disabled"),
 
