@@ -40,7 +40,6 @@ public class DeleteCommand implements ICommand {
         if (isBusy) {
             throw new CommandErrorException(LangConfig.WORLD_DELETION_BUSY.getText());
         }
-        assertArgsSize(argsString);
 
         isBusy = true;
         try {

@@ -55,7 +55,6 @@ public class LockWorldCommand implements ICommand {
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException, CommandOnlyForUserException, CommandErrorException {
-        assertArgsSize(argsString);
         World world;
         final String lockValue;
         boolean lock;

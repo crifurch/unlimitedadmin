@@ -45,7 +45,6 @@ public class TpCommand implements ICommand {
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
         UUID targetPlayer = null;
         UUID tpTo;
-        assertArgsSize(argsString);
         int indexTpTo = 0;
         if (argsString.size() > 1) {
             assertOtherPermission(sender);

@@ -42,7 +42,6 @@ public class AddNotificationCommand implements ICommand {
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        assertArgsSize(argsString);
         final String name = argsString.get(0);
         final int interval = (int) Double.parseDouble(argsString.get(1));
         final String message = String.join(" ", argsString.subList(2, argsString.size()));

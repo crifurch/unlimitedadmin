@@ -71,7 +71,6 @@ public class TpPosCommand implements ICommand {
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
         UUID targetPlayer = null;
-        assertArgsSize(argsString);
         if (argsString.size() > 4) {
             assertOtherPermission(sender);
             targetPlayer = plugin.getPlayersMapModule().getPlayerUUID(argsString.get(4));

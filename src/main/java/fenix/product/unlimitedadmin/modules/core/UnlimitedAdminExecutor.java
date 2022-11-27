@@ -59,6 +59,7 @@ public class UnlimitedAdminExecutor extends CommandExecutor {
         }
         final List<String> argsString = Arrays.asList(args).subList(0, Math.min(args.length, this.command.getMaxArgsSize()));
         try {
+            this.command.assertArgsSize(argsString);
             this.command.onCommand(sender, argsString);
         } catch (NotifibleException e) {
             sender.sendMessage(PlaceHolderUtils.replaceColors(e.getMessage()));

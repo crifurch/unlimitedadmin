@@ -45,7 +45,6 @@ public class MaintainModeCommand implements ICommand {
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException {
-        assertArgsSize(argsString);
         final String s = argsString.get(0);
         final boolean aTrue = s.equalsIgnoreCase("1") || s.equalsIgnoreCase("true");
         module.setMaintainMode(aTrue);

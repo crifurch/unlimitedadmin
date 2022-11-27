@@ -12,14 +12,14 @@ public interface IModule {
         return Collections.emptyList();
     }
 
-    default boolean runCommand(String name, CommandSender sender, List<String> args) throws NotifibleException {
+    default void runCommand(String name, CommandSender sender, List<String> args) throws NotifibleException {
         for (ICommand command : getCommands()) {
             if (command.getName().equals(name)) {
+                command.assertArgsSize(args);
                 command.onCommand(sender, args);
             }
         }
         sender.sendMessage("This command is bad for module " + getName());
-        return true;
     }
 
     String getName();

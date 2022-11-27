@@ -48,7 +48,6 @@ public class InviteCommand implements ICommand {
             CommandNotEnoughArgsException,
             CommandErrorException {
         assertSenderIsPlayer(sender);
-        assertArgsSize(argsString);
         String name = GlobalConstants.defaultEntryName;
         UUID playerToAdd = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(0));
         if (playerToAdd == null) {

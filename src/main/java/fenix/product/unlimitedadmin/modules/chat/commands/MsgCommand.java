@@ -36,7 +36,6 @@ public class MsgCommand implements ICommand {
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        assertArgsSize(argsString);
         final String message = String.join(" ", argsString.subList(1, argsString.size()));
         chatModule.broadcastMessage((Entity) sender, PrivateMessageChatChannel.prepareMessage(message, argsString.get(0)));
     }

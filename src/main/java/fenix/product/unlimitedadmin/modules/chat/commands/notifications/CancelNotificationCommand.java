@@ -39,7 +39,6 @@ public class CancelNotificationCommand implements ICommand {
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        assertArgsSize(argsString);
         final boolean b = chatModule.cancelNotification(argsString.get(0));
         if (!b) throw new NotifibleException(LangConfig.NO_SUCH_NOTIFICATION.getText(argsString.get(0)));
     }

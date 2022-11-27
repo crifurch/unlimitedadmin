@@ -58,7 +58,6 @@ public class CreateCommand implements ICommand {
         if (isBusy) {
             throw new CommandErrorException(LangConfig.WORLD_CREATION_BUSY.getText());
         }
-        assertArgsSize(argsString);
         final String envString = argsString.get(1).toUpperCase();
         World.Environment env = supportedEnvironment.get(envString);
         if (env == null) {
