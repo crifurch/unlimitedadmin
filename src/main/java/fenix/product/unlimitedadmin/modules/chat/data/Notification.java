@@ -36,7 +36,7 @@ public class Notification implements Runnable {
     }
 
     public void schedule() {
-        task = Bukkit.getScheduler().runTaskTimerAsynchronously(UnlimitedAdmin.getInstance(), this, 0, interval);
+        task = Bukkit.getScheduler().runTaskLater(UnlimitedAdmin.getInstance(), this, interval);
     }
 
     public void start() {

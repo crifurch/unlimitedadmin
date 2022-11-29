@@ -198,7 +198,7 @@ public class ChatModule implements IModule {
         }
         final Notification value = new Notification(this, message, time, onMessage);
         adsNotifications.put(name, value);
-        value.run();
+        value.start();
         return true;
     }
 
