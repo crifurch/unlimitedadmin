@@ -14,6 +14,7 @@ Now it support such modules:
 * Spawn - Create multiple spawn points and teleport to them;
 * PlayerStatus - you can kill, heal, feed players and more other;
 
-# More information about modules
+# More information about plugin and modules
 
-EN version [ABOUT](https://www.spigotmc.org/resources/unlimitedadmin.82347/)
+* EN version [ABOUT](https://github.com/artem312/unlimitedadmin/blob/master/About_EN.md)
+* RU version [ABOUT](https://github.com/artem312/unlimitedadmin/blob/master/About_RU.md)
