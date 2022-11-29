@@ -41,7 +41,7 @@ public class AddNotificationCommand implements ICommand {
             case 1:
                 return Collections.singletonList("<seconde>=1>");
             default:
-                return Collections.singletonList("<message>");
+                return ICommand.EMPTY_TAB_COMPLETIONS;
         }
     }
 

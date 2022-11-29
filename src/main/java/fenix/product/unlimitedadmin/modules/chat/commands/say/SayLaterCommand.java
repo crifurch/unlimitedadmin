@@ -9,8 +9,10 @@ import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class SayLaterCommand implements ICommand {
@@ -33,6 +35,14 @@ public class SayLaterCommand implements ICommand {
     @Override
     public byte getMinArgsSize() {
         return 2;
+    }
+
+    @Override
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
+        if (i == 0) {
+            return Collections.singletonList("<seconsd>");
+        }
+        return ICommand.EMPTY_TAB_COMPLETIONS;
     }
 
     @Override
