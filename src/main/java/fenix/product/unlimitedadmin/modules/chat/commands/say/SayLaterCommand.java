@@ -8,6 +8,7 @@ import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +26,7 @@ public class SayLaterCommand implements ICommand {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "saylater";
     }
 

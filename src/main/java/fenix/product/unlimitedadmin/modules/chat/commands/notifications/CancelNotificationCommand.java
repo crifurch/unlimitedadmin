@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class CancelNotificationCommand implements ICommand {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "cancelnotif";
     }
 

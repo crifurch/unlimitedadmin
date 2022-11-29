@@ -8,6 +8,7 @@ import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class SayCommand implements ICommand {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "say";
     }
 

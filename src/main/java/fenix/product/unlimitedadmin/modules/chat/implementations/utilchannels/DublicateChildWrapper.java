@@ -24,7 +24,7 @@ public class DublicateChildWrapper implements IChatChanel {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return child.getName();
     }
 

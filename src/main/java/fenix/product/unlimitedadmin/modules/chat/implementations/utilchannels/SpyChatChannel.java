@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.Mute;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISubhandlerChannel;
@@ -17,13 +18,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpyChatChannel implements ISubhandlerChannel {
+
+
+    final ChatModule chatModule;
+
+    public SpyChatChannel(ChatModule chatModule) {
+        this.chatModule = chatModule;
+    }
+
     @Override
     public @Nullable String getChannelPrefix() {
         return null;
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "spy";
     }
 
@@ -40,7 +49,17 @@ public class SpyChatChannel implements ISubhandlerChannel {
         }
         final String formattedMessage = formatMessage(sender, parentFormattedMessage);
         getTargetPlayers(sender, null).forEach(targetPlayer -> {
-            if (parentTargetPlayers.contains(targetPlayer)) {
+            boolean muted = false;
+            if (sender instanceof Player) {
+                if (PermissionsProvider.getInstance().havePermission((Player) sender,
+                        UnlimitedAdminPermissionsList.CHAT_MUTE_BYPASS) != PermissionStatus.PERMISSION_TRUE) {
+                    final Mute mute = chatModule.getMute((sender).getUniqueId());
+                    if (mute != null) {
+                        muted = mute.isMuted(getName());
+                    }
+                }
+            }
+            if (parentTargetPlayers.contains(targetPlayer) && !muted) {
                 return;
             }
             targetPlayer.sendMessage(formattedMessage);

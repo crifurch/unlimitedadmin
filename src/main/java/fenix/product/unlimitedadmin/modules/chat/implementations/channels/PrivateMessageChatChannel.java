@@ -41,7 +41,7 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "private";
     }
 

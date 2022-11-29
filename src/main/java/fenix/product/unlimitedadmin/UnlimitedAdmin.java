@@ -114,13 +114,21 @@ public final class UnlimitedAdmin extends JavaPlugin {
         return new File(getDataFolder(), module.getName());
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public File getModuleConfigFile(IModule module) {
+        return getModuleConfigFile(module, "config");
+    }
+
+    public File getModuleConfigFile(IModule module, String name) {
+        return getModuleFile(module, name + ".yml");
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public File getModuleFile(IModule module, String name) {
         final File moduleFolder = getModuleFolder(module);
         if (!moduleFolder.exists()) {
             moduleFolder.mkdirs();
         }
-        final File config = new File(moduleFolder, "config.yml");
+        final File config = new File(moduleFolder, name);
         if (!config.exists()) {
             try {
                 config.createNewFile();

@@ -4,6 +4,8 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
+import fenix.product.unlimitedadmin.modules.chat.commands.MuteCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.UnmuteCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.AddNotificationCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.CancelNotificationCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.NotificationsListCommand;
@@ -11,11 +13,15 @@ import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.Answer
 import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.MsgCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.say.SayCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.say.SayLaterCommand;
+import fenix.product.unlimitedadmin.modules.chat.data.Ignore;
+import fenix.product.unlimitedadmin.modules.chat.data.Mute;
 import fenix.product.unlimitedadmin.modules.chat.data.Notification;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.PrivateMessageChatChannel;
+import fenix.product.unlimitedadmin.modules.chat.implementations.firewalls.BadWordFirewall;
+import fenix.product.unlimitedadmin.modules.chat.implementations.firewalls.MuteFirewall;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.DublicateChildWrapper;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.FirewallChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.LogChatChannel;
@@ -49,6 +55,7 @@ public class ChatModule implements IModule {
     public ChatModule(@NotNull UnlimitedAdmin plugin) {
         this.plugin = plugin;
         ChatModuleConfig.init(this);
+        ChatMuteConfig.init(this);
         plugin.getServer().getPluginManager().registerEvents(new ChatMessageListener(this), plugin);
         if (ChatModuleConfig.NOTIFICATIONS_ENABLED.getBoolean()) {
             commands.add(new CancelNotificationCommand(this));
@@ -58,7 +65,7 @@ public class ChatModule implements IModule {
         }
 
         if (ChatModuleConfig.IS_SPY_CHAT_ENABLED.getBoolean()) {
-            spyChatChannel = new SpyChatChannel();
+            spyChatChannel = new SpyChatChannel(this);
         }
         if (ChatModuleConfig.IS_LOG_CHAT_ENABLED.getBoolean()) {
             logChatChannel = new LogChatChannel(this);
@@ -79,6 +86,8 @@ public class ChatModule implements IModule {
 
         commands.add(new SayCommand(this));
         commands.add(new SayLaterCommand(this));
+        commands.add(new MuteCommand(this));
+        commands.add(new UnmuteCommand(this));
 
     }
 
@@ -99,6 +108,11 @@ public class ChatModule implements IModule {
         }
         if (unwrapChannel(toAdd) instanceof ILoggedChat && logChatChannel != null) {
             toAdd = new DublicateChildWrapper(toAdd, logChatChannel);
+        }
+        toAdd = new MuteFirewall(toAdd, this);
+
+        if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
+            toAdd = new BadWordFirewall(toAdd, this);
         }
         chatChannels.add(toAdd);
         chatChannels.sort(Comparator.comparingInt(o -> {
@@ -142,6 +156,15 @@ public class ChatModule implements IModule {
                 return;
             }
         }
+    }
+
+    public List<String> getChannelsList() {
+        List<String> list = new ArrayList<>();
+        for (IChatChanel chatChannel : chatChannels) {
+            String channelPrefix = chatChannel.getName();
+            list.add(channelPrefix);
+        }
+        return list;
     }
 
     public void addForAnswer(Entity sender, Player receiver) {
@@ -229,4 +252,21 @@ public class ChatModule implements IModule {
         }
     }
 
+    public void setMute(Mute mute) {
+        ChatMuteConfig.saveMuted(mute);
+    }
+
+    public void setIgnore(Ignore ignore) {
+        ChatMuteConfig.saveIgnored(ignore);
+    }
+
+    @Nullable
+    public Mute getMute(UUID uuid) {
+        return ChatMuteConfig.getMuteForPlayer(uuid);
+    }
+
+    @Nullable
+    public Ignore getIgnore(UUID uuid) {
+        return ChatMuteConfig.getIgnoreForPlayer(uuid);
+    }
 }

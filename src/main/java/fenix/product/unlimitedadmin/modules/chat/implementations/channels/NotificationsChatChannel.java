@@ -13,7 +13,7 @@ public class NotificationsChatChannel implements ILoggedChat {
     public static final String CHANNEL_PREFIX = "!notification!";
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "notifications";
     }
 

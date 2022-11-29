@@ -4,7 +4,9 @@ import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 
 public enum AdditionalPermissions {
     OTHER("other"),
-    SAFE_ON_LOGIN("safe_on_login");
+    SAFE_ON_LOGIN("safe_on_login"),
+    SHOW_OFFLINE("show_offline"),
+    ;
 
     private final String permission;
 

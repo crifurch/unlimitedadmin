@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class GlobalChatChannel implements ILoggedChat, IChatChanel {
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "global";
     }
 

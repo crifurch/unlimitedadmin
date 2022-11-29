@@ -7,6 +7,8 @@ import fenix.product.unlimitedadmin.api.interfaces.IConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public enum ChatModuleConfig implements IConfig {
     IS_GLOBAL_CHAT_WORLD_WIDE("chat.global.world-wide", true, "if true, global chat will be world wide, if false, global chat will be only in world where sender is"),
@@ -38,7 +40,8 @@ public enum ChatModuleConfig implements IConfig {
 
     SAY_FORMAT("say.format", "&8[%player]: &f%message", "format of say command"),
     SAY_MAX_DELAY("say.max-delay", 1200, "max delay of saylater command"),
-
+    BAD_WORDS_ENABLED("bad-words.enabled", true, "if true, bad words protection will be enabled"),
+    BAD_WORDS_CHANNELS("bad-words.channels", Collections.singletonList("*"), "list of channels where bad words protection will be enabled"),
     ;
 
     private static ModuleConfig config;
@@ -76,6 +79,10 @@ public enum ChatModuleConfig implements IConfig {
 
     public String getString() {
         return config.getString(getPath());
+    }
+
+    public List<String> getStringList() {
+        return config.getStringList(getPath());
     }
 
     public ConfigurationSection getSection() {

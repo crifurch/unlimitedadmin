@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class LocalChatChannel implements ILoggedChat, ISpiedChat {
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "local";
     }
 

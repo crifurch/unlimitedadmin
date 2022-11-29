@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface ICommandDataProvider {
 
+    List<String> EMPTY_TAB_COMPLETIONS = Collections.emptyList();
+
+
     String baseCommandPermission = "unlimitedadmin.commands.";
 
     @NotNull

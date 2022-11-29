@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISubhandlerChannel;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
@@ -27,7 +28,7 @@ public class LogChatChannel implements ISubhandlerChannel {
 
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "log";
     }
 

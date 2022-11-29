@@ -24,6 +24,7 @@ public interface IChatChanel {
         return null;
     }
 
+    @NotNull
     String getName();
 
     @NotNull

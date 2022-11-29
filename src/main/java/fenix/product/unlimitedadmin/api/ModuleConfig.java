@@ -43,6 +43,10 @@ public class ModuleConfig {
         return cfg.getConfigurationSection(path);
     }
 
+    public ConfigurationSection createConfigurationSection(String path) {
+        return cfg.createSection(path);
+    }
+
     public Location getLocation(String path) {
         return cfg.getLocation(path);
     }

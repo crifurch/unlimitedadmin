@@ -21,7 +21,7 @@ public class FirewallChatChannel implements IChatChanel {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return child.getName();
     }
 
@@ -57,11 +57,11 @@ public class FirewallChatChannel implements IChatChanel {
         return child.broadcast(sender, message, sendMessageConsumer);
     }
 
-    boolean isBlocked(Entity sender, String message) {
+    public boolean isBlocked(Entity sender, String message) {
         return false;
     }
 
-    String getBlockedMessage(Entity sender, String message) {
+    public String getBlockedMessage(Entity sender, String message) {
         return null;
     }
 }
