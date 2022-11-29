@@ -27,6 +27,11 @@ public class SpyChatChannel implements ISubhandlerChannel {
     }
 
     @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
+    }
+
+    @Override
     public @Nullable String getChannelPrefix() {
         return null;
     }

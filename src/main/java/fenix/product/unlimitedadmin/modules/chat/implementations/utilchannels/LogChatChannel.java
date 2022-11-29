@@ -26,6 +26,10 @@ public class LogChatChannel implements ISubhandlerChannel {
         this.chatModule = chatModule;
     }
 
+    @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
+    }
 
     @Override
     public @NotNull String getName() {

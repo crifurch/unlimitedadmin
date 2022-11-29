@@ -12,18 +12,16 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class MuteFirewall extends FirewallChatChannel {
-    final ChatModule chatModule;
 
     public MuteFirewall(IChatChanel child, ChatModule chatModule) {
-        super(child);
-        this.chatModule = chatModule;
+        super(chatModule, child);
     }
 
     @Override
     public boolean isBlocked(Entity sender, String message) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            final Mute mute = chatModule.getMute(player.getUniqueId());
+            final Mute mute = getModule().getMute(player.getUniqueId());
             if (mute == null) {
                 return false;
             }

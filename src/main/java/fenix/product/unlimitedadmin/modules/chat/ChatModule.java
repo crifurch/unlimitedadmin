@@ -1,9 +1,12 @@
 package fenix.product.unlimitedadmin.modules.chat;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
+import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
+import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.chat.commands.MuteCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.UnmuteCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.AddNotificationCommand;
@@ -70,13 +73,13 @@ public class ChatModule implements IModule {
         if (ChatModuleConfig.IS_LOG_CHAT_ENABLED.getBoolean()) {
             logChatChannel = new LogChatChannel(this);
         }
-        addChatChannel(new NotificationsChatChannel());
+        addChatChannel(new NotificationsChatChannel(this));
 
         if (ChatModuleConfig.IS_GLOBAL_CHAT_ENABLED.getBoolean()) {
-            addChatChannel(new GlobalChatChannel());
+            addChatChannel(new GlobalChatChannel(this));
         }
         if (ChatModuleConfig.IS_LOCAL_CHAT_ENABLED.getBoolean()) {
-            addChatChannel(new LocalChatChannel());
+            addChatChannel(new LocalChatChannel(this));
         }
         if (ChatModuleConfig.IS_PRIVATE_CHAT_ENABLED.getBoolean()) {
             addChatChannel(new PrivateMessageChatChannel(this));
@@ -108,10 +111,10 @@ public class ChatModule implements IModule {
     public void addChatChannel(IChatChanel chatChannel) {
         IChatChanel toAdd = chatChannel;
         if (unwrapChannel(toAdd) instanceof ISpiedChat && spyChatChannel != null) {
-            toAdd = new DublicateChildWrapper(toAdd, spyChatChannel);
+            toAdd = new DublicateChildWrapper(toAdd, spyChatChannel, this);
         }
         if (unwrapChannel(toAdd) instanceof ILoggedChat && logChatChannel != null) {
-            toAdd = new DublicateChildWrapper(toAdd, logChatChannel);
+            toAdd = new DublicateChildWrapper(toAdd, logChatChannel, this);
         }
         toAdd = new MuteFirewall(toAdd, this);
 
@@ -254,6 +257,20 @@ public class ChatModule implements IModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean requestSendMessage(Entity sender, Player receiver) {
+        if (sender instanceof Player) {
+            final Player player = (Player) sender;
+            if (PermissionsProvider.getInstance().havePermission(player, UnlimitedAdminPermissionsList.CHAT_IGNORE_BYPASS) == PermissionStatus.PERMISSION_TRUE) {
+                return true;
+            }
+        }
+        final Ignore ignore = getIgnore(receiver.getUniqueId());
+        if (ignore == null) {
+            return true;
+        }
+        return !ignore.isIgnored(sender.getUniqueId().toString());
     }
 
     public void setMute(Mute mute) {

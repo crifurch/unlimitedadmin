@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.channels;
 
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
+import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +12,17 @@ import java.util.function.Consumer;
 public class NotificationsChatChannel implements ILoggedChat {
 
     public static final String CHANNEL_PREFIX = "!notification!";
+
+    final ChatModule chatModule;
+
+    public NotificationsChatChannel(ChatModule chatModule) {
+        this.chatModule = chatModule;
+    }
+
+    @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
+    }
 
     @Override
     public @NotNull String getName() {

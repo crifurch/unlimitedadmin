@@ -16,8 +16,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public interface IChatChanel {
-
-    ChatModule chatModule = null;
+    @NotNull
+    ChatModule getModule();
 
     @Nullable
     default String getChannelPrefix() {
@@ -48,7 +48,12 @@ public interface IChatChanel {
             }
             return LangConfig.CHAT_NOBODY_HEAR.getText();
         }
-        targetPlayers.forEach(player -> player.sendMessage(formattedMessage));
+        targetPlayers.forEach(player -> {
+            if (!getModule().requestSendMessage(sender, player)) {
+                return;
+            }
+            player.sendMessage(formattedMessage);
+        });
         return null;
     }
 

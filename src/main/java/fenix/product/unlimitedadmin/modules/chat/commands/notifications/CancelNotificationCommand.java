@@ -19,7 +19,7 @@ public class CancelNotificationCommand implements ICommand {
 
     @Override
     public @NotNull String getName() {
-        return "cancelnotif";
+        return "cancelnotify";
     }
 
 

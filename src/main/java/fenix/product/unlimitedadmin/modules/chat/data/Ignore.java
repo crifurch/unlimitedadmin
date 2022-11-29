@@ -29,18 +29,42 @@ public class Ignore {
     }
 
     public void addIgnoredPlayer(String player) {
-        if (ignoredPlayers.contains(player)) {
+        if (ignoredPlayers.contains(player) || ignoredPlayers.contains("*")) {
+            return;
+        }
+        if (player.equals("*")) {
+            ignoredPlayers.clear();
+        }
+        if (ignoredPlayers.contains("!" + player)) {
+            ignoredPlayers.remove("!" + player);
             return;
         }
         ignoredPlayers.add(player);
     }
 
     public void removeIgnoredPlayer(String player) {
+        if (player.equals("*")) {
+            ignoredPlayers.clear();
+            return;
+        }
         ignoredPlayers.remove(player);
+        if (ignoredPlayers.contains("!" + player)) {
+            return;
+        }
+        if (ignoredPlayers.contains("*")) {
+            ignoredPlayers.add("!" + player);
+        }
     }
 
     public ConfigurationSection toConfigurationSection(ConfigurationSection section) {
         section.set("ignoredPlayers", ignoredPlayers);
         return section;
+    }
+
+    public boolean isIgnored(String player) {
+        if (ignoredPlayers.contains("*")) {
+            return !ignoredPlayers.contains("!" + player);
+        }
+        return ignoredPlayers.contains(player);
     }
 }

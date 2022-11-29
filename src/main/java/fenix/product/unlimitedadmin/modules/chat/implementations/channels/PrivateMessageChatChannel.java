@@ -28,6 +28,11 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
         this.chatModule = chatModule;
     }
 
+    @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
+    }
+
     @NotNull
     public static String prepareMessage(@NotNull String message, Entity... receivers) {
         final String receiversNames = String.join(",", Arrays.stream(receivers).map(Entity::getName).toArray(String[]::new));
@@ -78,10 +83,13 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
             if (sendMessageConsumer != null) {
                 sendMessageConsumer.accept(message1);
             }
-            player.sendMessage(message1);
             if (sender == player) {
                 return;
             }
+            if (!chatModule.requestSendMessage(sender, player)) {
+                return;
+            }
+            player.sendMessage(message1);
             if (sender != null) {
                 sender.sendMessage(message1);
             }

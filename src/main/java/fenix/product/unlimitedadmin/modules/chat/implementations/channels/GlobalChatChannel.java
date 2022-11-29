@@ -1,7 +1,7 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.channels;
 
+import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
-import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -11,7 +11,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GlobalChatChannel implements ILoggedChat, IChatChanel {
+public class GlobalChatChannel implements ILoggedChat {
+
+    final ChatModule chatModule;
+
+    public GlobalChatChannel(ChatModule chatModule) {
+        this.chatModule = chatModule;
+    }
+
+    @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
+    }
 
     @Override
     public @NotNull String getName() {

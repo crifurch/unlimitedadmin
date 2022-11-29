@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.function.Consumer;
@@ -61,5 +62,11 @@ public class Notification implements Runnable {
             stop();
         }
         if (onSendMessagesConsumer != null) onSendMessagesConsumer.accept(message);
+    }
+
+    public ConfigurationSection toConfig(ConfigurationSection section) {
+        section.set("message", message);
+        section.set("interval", interval / 20);
+        return section;
     }
 }

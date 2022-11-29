@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels;
 
+import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISubhandlerChannel;
 import org.bukkit.entity.Entity;
@@ -14,9 +15,17 @@ public class DublicateChildWrapper implements IChatChanel {
     private final IChatChanel child;
     private final ISubhandlerChannel dublicator;
 
-    public DublicateChildWrapper(IChatChanel child, @Nullable ISubhandlerChannel dublicator) {
+    final ChatModule chatModule;
+
+    public DublicateChildWrapper(IChatChanel child, @Nullable ISubhandlerChannel dublicator, ChatModule chatModule) {
         this.child = child;
         this.dublicator = dublicator;
+        this.chatModule = chatModule;
+    }
+
+    @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
     }
 
     public IChatChanel getChild() {

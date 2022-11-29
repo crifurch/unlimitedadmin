@@ -25,12 +25,10 @@ public class BadWordFirewall extends FirewallChatChannel {
 
     static File badWordsFile;
     static List<Pattern> badWords = new ArrayList<>();
-    final ChatModule chatModule;
 
 
     public BadWordFirewall(IChatChanel child, ChatModule chatModule) {
-        super(child);
-        this.chatModule = chatModule;
+        super(chatModule, child);
     }
 
     public static void loadBadWords(ChatModule chatModule) {
@@ -66,10 +64,7 @@ public class BadWordFirewall extends FirewallChatChannel {
             return false;
         }
         final String toCheck = message.toLowerCase().replaceAll("\\b", "").replace("_", "");
-        return badWords.stream().anyMatch(pattern -> {
-            final boolean b = pattern.matcher(toCheck).find();
-            return b;
-        });
+        return badWords.stream().anyMatch(pattern -> pattern.matcher(toCheck).find());
     }
 
     @Override

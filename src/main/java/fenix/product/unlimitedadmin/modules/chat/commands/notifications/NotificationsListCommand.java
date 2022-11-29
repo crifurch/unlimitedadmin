@@ -17,7 +17,7 @@ public class NotificationsListCommand implements ICommand {
 
     @Override
     public @NotNull String getName() {
-        return "listnotifs";
+        return "listnotifies";
     }
 
 

@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.channels;
 
+import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
@@ -12,6 +13,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LocalChatChannel implements ILoggedChat, ISpiedChat {
+
+    final ChatModule chatModule;
+
+    public LocalChatChannel(ChatModule chatModule) {
+        this.chatModule = chatModule;
+    }
+
+    @Override
+    public @NotNull ChatModule getModule() {
+        return chatModule;
+    }
+
     @Override
     public @NotNull String getName() {
         return "local";
