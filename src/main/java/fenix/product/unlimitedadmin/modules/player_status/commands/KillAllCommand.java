@@ -27,6 +27,7 @@ public class KillAllCommand implements ICommand {
     public void onCommand(CommandSender sender, List<String> argsString) throws CommandOtherPermissionsException, CommandErrorException {
         final Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayers) {
+            if (player == sender) continue;
             if (!PlayerUtils.setHealth(player.getUniqueId(), 0)) {
                 throw new CommandErrorException();
             }
