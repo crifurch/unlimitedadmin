@@ -84,6 +84,10 @@ public class ChatModule implements IModule {
             commands.add(new AnswerCommand(this));
         }
 
+        if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
+            BadWordFirewall.loadBadWords(this);
+        }
+
         commands.add(new SayCommand(this));
         commands.add(new SayLaterCommand(this));
         commands.add(new MuteCommand(this));
