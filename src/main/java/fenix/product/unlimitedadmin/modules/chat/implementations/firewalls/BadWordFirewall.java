@@ -42,6 +42,9 @@ public class BadWordFirewall extends FirewallChatChannel {
                 if (line.isEmpty()) {
                     continue;
                 }
+                if (line.startsWith("#")) {
+                    continue;
+                }
                 badWords.add(Pattern.compile(line));
             }
         } catch (Exception e) {
