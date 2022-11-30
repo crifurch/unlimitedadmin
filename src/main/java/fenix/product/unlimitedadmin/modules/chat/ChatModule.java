@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-
+//todo custom channels
 public class ChatModule implements IModule {
 
 
