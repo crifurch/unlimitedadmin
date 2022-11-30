@@ -47,6 +47,7 @@ public enum LangConfig {
     NO_SUCH_CHANNEL("chat.no", "No such channel %s"),
     CHAT_MUTED_IN_CHANNEL("chat.muted", "You muted in channel %s"),
     CHAT_BAD_WORD_DETECTED("chat.bad_word", "Bad word detected in your message"),
+    CHAT_ADS_DETECTED("chat.ads", "Ads detected in your message"),
     NO_SUCH_NOTIFICATION("notification.no", "No such notification %s"),
     NOTIFICATIONS_REMOVE_BEFORE_ADD("notification.remove_before_add", "Remove notification with name %s before add"),
 

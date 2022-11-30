@@ -43,6 +43,9 @@ public enum ChatModuleConfig implements IConfig {
     SAY_MAX_DELAY("say.max-delay", 1200, "max delay of saylater command"),
     BAD_WORDS_ENABLED("bad-words.enabled", true, "if true, bad words protection will be enabled"),
     BAD_WORDS_CHANNELS("bad-words.channels", Collections.singletonList("*"), "list of channels where bad words protection will be enabled"),
+    ADS_ENABLED("ads.enabled", true, "if true, ads protection will be enabled"),
+    ADS_CHANNELS("ads.channels", Collections.singletonList("*"), "list of channels where ads protection will be enabled"),
+    ADS_DOMAINS_EXCEPT("ads.domains-except", Collections.singletonList("example.com"), "list of domains that will be ignored by ads protection"),
     ;
 
     private static ModuleConfig config;

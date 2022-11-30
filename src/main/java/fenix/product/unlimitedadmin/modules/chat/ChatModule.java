@@ -25,6 +25,7 @@ import fenix.product.unlimitedadmin.modules.chat.implementations.channels.Global
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.PrivateMessageChatChannel;
+import fenix.product.unlimitedadmin.modules.chat.implementations.firewalls.AdsFirewall;
 import fenix.product.unlimitedadmin.modules.chat.implementations.firewalls.BadWordFirewall;
 import fenix.product.unlimitedadmin.modules.chat.implementations.firewalls.MuteFirewall;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.DublicateChildWrapper;
@@ -117,6 +118,9 @@ public class ChatModule implements IModule {
 
         if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
             toAdd = new BadWordFirewall(toAdd, this);
+        }
+        if (ChatModuleConfig.ADS_ENABLED.getBoolean()) {
+            toAdd = new AdsFirewall(toAdd, this);
         }
         if (unwrapChannel(toAdd) instanceof ISpiedChat && spyChatChannel != null) {
             toAdd = new DublicateChildWrapper(toAdd, spyChatChannel, this);
