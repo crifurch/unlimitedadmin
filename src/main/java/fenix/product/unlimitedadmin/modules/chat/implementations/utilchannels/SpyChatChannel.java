@@ -1,6 +1,5 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -49,15 +48,11 @@ public class SpyChatChannel implements ISubhandlerChannel {
             return;
         }
         final List<Player> parentTargetPlayers = parent.getTargetPlayers(sender, null);
-        UnlimitedAdmin.getInstance().getLogger().info("Spying on " + iChatChanel.getName() + " channel: " + message);
-        String parentFormattedMessage = iChatChanel.formatMessage(sender, message);
-        UnlimitedAdmin.getInstance().getLogger().info("Spying on " + iChatChanel.getName() + " channel: " + parentFormattedMessage);
+        String parentFormattedMessage = message;
         if (ChatModuleConfig.SPY_CHAT_SHOW_CHANNEL.getBoolean()) {
             parentFormattedMessage = ((ISpiedChat) iChatChanel).getSpyPrefix() + " " + parentFormattedMessage;
         }
-        UnlimitedAdmin.getInstance().getLogger().info("Spying on " + iChatChanel.getName() + " channel: " + parentFormattedMessage);
         final String formattedMessage = formatMessage(sender, parentFormattedMessage);
-        UnlimitedAdmin.getInstance().getLogger().info("Spying on " + iChatChanel.getName() + " channel: " + formattedMessage);
         getTargetPlayers(sender, null).forEach(targetPlayer -> {
             boolean muted = false;
             if (sender.getPermissionStatus(
