@@ -4,6 +4,8 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.PlayerMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.PrivateMessageChatChannel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,11 +43,11 @@ public class AnswerCommand implements ICommand {
         Player player = (Player) sender;
         if (argsString.size() > 0) {
             String message = String.join(" ", argsString);
-            final Player forAnswer = chatModule.getForAnswer(player);
+            final PlayerMessageSender forAnswer = chatModule.getForAnswer(player);
             if (forAnswer == null) {
                 throw new NotifibleException(LangConfig.CHAT_NO_ONE_TO_ANSWER.getText());
             }
-            chatModule.broadcastMessage(player, PrivateMessageChatChannel.prepareMessage(message, forAnswer.getName()));
+            chatModule.broadcastMessage(ChatMessageSender.fromSender(sender), PrivateMessageChatChannel.prepareMessage(message, forAnswer.getName()));
         }
     }
 

@@ -4,13 +4,11 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
-import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels.FirewallChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,13 +50,11 @@ public class BadWordFirewall extends FirewallChatChannel {
     }
 
     @Override
-    public boolean isBlocked(Entity sender, String message) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (PermissionsProvider.getInstance().havePermission(player, UnlimitedAdminPermissionsList.CHAT_BADWORDS_BYPASS) == PermissionStatus.PERMISSION_TRUE) {
-                return false;
-            }
+    public boolean isBlocked(ChatMessageSender sender, String message) {
+        if (sender.getPermissionStatus(UnlimitedAdminPermissionsList.CHAT_BADWORDS_BYPASS) == PermissionStatus.PERMISSION_TRUE) {
+            return false;
         }
+
         final List<String> stringList = ChatModuleConfig.BAD_WORDS_CHANNELS.getStringList();
         if (!(stringList.contains(getChild().getName()) || stringList.contains("*"))) {
             return false;
@@ -68,7 +64,7 @@ public class BadWordFirewall extends FirewallChatChannel {
     }
 
     @Override
-    public String getBlockedMessage(Entity sender, String message) {
+    public String getBlockedMessage(ChatMessageSender sender, String message) {
         return LangConfig.CHAT_BAD_WORD_DETECTED.getText();
     }
 

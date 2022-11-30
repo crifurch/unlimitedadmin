@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import org.bukkit.entity.Entity;
@@ -56,7 +57,7 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
     }
 
     @Override
-    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
+    public @Nullable String broadcast(@NotNull ChatMessageSender sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
         final Matcher matcher = NicknamePattern.matcher(message);
         if (!matcher.find()) {
             return LangConfig.NO_SUCH_PLAYER.getText();
@@ -83,16 +84,14 @@ public class PrivateMessageChatChannel implements ILoggedChat, ISpiedChat {
             if (sendMessageConsumer != null) {
                 sendMessageConsumer.accept(message1);
             }
-            if (sender == player) {
+            if (sender.sameAs(player)) {
                 return;
             }
             if (!chatModule.requestSendMessage(sender, player)) {
                 return;
             }
             player.sendMessage(message1);
-            if (sender != null) {
-                sender.sendMessage(message1);
-            }
+            sender.sendMessage(message1);
             chatModule.addForAnswer(sender, player);
         });
         return null;

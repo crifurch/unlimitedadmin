@@ -3,11 +3,10 @@ package fenix.product.unlimitedadmin.modules.chat.commands.say;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,13 +52,9 @@ public class SayLaterCommand implements ICommand {
         }
         String message = String.join(" ", argsString.subList(1, argsString.size()));
         String prefix = ChatModuleConfig.SAY_FORMAT.getString();
-        if (sender instanceof Entity) {
-            Entity entity = (Entity) sender;
-            prefix = PlaceHolderUtils.replacePlayerPlaceholder(prefix, entity);
-        } else {
-            prefix = PlaceHolderUtils.replaceServerPlaceholder(prefix, sender);
-        }
         message = prefix.replaceAll("%message", message);
+        final ChatMessageSender chatMessageSender = ChatMessageSender.fromSender(sender);
+        message = chatMessageSender.replacePlaceholders(message);
         final Collection<String> notificationNames = chatModule.getNotificationNames();
         String name = "saylater";
         int i = 0;

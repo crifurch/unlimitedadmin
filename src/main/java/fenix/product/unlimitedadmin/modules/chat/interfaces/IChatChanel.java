@@ -1,11 +1,10 @@
 package fenix.product.unlimitedadmin.modules.chat.interfaces;
 
 import fenix.product.unlimitedadmin.api.LangConfig;
-import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,16 +32,14 @@ public interface IChatChanel {
     }
 
     @Nullable
-    default String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
+    default String broadcast(@NotNull ChatMessageSender sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
         final List<Player> targetPlayers = getTargetPlayers(sender, null);
         final String formattedMessage = formatMessage(sender, message);
         if (sendMessageConsumer != null) {
             sendMessageConsumer.accept(formattedMessage);
         }
-        if (targetPlayers.isEmpty() || (targetPlayers.size() == 1 && targetPlayers.get(0) == sender)) {
-            if (sender instanceof Player) {
-                sender.sendMessage(formattedMessage);
-            }
+        if (targetPlayers.isEmpty() || (targetPlayers.size() == 1 && sender.sameAs(targetPlayers.get(0)))) {
+            sender.sendMessage(formattedMessage);
             if (!ChatModuleConfig.SHOW_NOBODY_HEAR_YOU_MESSAGE.getBoolean()) {
                 return null;
             }
@@ -58,8 +55,8 @@ public interface IChatChanel {
     }
 
     @NotNull
-    default List<Player> getTargetPlayers(@Nullable Entity sender, @Nullable List<String> filteredNicknames) {
-        final List<Player> onlinePlayers = new ArrayList<Player>(Bukkit.getOnlinePlayers());
+    default List<Player> getTargetPlayers(@NotNull ChatMessageSender sender, @Nullable List<String> filteredNicknames) {
+        final List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         if (filteredNicknames == null || filteredNicknames.isEmpty()) {
             return onlinePlayers;
         }
@@ -67,12 +64,7 @@ public interface IChatChanel {
     }
 
 
-    default String formatMessage(@Nullable Entity sender, @NotNull String message) {
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
-        String format = PlaceHolderUtils.replacePlayerPlaceholders(getFormat(), player);
-        return format.replace("%message", message);
+    default String formatMessage(@NotNull ChatMessageSender sender, @NotNull String message) {
+        return sender.replacePlaceholders(getFormat().replace("%message", message));
     }
 }

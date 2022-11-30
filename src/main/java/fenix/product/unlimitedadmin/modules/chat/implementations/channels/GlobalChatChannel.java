@@ -2,8 +2,8 @@ package fenix.product.unlimitedadmin.modules.chat.implementations.channels;
 
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,11 +36,11 @@ public class GlobalChatChannel implements ILoggedChat {
 
 
     @Override
-    public @NotNull List<Player> getTargetPlayers(@Nullable Entity sender, @Nullable List<String> filteredNicknames) {
+    public @NotNull List<Player> getTargetPlayers(@NotNull ChatMessageSender sender, @Nullable List<String> filteredNicknames) {
         List<Player> targetPlayers = ILoggedChat.super.getTargetPlayers(sender, filteredNicknames);
-        if (sender instanceof Player && !ChatModuleConfig.IS_GLOBAL_CHAT_WORLD_WIDE.getBoolean()) {
-            final Player player = (Player) sender;
-            targetPlayers = targetPlayers.stream().filter(targetPlayer -> targetPlayer.getWorld() != player.getWorld()).collect(Collectors.toList());
+        if (!ChatModuleConfig.IS_GLOBAL_CHAT_WORLD_WIDE.getBoolean()) {
+            targetPlayers = targetPlayers.stream().filter(targetPlayer -> !sender.sameWorld(targetPlayer.getWorld()))
+                    .collect(Collectors.toList());
         }
         return targetPlayers;
     }

@@ -1,9 +1,8 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.channels;
 
-import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,13 +34,7 @@ public class NotificationsChatChannel implements ILoggedChat {
     }
 
     @Override
-    public String formatMessage(@Nullable Entity sender, @NotNull String message) {
-        final String s = ILoggedChat.super.formatMessage(sender, message);
-        return PlaceHolderUtils.replaceColors(s);
-    }
-
-    @Override
-    public @Nullable String broadcast(@Nullable Entity sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
+    public @Nullable String broadcast(@NotNull ChatMessageSender sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
         ILoggedChat.super.broadcast(sender, message, sendMessageConsumer);
         return null;
     }

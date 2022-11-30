@@ -2,12 +2,11 @@ package fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISubhandlerChannel;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class LogChatChannel implements ISubhandlerChannel {
-    private static Pattern pattern = Pattern.compile("§.");
+    private static final Pattern pattern = Pattern.compile("\u00A7.");
     final ChatModule chatModule;
     private File logFile;
 
@@ -39,10 +38,10 @@ public class LogChatChannel implements ISubhandlerChannel {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
-    public String onSubhandlerMessage(@Nullable Entity sender, IChatChanel parent, String message) {
+    public void onSubhandlerMessage(@NotNull ChatMessageSender sender, IChatChanel parent, String message) {
         final IChatChanel iChatChanel = ChatModule.unwrapChannel(parent);
         if (!(iChatChanel instanceof ILoggedChat)) {
-            return null;
+            return;
         }
         String logPrefix = ((ILoggedChat) iChatChanel).getLogPrefix();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("[dd/MM/yyyy HH:mm:ss]");
@@ -72,7 +71,5 @@ public class LogChatChannel implements ISubhandlerChannel {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 }

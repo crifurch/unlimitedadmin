@@ -1,12 +1,12 @@
 package fenix.product.unlimitedadmin.modules.chat.interfaces;
 
-import org.bukkit.entity.Entity;
-import org.jetbrains.annotations.Nullable;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
+import org.jetbrains.annotations.NotNull;
 
 
 public interface ISubhandlerChannel extends IChatChanel {
 
-    default String onSubhandlerMessage(@Nullable Entity sender, IChatChanel parent, String message) {
-        return broadcast(sender, parent.formatMessage(sender, message), null);
+    default void onSubhandlerMessage(@NotNull ChatMessageSender sender, IChatChanel parent, String message) {
+        broadcast(sender, parent.formatMessage(sender, message), null);
     }
 }

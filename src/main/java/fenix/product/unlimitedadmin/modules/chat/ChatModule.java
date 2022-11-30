@@ -8,7 +8,6 @@ import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
-import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.chat.commands.MuteCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.UnmuteCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.notifications.*;
@@ -19,6 +18,9 @@ import fenix.product.unlimitedadmin.modules.chat.commands.say.SayLaterCommand;
 import fenix.product.unlimitedadmin.modules.chat.data.Ignore;
 import fenix.product.unlimitedadmin.modules.chat.data.Mute;
 import fenix.product.unlimitedadmin.modules.chat.data.Notification;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ConsoleMessageSender;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.PlayerMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.GlobalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.LocalChatChannel;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.NotificationsChatChannel;
@@ -34,7 +36,6 @@ import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import fenix.product.unlimitedadmin.modules.chat.listeners.ChatMessageListener;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +53,7 @@ public class ChatModule implements IModule {
     private SpyChatChannel spyChatChannel;
     private LogChatChannel logChatChannel;
     private final Map<String, Notification> adsNotifications = new HashMap<>();
-    private final Map<Player, Player> answerMap = new HashMap<>();
+    private final Map<Player, PlayerMessageSender> answerMap = new HashMap<>();
 
     public ChatModule(@NotNull UnlimitedAdmin plugin) {
         this.plugin = plugin;
@@ -112,16 +113,16 @@ public class ChatModule implements IModule {
 
     public void addChatChannel(IChatChanel chatChannel) {
         IChatChanel toAdd = chatChannel;
+        toAdd = new MuteFirewall(toAdd, this);
+
+        if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
+            toAdd = new BadWordFirewall(toAdd, this);
+        }
         if (unwrapChannel(toAdd) instanceof ISpiedChat && spyChatChannel != null) {
             toAdd = new DublicateChildWrapper(toAdd, spyChatChannel, this);
         }
         if (unwrapChannel(toAdd) instanceof ILoggedChat && logChatChannel != null) {
             toAdd = new DublicateChildWrapper(toAdd, logChatChannel, this);
-        }
-        toAdd = new MuteFirewall(toAdd, this);
-
-        if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
-            toAdd = new BadWordFirewall(toAdd, this);
         }
         chatChannels.add(toAdd);
         chatChannels.sort(Comparator.comparingInt(o -> {
@@ -140,7 +141,7 @@ public class ChatModule implements IModule {
         return commands;
     }
 
-    public void broadcastMessage(@Nullable Entity sender, String message) {
+    public void broadcastMessage(@Nullable ChatMessageSender sender, String message) {
         String messageToSend = message;
         for (IChatChanel chatChannel : chatChannels) {
             String channelPrefix = chatChannel.getChannelPrefix();
@@ -156,8 +157,11 @@ public class ChatModule implements IModule {
                 toSend = chatChannel;
             }
             if (toSend != null) {
+                if (sender == null) {
+                    sender = new ConsoleMessageSender(null);
+                }
                 final String broadcast = toSend.broadcast(sender, messageToSend, null);
-                if (broadcast != null && sender != null) {
+                if (broadcast != null) {
                     sender.sendMessage(
                             PlaceHolderUtils.replacePlayerPlaceholders(broadcast)
                     );
@@ -176,16 +180,16 @@ public class ChatModule implements IModule {
         return list;
     }
 
-    public void addForAnswer(Entity sender, Player receiver) {
-        if (sender instanceof Player) {
-            answerMap.put(receiver, (Player) sender);
+    public void addForAnswer(ChatMessageSender sender, Player receiver) {
+        if (sender instanceof PlayerMessageSender) {
+            answerMap.put(receiver, (PlayerMessageSender) sender);
         } else {
             answerMap.remove(receiver);
         }
     }
 
     @Nullable
-    public Player getForAnswer(Player receiver) {
+    public PlayerMessageSender getForAnswer(Player receiver) {
         return answerMap.get(receiver);
     }
 
@@ -313,18 +317,16 @@ public class ChatModule implements IModule {
     }
 
 
-    public boolean requestSendMessage(Entity sender, Player receiver) {
-        if (sender instanceof Player) {
-            final Player player = (Player) sender;
-            if (PermissionsProvider.getInstance().havePermission(player, UnlimitedAdminPermissionsList.CHAT_IGNORE_BYPASS) == PermissionStatus.PERMISSION_TRUE) {
-                return true;
-            }
+    public boolean requestSendMessage(ChatMessageSender sender, Player receiver) {
+        if (sender.getPermissionStatus(UnlimitedAdminPermissionsList.CHAT_IGNORE_BYPASS) == PermissionStatus.PERMISSION_TRUE) {
+            return true;
         }
+
         final Ignore ignore = getIgnore(receiver.getUniqueId());
         if (ignore == null) {
             return true;
         }
-        return !ignore.isIgnored(sender.getUniqueId().toString());
+        return !ignore.isIgnored(sender.getUUID().toString());
     }
 
     public void setMute(Mute mute) {

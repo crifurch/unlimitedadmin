@@ -2,9 +2,10 @@ package fenix.product.unlimitedadmin.modules.chat.implementations.channels;
 
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
+import fenix.product.unlimitedadmin.modules.chat.data.sender.PlayerMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,20 +37,18 @@ public class LocalChatChannel implements ILoggedChat, ISpiedChat {
     }
 
     @Override
-    public @NotNull List<Player> getTargetPlayers(@Nullable Entity sender, @Nullable List<String> filteredNicknames) {
+    public @NotNull List<Player> getTargetPlayers(@NotNull ChatMessageSender sender, @Nullable List<String> filteredNicknames) {
         List<Player> targetPlayers = ILoggedChat.super.getTargetPlayers(sender, filteredNicknames);
-        if (sender instanceof Player) {
-            final Player player = (Player) sender;
+        if (sender instanceof PlayerMessageSender) {
             final int squaredRadius = ChatModuleConfig.LOCAL_CHAT_RADIUS.getInt() * ChatModuleConfig.LOCAL_CHAT_RADIUS.getInt();
             targetPlayers = targetPlayers.stream().filter(targetPlayer -> {
-                if (sender == targetPlayer) {
+                if (sender.sameAs(targetPlayer)) {
                     return true;
                 }
-                final boolean isInSameWorlds = targetPlayer.getWorld() == player.getWorld();
-                if (!isInSameWorlds) {
+                if (!sender.sameWorld(targetPlayer.getWorld())) {
                     return false;
                 }
-                return targetPlayer.getLocation().distanceSquared(player.getLocation()) <= squaredRadius;
+                return sender.inDistance(targetPlayer.getLocation(), squaredRadius);
             }).collect(Collectors.toList());
         }
         return targetPlayers;
