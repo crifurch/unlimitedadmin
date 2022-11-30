@@ -29,6 +29,7 @@ public enum ChatModuleConfig implements IConfig {
     PRIVATE_CHAT_FORMAT("chat.private.format", "&8[&f%prefix%displayname%suffix &8-> &f%2prefix%2displayname%2suffix&8]: &f%message", "format of private chat"),
     IS_LOG_CHAT_ENABLED("log.enabled", true, "if true, log chat will be enabled, if false, log chat will be disabled"),
     SHOW_NOBODY_HEAR_YOU_MESSAGE("show-nobody-hear-you-message", true, "if true, nobody hear you message will be shown"),
+    ALLOW_PLAYER_USE_COLOR_CODES("allow-player-use-color-codes", true, "if true, players can use color codes in chat"),
     NOTIFICATIONS_ENABLED("notifications.enabled", true, "if true, notifications will be enabled\n" +
             "example of ads:\n" +
             "  notifications:\n" +

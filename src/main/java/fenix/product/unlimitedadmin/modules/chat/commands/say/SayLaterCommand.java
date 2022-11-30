@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.say;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
@@ -51,10 +52,12 @@ public class SayLaterCommand implements ICommand {
             throw new NotifibleException(LangConfig.MAX_SAY_DELAY_ERROR.getText(ChatModuleConfig.SAY_MAX_DELAY.getInt() + ""));
         }
         String message = String.join(" ", argsString.subList(1, argsString.size()));
-        String prefix = ChatModuleConfig.SAY_FORMAT.getString();
-        message = prefix.replaceAll("%message", message);
         final ChatMessageSender chatMessageSender = ChatMessageSender.fromSender(sender);
-        message = chatMessageSender.replacePlaceholders(message);
+        String prefix = chatMessageSender.replacePlaceholders(ChatModuleConfig.SAY_FORMAT.getString());
+        if (ChatModuleConfig.ALLOW_PLAYER_USE_COLOR_CODES.getBoolean()) {
+            message = PlaceHolderUtils.replaceColors(message);
+        }
+        message = prefix.replaceAll("%message", message);
         final Collection<String> notificationNames = chatModule.getNotificationNames();
         String name = "saylater";
         int i = 0;

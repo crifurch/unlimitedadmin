@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.say;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
@@ -41,11 +42,13 @@ public class SayCommand implements ICommand {
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        String message = String.join(" ", argsString);
-        String prefix = ChatModuleConfig.SAY_FORMAT.getString();
-        message = prefix.replaceAll("%message", message);
         final ChatMessageSender chatMessageSender = ChatMessageSender.fromSender(sender);
-        message = chatMessageSender.replacePlaceholders(message);
+        String message = String.join(" ", argsString);
+        String prefix = chatMessageSender.replacePlaceholders(ChatModuleConfig.SAY_FORMAT.getString());
+        if (ChatModuleConfig.ALLOW_PLAYER_USE_COLOR_CODES.getBoolean()) {
+            message = PlaceHolderUtils.replaceColors(message);
+        }
+        message = prefix.replaceAll("%message", message);
         chatModule.broadcastMessage(chatMessageSender, NotificationsChatChannel.CHANNEL_PREFIX + message);
     }
 }

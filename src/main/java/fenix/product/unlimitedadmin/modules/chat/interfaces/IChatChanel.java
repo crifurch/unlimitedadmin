@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.chat.interfaces;
 
 import fenix.product.unlimitedadmin.api.LangConfig;
+import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
@@ -65,6 +66,10 @@ public interface IChatChanel {
 
 
     default String formatMessage(@NotNull ChatMessageSender sender, @NotNull String message) {
-        return sender.replacePlaceholders(getFormat().replace("%message", message));
+        String format = sender.replacePlaceholders(getFormat());
+        if (ChatModuleConfig.ALLOW_PLAYER_USE_COLOR_CODES.getBoolean()) {
+            message = PlaceHolderUtils.replaceColors(message);
+        }
+        return format.replace("%message", message);
     }
 }
