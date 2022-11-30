@@ -67,7 +67,7 @@ public class LogChatChannel implements ISubhandlerChannel {
 
         String formatMessage = pattern.matcher(message).replaceAll("");
         String logMessage = dtf.format(now) + " " + logPrefix + " " + formatMessage;
-        try {//ust-8
+        try {
             final OutputStreamWriter out = new OutputStreamWriter(Files.newOutputStream(logFile.toPath(), StandardOpenOption.APPEND), StandardCharsets.UTF_8);
             BufferedWriter output = new BufferedWriter(out);
 
