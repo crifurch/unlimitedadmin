@@ -74,7 +74,7 @@ public class SpyChatChannel implements ISubhandlerChannel {
     @Override
     public @NotNull List<Player> getTargetPlayers(@NotNull ChatMessageSender sender, @Nullable List<String> filteredNicknames) {
         final List<Player> targetPlayers = ISubhandlerChannel.super.getTargetPlayers(sender, filteredNicknames);
-        return targetPlayers.stream().filter(player -> sender.sameAs(player) && PermissionsProvider.getInstance().
+        return targetPlayers.stream().filter(player -> !sender.sameAs(player) && PermissionsProvider.getInstance().
                 havePermission(player, UnlimitedAdminPermissionsList.CHAT_SPY) == PermissionStatus.PERMISSION_TRUE
         ).collect(Collectors.toList());
     }
