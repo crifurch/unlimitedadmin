@@ -23,7 +23,7 @@ public class AdsFirewall extends FirewallChatChannel {
     @Override
     public boolean isBlocked(ChatMessageSender sender, String message) {
         final List<String> stringList1 = ChatModuleConfig.ADS_CHANNELS.getStringList();
-        if (stringList1.contains("*") || stringList1.contains(sender.getName())) {
+        if (!(stringList1.contains("*") || stringList1.contains(getName()))) {
             return false;
         }
         if (sender.getPermissionStatus(UnlimitedAdminPermissionsList.CHAT_ADS_BYPASS) == PermissionStatus.PERMISSION_TRUE) {

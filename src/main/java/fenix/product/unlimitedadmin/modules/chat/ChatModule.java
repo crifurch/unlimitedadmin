@@ -116,11 +116,11 @@ public class ChatModule implements IModule {
         IChatChanel toAdd = chatChannel;
         toAdd = new MuteFirewall(toAdd, this);
 
-        if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
-            toAdd = new BadWordFirewall(toAdd, this);
-        }
         if (ChatModuleConfig.ADS_ENABLED.getBoolean()) {
             toAdd = new AdsFirewall(toAdd, this);
+        }
+        if (ChatModuleConfig.BAD_WORDS_ENABLED.getBoolean()) {
+            toAdd = new BadWordFirewall(toAdd, this);
         }
         if (unwrapChannel(toAdd) instanceof ISpiedChat && spyChatChannel != null) {
             toAdd = new DublicateChildWrapper(toAdd, spyChatChannel, this);
