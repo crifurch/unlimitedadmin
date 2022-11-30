@@ -10,8 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
@@ -64,8 +67,10 @@ public class LogChatChannel implements ISubhandlerChannel {
 
         String formatMessage = pattern.matcher(message).replaceAll("");
         String logMessage = dtf.format(now) + " " + logPrefix + " " + formatMessage;
-        try {
-            BufferedWriter output = new BufferedWriter(new FileWriter(logFile, true));
+        try {//ust-8
+            final OutputStreamWriter out = new OutputStreamWriter(Files.newOutputStream(logFile.toPath(), StandardOpenOption.APPEND), StandardCharsets.UTF_8);
+            BufferedWriter output = new BufferedWriter(out);
+
             output.append(logMessage).append(System.lineSeparator());
             output.close();
         } catch (IOException e) {
