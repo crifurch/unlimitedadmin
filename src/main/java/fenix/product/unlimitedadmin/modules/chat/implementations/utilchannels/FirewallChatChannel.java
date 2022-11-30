@@ -57,10 +57,10 @@ public class FirewallChatChannel implements IChatChanel {
 
     @Override
     public @Nullable String broadcast(@NotNull ChatMessageSender sender, @NotNull String message, @Nullable Consumer<String> sendMessageConsumer) {
-        if (sendMessageConsumer != null) {
-            sendMessageConsumer.accept(child.formatMessage(sender, message));
-        }
         if (isBlocked(sender, message)) {
+            if (sendMessageConsumer != null) {
+                sendMessageConsumer.accept(child.formatMessage(sender, message));
+            }
             return getBlockedMessage(sender, message);
         }
 
