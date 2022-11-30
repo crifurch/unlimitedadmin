@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SaveNotificationCommand implements ICommand {
@@ -23,6 +24,11 @@ public class SaveNotificationCommand implements ICommand {
     @Override
     public String getUsageText() {
         return ICommand.super.getUsageText() + " <name>";
+    }
+
+    @Override
+    public List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
+        return new ArrayList<>(chatModule.getNotificationNames());
     }
 
     @Override

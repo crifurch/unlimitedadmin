@@ -20,7 +20,6 @@ public class NotificationsListCommand implements ICommand {
         return "listnotifies";
     }
 
-
     @Override
     public byte getMaxArgsSize() {
         return 0;

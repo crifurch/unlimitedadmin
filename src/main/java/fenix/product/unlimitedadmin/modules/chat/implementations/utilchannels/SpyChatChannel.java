@@ -63,7 +63,7 @@ public class SpyChatChannel implements ISubhandlerChannel {
                 }
             }
 
-            if (parentTargetPlayers.contains(targetPlayer) && !muted) {
+            if (!muted && parentTargetPlayers.contains(targetPlayer)) {
                 return;
             }
             targetPlayer.sendMessage(formattedMessage);

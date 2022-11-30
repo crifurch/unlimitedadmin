@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteNotificationCommand implements ICommand {
@@ -33,6 +34,11 @@ public class DeleteNotificationCommand implements ICommand {
     @Override
     public byte getMaxArgsSize() {
         return 1;
+    }
+
+    @Override
+    public List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
+        return new ArrayList<>(chatModule.getNotificationNames());
     }
 
     @Override

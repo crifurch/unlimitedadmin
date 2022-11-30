@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.ILoggedChat;
+import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GlobalChatChannel implements ILoggedChat {
+public class GlobalChatChannel implements ILoggedChat, ISpiedChat {
 
     final ChatModule chatModule;
 
