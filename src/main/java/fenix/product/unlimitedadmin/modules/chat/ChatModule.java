@@ -1,7 +1,9 @@
 package fenix.product.unlimitedadmin.modules.chat;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
+import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
@@ -9,9 +11,7 @@ import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.chat.commands.MuteCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.UnmuteCommand;
-import fenix.product.unlimitedadmin.modules.chat.commands.notifications.AddNotificationCommand;
-import fenix.product.unlimitedadmin.modules.chat.commands.notifications.CancelNotificationCommand;
-import fenix.product.unlimitedadmin.modules.chat.commands.notifications.NotificationsListCommand;
+import fenix.product.unlimitedadmin.modules.chat.commands.notifications.*;
 import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.AnswerCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.privatemessages.MsgCommand;
 import fenix.product.unlimitedadmin.modules.chat.commands.say.SayCommand;
@@ -41,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 public class ChatModule implements IModule {
 
@@ -64,6 +63,9 @@ public class ChatModule implements IModule {
             commands.add(new CancelNotificationCommand(this));
             commands.add(new NotificationsListCommand(this));
             commands.add(new AddNotificationCommand(this));
+            commands.add(new SaveNotificationCommand(this));
+            commands.add(new DeleteNotificationCommand(this));
+            commands.add(new NotificationInfoCommand(this));
             loadNotifications();
         }
 
@@ -191,16 +193,23 @@ public class ChatModule implements IModule {
         return adsNotifications.keySet();
     }
 
+    public boolean addNotification(String name, Notification notification) {
+        if (adsNotifications.containsKey(name)) {
+            return false;
+        }
+        adsNotifications.put(name, notification);
+        return true;
+    }
+
     public boolean addCyclicNotification(String name, String message, int time) {
         return addCyclicNotification(name, message, time, null);
     }
 
     public boolean addCyclicNotification(String name, String message, int time, Consumer<String> onMessage) {
-        if (adsNotifications.containsKey(name)) {
+        final Notification value = new Notification(this, message, time, onMessage);
+        if (!addNotification(name, value)) {
             return false;
         }
-        final Notification value = new Notification(this, message, time, onMessage);
-        adsNotifications.put(name, value);
         value.start();
         return true;
     }
@@ -210,18 +219,43 @@ public class ChatModule implements IModule {
     }
 
     public boolean addDelayedNotification(String name, String message, int time, Consumer<String> onMessage) {
-        if (adsNotifications.containsKey(name)) {
-            return false;
-        }
         final Notification value = new Notification(this, message, time, s -> {
             cancelNotification(name);
             if (onMessage != null) {
                 onMessage.accept(s);
             }
         });
-        adsNotifications.put(name, value);
+        if (!addNotification(name, value)) {
+            return false;
+        }
         value.schedule();
         return true;
+    }
+
+    private void loadNotifications() {
+        try {
+            final ConfigurationSection section = ChatModuleConfig.NOTIFICATION_MESSAGES.getSection();
+            if (section == null) return;
+            for (String key : section.getKeys(false)) {
+                try {
+                    final ConfigurationSection notificationSection = section.getConfigurationSection(key);
+                    if (notificationSection == null) {
+                        continue;
+                    }
+                    final Notification notification = Notification.fromConfig(this, notificationSection);
+                    if (notification == null) {
+                        continue;
+                    }
+                    if (addNotification(key, notification)) {
+                        notification.start();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean cancelNotification(String name) {
@@ -232,32 +266,52 @@ public class ChatModule implements IModule {
         return remove != null;
     }
 
-    private void loadNotifications() {
+    public void saveNotification(String name) throws NotifibleException {
+        final Notification notification = adsNotifications.get(name);
+        if (notification == null) {
+            throw new NotifibleException(LangConfig.NO_SUCH_NOTIFICATION.getText(name));
+        }
         try {
-            final ConfigurationSection section = ChatModuleConfig.NOTIFICATION_MESSAGES.getSection();
-            if (section == null) return;
-            for (String key : section.getKeys(false)) {
-
-                try {
-                    final ConfigurationSection notificationSection = section.getConfigurationSection(key);
-                    if (notificationSection == null) {
-                        continue;
-                    }
-                    final String message = notificationSection.getString("message");
-                    final int time = notificationSection.getInt("interval");
-                    if (message == null || time == 0) {
-                        continue;
-                    }
-                    plugin.getLogger().log(Level.INFO, "Register ad " + key + " with message " + message + " and time " + time);
-                    addCyclicNotification(key, message, time);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            ConfigurationSection section = ChatModuleConfig.NOTIFICATION_MESSAGES.getSection();
+            if (section == null) {
+                section = ChatModuleConfig.NOTIFICATION_MESSAGES.createSection();
             }
+            ConfigurationSection notificationSection = section.getConfigurationSection(name);
+            if (notificationSection == null) {
+                notificationSection = section.createSection(name);
+            }
+            notification.toConfig(notificationSection);
+            ChatModuleConfig.NOTIFICATION_MESSAGES.saveSection(section);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public String getNotificationInfo(String name) throws NotifibleException {
+        final Notification notification = adsNotifications.get(name);
+        if (notification == null) {
+            throw new NotifibleException(LangConfig.NO_SUCH_NOTIFICATION.getText(name));
+        }
+        return notification.getInfo(name);
+    }
+
+    public void deleteNotification(String name) throws NotifibleException {
+        final Notification notification = adsNotifications.get(name);
+        if (notification == null) {
+            throw new NotifibleException(LangConfig.NO_SUCH_NOTIFICATION.getText(name));
+        }
+        try {
+            ConfigurationSection section = ChatModuleConfig.NOTIFICATION_MESSAGES.getSection();
+            if (section == null) {
+                section = ChatModuleConfig.NOTIFICATION_MESSAGES.createSection();
+            }
+            section.set(name, null);
+            ChatModuleConfig.NOTIFICATION_MESSAGES.saveSection(section);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public boolean requestSendMessage(Entity sender, Player receiver) {
         if (sender instanceof Player) {

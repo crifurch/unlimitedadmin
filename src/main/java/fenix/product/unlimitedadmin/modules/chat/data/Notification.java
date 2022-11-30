@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.modules.chat.implementations.channels.Notifi
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -64,9 +65,19 @@ public class Notification implements Runnable {
         if (onSendMessagesConsumer != null) onSendMessagesConsumer.accept(message);
     }
 
-    public ConfigurationSection toConfig(ConfigurationSection section) {
+    public static Notification fromConfig(ChatModule chatModule, @NotNull ConfigurationSection section) {
+        String message = section.getString("message");
+        if (message == null) return null;
+        int interval = section.getInt("interval");
+        return new Notification(chatModule, message, interval);
+    }
+
+    public String getInfo(String name) {
+        return "name: " + name + "\nmessage: " + message + "\ninterval: " + interval / 20 + "s";
+    }
+
+    public void toConfig(ConfigurationSection section) {
         section.set("message", message);
         section.set("interval", interval / 20);
-        return section;
     }
 }

@@ -89,6 +89,14 @@ public enum ChatModuleConfig implements IConfig {
         return config.getConfigurationSection(getPath());
     }
 
+    public ConfigurationSection createSection() {
+        return config.createConfigurationSection(path);
+    }
+
+    public void saveSection(ConfigurationSection section) {
+        config.set(path, section, true);
+    }
+
 
     @Override
     public String getPath() {
