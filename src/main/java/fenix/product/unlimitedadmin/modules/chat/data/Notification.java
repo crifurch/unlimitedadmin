@@ -47,11 +47,11 @@ public class Notification implements Runnable {
     }
 
     public String getMessage() {
-        return message;
+        return message.substring(NotificationsChatChannel.CHANNEL_PREFIX.length());
     }
 
     public int getInterval() {
-        return interval;
+        return interval / 20;
     }
 
     @Override
@@ -73,11 +73,12 @@ public class Notification implements Runnable {
     }
 
     public String getInfo(String name) {
-        return "name: " + name + "\nmessage: " + message + "\ninterval: " + interval / 20 + "s";
+        return "name: " + name + "\nmessage: " + getMessage() + "\ninterval: " + getInterval() + "s";
     }
 
+
     public void toConfig(ConfigurationSection section) {
-        section.set("message", message);
-        section.set("interval", interval / 20);
+        section.set("message", getMessage());
+        section.set("interval", getInterval());
     }
 }
