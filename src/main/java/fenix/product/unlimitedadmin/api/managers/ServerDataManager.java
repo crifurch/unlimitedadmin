@@ -63,59 +63,8 @@ public class ServerDataManager {
         return Bukkit.getOperators().stream().map(OfflinePlayer::getName).collect(Collectors.toList());
     }
 
-    @SuppressWarnings("rawtypes")
     public static void setOP(String player, boolean op) {
         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player);
         offlinePlayer.setOp(op);
-        File file = new File("ops.json");
-//        StringBuilder sb = new StringBuilder();
-//        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                sb.append(line);
-//                sb.append(System.lineSeparator());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return;
-//        }
-//        String json = sb.toString();
-//        UnlimitedAdmin.getInstance().getLogger().info(json);
-//        Gson gson = new Gson();
-//        HashMap[] ops = gson.fromJson(json, HashMap[].class);
-//        boolean found = false;
-//        for (HashMap opMap : ops) {
-//            if (opMap.get("name").equals(player)) {
-//                found = true;
-//                break;
-//            }
-//        }
-//        if (op) {
-//            //add op
-//            if (found) {
-//                return;
-//            }
-//            final int level = Integer.parseInt(getServerProperty("op-permission-level", "4"));
-//            HashMap<String, Object> newOp = new HashMap<>();
-//            newOp.put("name", offlinePlayer.getName());
-//            newOp.put("uuid", offlinePlayer.getUniqueId().toString());
-//            newOp.put("level", level);
-//            newOp.put("bypassesPlayerLimit", false);
-//            ops = Arrays.copyOf(ops, ops.length + 1);
-//            ops[ops.length - 1] = newOp;
-//        } else {
-//            if (!found) {
-//                return;
-//            }
-//            ops = Arrays.stream(ops).filter(opMap -> !opMap.get("name").equals(player)).toArray(HashMap[]::new);
-//        }
-//        json = gson.toJson(ops);
-//        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-//            bw.write(json);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            //do nothing
-//        }
-
     }
 }
