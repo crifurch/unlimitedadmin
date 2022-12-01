@@ -2,31 +2,23 @@ package fenix.product.unlimitedadmin.modules.antiop.commands;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
 import fenix.product.unlimitedadmin.modules.antiop.AntiOPConfig;
-import fenix.product.unlimitedadmin.modules.antiop.AntiOPModule;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AntiOPRemoveCommand implements ICommand {
-    final AntiOPModule module;
-
-    public AntiOPRemoveCommand(AntiOPModule module) {
-        this.module = module;
-    }
-
+public class AntiOpOpCommand implements ICommand {
     @Override
     public @NotNull String getName() {
-        return "add";
+        return "op";
     }
 
     @Override
     public String getUsageText() {
-        return "/add <uuid|nickname>";
+        return "/op <player>";
     }
 
     @Override
@@ -34,21 +26,21 @@ public class AntiOPRemoveCommand implements ICommand {
         return 1;
     }
 
-    @Override
-    public byte getMaxArgsSize() {
-        return 1;
-    }
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        final String name = argsString.get(0);
         final List<String> ops = new ArrayList<>(AntiOPConfig.OP_LIST.getStringList());
-        if (!ops.contains(name)) {
-            return;
+        ArrayList<String> notAdded = new ArrayList<>();
+        for (String player : argsString) {
+            if (!ops.contains(player)) {
+                notAdded.add(player);
+                continue;
+            }
+            ServerDataManager.setOP(player, true);
         }
-        ops.remove(name);
-        AntiOPConfig.OP_LIST.set(ops, true);
-        module.checkOps(Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        if (!notAdded.isEmpty()) {
+            throw new NotifibleException("Players " + String.join(", ", notAdded) + " can't be OP");
+        }
     }
 
 }

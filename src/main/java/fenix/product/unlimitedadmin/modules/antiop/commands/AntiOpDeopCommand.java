@@ -2,22 +2,23 @@ package fenix.product.unlimitedadmin.modules.antiop.commands;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.modules.antiop.AntiOPConfig;
+import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AntiOpCommand implements ICommand {
+public class AntiOpDeopCommand implements ICommand {
     @Override
     public @NotNull String getName() {
-        return "op";
+        return "deop";
     }
 
     @Override
     public String getUsageText() {
-        return "/op <player>";
+        return "/deop <player>";
     }
 
     @Override
@@ -26,18 +27,16 @@ public class AntiOpCommand implements ICommand {
     }
 
     @Override
-    public byte getMaxArgsSize() {
-        return 1;
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
+        return new ArrayList<>(ServerDataManager.getAllOPs());
     }
-
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        final String name = argsString.get(0);
-        final List<String> ops = new ArrayList<>(AntiOPConfig.OP_LIST.getStringList());
-        if (!ops.contains(name)) {
-           throw new RuntimeException("Player is not in the op list");
+        for (String player : argsString) {
+            ServerDataManager.setOP(player, false);
         }
     }
 
 }
+

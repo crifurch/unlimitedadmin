@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public interface ICommandGroup extends ICommand {
         return ICommand.super.getUsageText() + "<command>";
     }
 
-    List<ICommand> getCommands();
+    Collection<ICommand> getCommands();
 
     @Override
     default byte getMinArgsSize() {
@@ -41,7 +42,7 @@ public interface ICommandGroup extends ICommand {
 
     @Override
     default void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        final List<ICommand> commands = getCommands();
+        final Collection<ICommand> commands = getCommands();
         final ICommand command = commands.stream().filter(c -> c.getName().equalsIgnoreCase(argsString.get(0))).findFirst().orElse(null);
         if (command == null) {
             throw new CommandNotEnoughArgsException(getUsageText());
@@ -50,9 +51,16 @@ public interface ICommandGroup extends ICommand {
         try {
             command.assertArgsSize(args);
         } catch (CommandNotEnoughArgsException e) {
+            if (!shouldOverrideUsageText()) {
+                throw e;
+            }
             throw new CommandNotEnoughArgsException("/" + getName()
                     + " " + command.getUsageText().substring(1));
         }
         command.onCommand(sender, args);
+    }
+
+    default boolean shouldOverrideUsageText() {
+        return true;
     }
 }

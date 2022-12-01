@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public interface IModule {
-
+public interface IModule extends ICommandGroup {
+    @Override
     default List<ICommand> getCommands() {
         return Collections.emptyList();
     }
@@ -22,6 +22,8 @@ public interface IModule {
         sender.sendMessage("This command is bad for module " + getName());
     }
 
-    String getName();
-
+    @Override
+    default boolean shouldOverrideUsageText() {
+        return false;
+    }
 }

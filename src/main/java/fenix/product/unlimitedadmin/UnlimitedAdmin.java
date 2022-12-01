@@ -21,9 +21,7 @@ import fenix.product.unlimitedadmin.modules.world.WorldManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,6 @@ public final class UnlimitedAdmin extends JavaPlugin {
         return INSTANCE;
     }
 
-    private String mainWorldName = "overworld";
 
     @Override
     public void onEnable() {
@@ -50,7 +47,6 @@ public final class UnlimitedAdmin extends JavaPlugin {
         UnlimitedAdminConfig.load();
         LangConfig.load();
         commandExecutor = new UnlimitedAdminExecutor(this);
-        setMainWoldName();
         loadModules();
 
 
@@ -147,26 +143,5 @@ public final class UnlimitedAdmin extends JavaPlugin {
         return new ModuleConfig(getModuleConfigFile(module));
     }
 
-    private void setMainWoldName() {
-        final File file = new File("server.properties");
-        if (file.exists()) {
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("level-name")) {
-                        mainWorldName = line.split("=")[1];
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public String getMainWorldName() {
-        return mainWorldName;
-    }
 
 }

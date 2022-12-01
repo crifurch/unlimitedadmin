@@ -3,13 +3,17 @@ package fenix.product.unlimitedadmin.modules.antiop;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOPGroupCommand;
+import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOpDeopCommand;
+import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOpOpCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,7 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class AntiOPModule implements IModule, Listener {
@@ -33,13 +37,15 @@ public class AntiOPModule implements IModule, Listener {
         this.plugin = plugin;
         AntiOPConfig.load();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        commands = Collections.singletonList(
-                new AntiOPGroupCommand(this)
+        commands = Arrays.asList(
+                new AntiOPGroupCommand(this),
+                new AntiOpDeopCommand(),
+                new AntiOpOpCommand()
         );
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "antiop";
     }
 
@@ -47,6 +53,7 @@ public class AntiOPModule implements IModule, Listener {
     public void onPlayerLogin(PlayerJoinEvent event) {
         checkOps(event.getPlayer());
     }
+
     public void checkOps(Player... players) {
         for (Player player : players) {
             if (player.isOp()) {
@@ -61,7 +68,7 @@ public class AntiOPModule implements IModule, Listener {
 
     private void deOP(Player player) {
         if (player.isOp()) {
-            player.setOp(false);
+            ServerDataManager.setOP(player.getName(), false);
         }
         if (AntiOPConfig.LOG.getBoolean()) {
             logOp(player);

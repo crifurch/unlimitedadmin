@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class AntiOPGroupCommand implements ICommandGroup {
@@ -18,7 +19,7 @@ public class AntiOPGroupCommand implements ICommandGroup {
         this.module = module;
         this.commands = Arrays.asList(
                 new AntiOPAddCommand(),
-                new AntiOPRemoveCommand(),
+                new AntiOPRemoveCommand(module),
                 new AntiOPCheckCommand(module)
         );
     }
@@ -29,7 +30,7 @@ public class AntiOPGroupCommand implements ICommandGroup {
     }
 
     @Override
-    public List<ICommand> getCommands() {
+    public Collection<ICommand> getCommands() {
         return commands;
     }
 
