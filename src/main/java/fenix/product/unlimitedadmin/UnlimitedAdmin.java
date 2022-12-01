@@ -6,6 +6,7 @@ import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
 import fenix.product.unlimitedadmin.api.utils.CommandsRegister;
+import fenix.product.unlimitedadmin.modules.antiop.AntiOPModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.core.UnlimitedAdminExecutor;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
@@ -92,6 +93,9 @@ public final class UnlimitedAdmin extends JavaPlugin {
         if (UnlimitedAdminConfig.CHAT_MODULE_ENABLED.getBoolean()) {
             rawModules.add(new ChatModule(this));
         }
+        if (UnlimitedAdminConfig.ANTIOP_MODULE_ENABLED.getBoolean()) {
+            rawModules.add(new AntiOPModule(this));
+        }
 
 
         for (IModule module : rawModules) {
@@ -139,7 +143,6 @@ public final class UnlimitedAdmin extends JavaPlugin {
         return config;
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public ModuleConfig getModuleConfig(IModule module) {
         return new ModuleConfig(getModuleConfigFile(module));
     }

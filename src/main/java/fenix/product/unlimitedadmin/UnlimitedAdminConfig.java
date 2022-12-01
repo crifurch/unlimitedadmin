@@ -18,6 +18,8 @@ public enum UnlimitedAdminConfig {
     SHOP_MODULE_ENABLED("modules.shop", true, "Manage your donate shop"),
 
     CHAT_MODULE_ENABLED("modules.chat", true, "Manage your chats"),
+
+    ANTIOP_MODULE_ENABLED("modules.antiop", true, "Prevent players to be OP"),
     SERVER_NAME("server", "Server", "Server name"),
     ;
 
