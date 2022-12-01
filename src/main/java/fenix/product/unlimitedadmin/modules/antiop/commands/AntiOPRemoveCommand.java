@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,12 @@ public class AntiOPRemoveCommand implements ICommand {
 
     @Override
     public @NotNull String getName() {
-        return "add";
+        return "remove";
     }
 
     @Override
     public String getUsageText() {
-        return "/add <uuid|nickname>";
+        return "/remove <uuid|nickname>";
     }
 
     @Override
@@ -37,6 +38,12 @@ public class AntiOPRemoveCommand implements ICommand {
     @Override
     public byte getMaxArgsSize() {
         return 1;
+    }
+
+
+    @Override
+    public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
+        return AntiOPConfig.OP_LIST.getStringList();
     }
 
     @Override
