@@ -8,7 +8,6 @@ public interface IConfig {
 
     Object getDefaultValue();
 
-
     default boolean isOptional() {
         return false;
     }

@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.tablist;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
-import fenix.product.unlimitedadmin.modules.tablist.utils.TabListPlaceHolderUtils;
+import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,7 +25,7 @@ public class TabListModule implements IModule, Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
         final Player player = event.getPlayer();
-        final String formatedText = TabListPlaceHolderUtils.replacePlayerPlaceholders(player,
+        final String formatedText = PlaceHolderUtils.replacePlayerPlaceholders(
                 TabListConfig.TABLIST_FORMAT.getString());
         player.setPlayerListName(formatedText);
     }

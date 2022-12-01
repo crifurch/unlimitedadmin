@@ -2,9 +2,9 @@ package fenix.product.unlimitedadmin.modules.playersmap;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.playersmap.data.CachedPlayer;
 import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
-import fenix.product.unlimitedadmin.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

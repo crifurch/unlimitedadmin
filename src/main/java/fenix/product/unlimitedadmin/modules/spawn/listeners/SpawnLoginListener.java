@@ -1,9 +1,9 @@
 package fenix.product.unlimitedadmin.modules.spawn.listeners;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
-import fenix.product.unlimitedadmin.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

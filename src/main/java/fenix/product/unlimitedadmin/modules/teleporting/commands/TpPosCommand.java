@@ -5,7 +5,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.utils.PlayerUtils;
+import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

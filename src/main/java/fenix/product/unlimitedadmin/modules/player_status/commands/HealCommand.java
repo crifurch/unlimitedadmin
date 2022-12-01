@@ -6,7 +6,7 @@ import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOtherPermissionsException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.utils.PlayerUtils;
+import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

@@ -1,18 +1,15 @@
 package fenix.product.unlimitedadmin.modules.spawn.listeners;
 
 import fenix.product.unlimitedadmin.GlobalConstants;
-import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
+import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import fenix.product.unlimitedadmin.modules.spawn.events.RespawnTeleportEvent;
-import fenix.product.unlimitedadmin.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
-
-import java.util.concurrent.CompletableFuture;
 
 public class SpawnDeathListener implements Listener {
     final SpawnModule module;
