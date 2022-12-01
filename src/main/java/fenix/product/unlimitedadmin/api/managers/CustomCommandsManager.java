@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.api.utils;
+package fenix.product.unlimitedadmin.api.managers;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import org.bukkit.Bukkit;
@@ -15,19 +15,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-public class CommandsRegister {
-    private static CommandsRegister INSTANCE;
+public class CustomCommandsManager {
+    private static CustomCommandsManager INSTANCE;
     private static Plugin plugin;
 
-    public static CommandsRegister getInstance() {
+    public static CustomCommandsManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new CommandsRegister();
+            INSTANCE = new CustomCommandsManager();
         }
         return INSTANCE;
     }
 
     public static void init(Plugin plugin) {
-        CommandsRegister.plugin = plugin;
+        CustomCommandsManager.plugin = plugin;
     }
 
     private static PluginCommand getCommand(String name, Plugin plugin) {

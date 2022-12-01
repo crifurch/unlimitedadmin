@@ -4,8 +4,8 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.ModuleConfig;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.managers.CustomCommandsManager;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
-import fenix.product.unlimitedadmin.api.utils.CommandsRegister;
 import fenix.product.unlimitedadmin.modules.antiop.AntiOPModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.core.UnlimitedAdminExecutor;
@@ -42,7 +42,7 @@ public final class UnlimitedAdmin extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
-        CommandsRegister.init(this);
+        CustomCommandsManager.init(this);
         UnlimitedAdminConfig.load();
         LangConfig.load();
         new UnlimitedAdminExecutor(this);
@@ -95,7 +95,7 @@ public final class UnlimitedAdmin extends JavaPlugin {
 
         for (IModule module : rawModules) {
             for (ICommand command : module.getCommands()) {
-                final PluginCommand pluginCommand = CommandsRegister.getInstance().registerCommand(command);
+                final PluginCommand pluginCommand = CustomCommandsManager.getInstance().registerCommand(command);
                 pluginCommand.setExecutor(new CommandExecutor(this, command));
             }
         }
