@@ -1,6 +1,6 @@
 package fenix.product.unlimitedadmin.integrations.permissions;
 
-import fenix.product.unlimitedadmin.utils.HookManager;
+import fenix.product.unlimitedadmin.api.managers.HookManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

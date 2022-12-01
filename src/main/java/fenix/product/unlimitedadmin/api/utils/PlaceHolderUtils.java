@@ -1,8 +1,8 @@
 package fenix.product.unlimitedadmin.api.utils;
 
 import fenix.product.unlimitedadmin.UnlimitedAdminConfig;
+import fenix.product.unlimitedadmin.api.managers.HookManager;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
-import fenix.product.unlimitedadmin.utils.HookManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;

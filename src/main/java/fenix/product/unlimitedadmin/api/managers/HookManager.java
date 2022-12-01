@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.utils;
+package fenix.product.unlimitedadmin.api.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

@@ -29,7 +29,6 @@ import java.util.List;
 public final class UnlimitedAdmin extends JavaPlugin {
     private static UnlimitedAdmin INSTANCE;
 
-    private UnlimitedAdminExecutor commandExecutor;
 
 
     private final List<IModule> modules = new ArrayList<>();
@@ -46,7 +45,7 @@ public final class UnlimitedAdmin extends JavaPlugin {
         CommandsRegister.init(this);
         UnlimitedAdminConfig.load();
         LangConfig.load();
-        commandExecutor = new UnlimitedAdminExecutor(this);
+        new UnlimitedAdminExecutor(this);
         loadModules();
 
 
