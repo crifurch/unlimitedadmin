@@ -1,6 +1,6 @@
 package fenix.product.unlimitedadmin.modules.spawn.listeners;
 
-import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.api.GlobalConstants;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;

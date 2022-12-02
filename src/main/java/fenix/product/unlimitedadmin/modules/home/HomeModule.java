@@ -1,11 +1,12 @@
 package fenix.product.unlimitedadmin.modules.home;
 
-import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.GlobalConstants;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.home.commands.DelHomeCommand;
@@ -18,7 +19,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class HomeModule implements IModule, Listener {
+public class HomeModule implements IModule {
 
     private static YamlConfiguration cfg;
     private static File f;
@@ -35,7 +35,7 @@ public class HomeModule implements IModule, Listener {
 
     public HomeModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getModuleFolder(this), Collections.singletonList("homes.yml"));
+        f = FileUtils.getFileFromList(plugin.getModuleFolder(this), Collections.singletonList("homes.yml"));
         cfg = YamlConfiguration.loadConfiguration(f);
         HomeModuleConfig.init(this);
         commands.add(new SetHomeCommand(this));
@@ -49,8 +49,8 @@ public class HomeModule implements IModule, Listener {
 
 
     @Override
-    public String getName() {
-        return "home";
+    public @NotNull String getName() {
+        return ModulesManager.HOME.getName();
     }
 
     private void writeHomeToConfig(Home home) {
@@ -185,7 +185,7 @@ public class HomeModule implements IModule, Listener {
     public String parseHomeName(@NotNull Player owner, @NotNull String name) throws NotifibleException {
         if (name.contains(":")) {
             final String[] split = name.split(":");
-            final UUID playerUUID = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(split[0]);
+            final UUID playerUUID = plugin.getPlayersMapModule().getPlayerUUID(split[0]);
             if (split.length != 2 || playerUUID == null) {
                 throw new NotifibleException(LangConfig.NO_SUCH_HOME.getText(""));
             }

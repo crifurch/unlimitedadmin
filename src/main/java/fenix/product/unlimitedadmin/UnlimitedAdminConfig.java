@@ -8,17 +8,15 @@ import java.io.IOException;
 import java.util.Collections;
 
 public enum UnlimitedAdminConfig {
-    TABLIST_MODULE_ENABLED("modules.tablist", true, "TabList Module provide custom appearence of ingame player tab list"),
     WORLDS_MODULE_ENABLED("modules.worldManager", true, "WorldManager Module provide abilities to create custom worlds"),
+    MAINTAIN_MODULE_ENABLED("modules.maintain", true, "Manage your server when maintain"),
+    TABLIST_MODULE_ENABLED("modules.tablist", true, "TabList Module provide custom appearence of ingame player tab list"),
     TELEPORT_MODULE_ENABLED("modules.teleport", true, "Teleport Module provide abilities teleporting online/offline players"),
     SPAWN_MODULE_ENABLED("modules.spawn", true, "Create spawn points on your server"),
     HOME_MODULE_ENABLED("modules.home", true, "Create home points on your server"),
     PLAYER_STATUS_MODULE_ENABLED("modules.playerstatus", true, "Manipulating whit player status"),
-    MAINTAIN_MODULE_ENABLED("modules.maintain", true, "Manage your server when maintain"),
     SHOP_MODULE_ENABLED("modules.shop", true, "Manage your donate shop"),
-
     CHAT_MODULE_ENABLED("modules.chat", true, "Manage your chats"),
-
     ANTIOP_MODULE_ENABLED("modules.antiop", true, "Prevent players to be OP"),
     SERVER_NAME("server", "Server", "Server name"),
     ;

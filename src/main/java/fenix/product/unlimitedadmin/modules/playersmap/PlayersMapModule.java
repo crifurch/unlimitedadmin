@@ -1,7 +1,8 @@
 package fenix.product.unlimitedadmin.modules.playersmap;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.playersmap.data.CachedPlayer;
 import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -31,6 +33,34 @@ public class PlayersMapModule implements IModule, Listener {
     private final List<CachedPlayer> playerMap = new ArrayList<>();
     private final File mapFile;
     protected final File playerDataFolder;
+
+    public PlayersMapModule(UnlimitedAdmin plugin) {
+        mapFile = new File(plugin.getDataFolder().getAbsolutePath() + "/playerMap.csv");
+        playerDataFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/playersData");
+        if (!mapFile.exists()) {
+            try {
+                //noinspection ResultOfMethodCallIgnored
+                mapFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!playerDataFolder.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            playerDataFolder.mkdir();
+        }
+        try {
+            load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return ModulesManager.PLAYERS_MAP.getName();
+    }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR)
     public void onPlayerLogin(PlayerJoinEvent event) {
@@ -81,28 +111,6 @@ public class PlayersMapModule implements IModule, Listener {
         PlayerDataHelper.setPlayerWorld(player.getUniqueId(), player.getWorld());
     }
 
-    public PlayersMapModule(UnlimitedAdmin plugin) {
-        mapFile = new File(plugin.getDataFolder().getAbsolutePath() + "/playerMap.csv");
-        playerDataFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/playersData");
-        if (!mapFile.exists()) {
-            try {
-                //noinspection ResultOfMethodCallIgnored
-                mapFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (!playerDataFolder.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            playerDataFolder.mkdir();
-        }
-        try {
-            load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        getServer().getPluginManager().registerEvents(this, plugin);
-    }
 
     private void load() throws IOException {
         playerMap.clear();
@@ -192,8 +200,4 @@ public class PlayersMapModule implements IModule, Listener {
         return false;
     }
 
-    @Override
-    public String getName() {
-        return "playermap";
-    }
 }

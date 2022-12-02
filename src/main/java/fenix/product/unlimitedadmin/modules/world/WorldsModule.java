@@ -1,8 +1,9 @@
 package fenix.product.unlimitedadmin.modules.world;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.modules.world.commands.CreateCommand;
 import fenix.product.unlimitedadmin.modules.world.commands.DeleteCommand;
@@ -16,6 +17,7 @@ import org.bukkit.WorldType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -24,16 +26,16 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//todo add load worlds
-public class WorldManager implements IModule {
+// todo add load worlds
+public class WorldsModule implements IModule {
     private final UnlimitedAdmin plugin;
     private final File worldsMapFolder;
     private final boolean inited;
-    private Map<String, FileConfiguration> worldsConfigurations;
-    private final List<ICommand> commands = new ArrayList<>();
-    private WorldListeners listener;
+    private final Map<String, FileConfiguration> worldsConfigurations;
+    private final List<ICommand> commands;
 
-    public WorldManager(UnlimitedAdmin plugin) {
+
+    public WorldsModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
         worldsMapFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/worlds/map");
         if (!worldsMapFolder.exists()) {
@@ -48,27 +50,32 @@ public class WorldManager implements IModule {
         } else {
             inited = true;
         }
-        if (inited) {
-            worldsConfigurations = new HashMap<>();
-            for (File file : Objects.requireNonNull(worldsMapFolder.listFiles())) {
-                if (file.getName().endsWith("_world.yml")) {
-                    worldsConfigurations.put(file.getName().substring(0, file.getName().length() - 10)
-                            , YamlConfiguration.loadConfiguration(file));
-                }
-            }
-
-            commands.add(new CreateCommand(this));
-            commands.add(new DeleteCommand(this));
-            commands.add(new ListCommand(this));
-            commands.add(new GuiCommand(this));
-
-            listener = new WorldListeners(plugin, this);
-
-            for (String name : worldsConfigurations.keySet()) {
-                loadWorld(name);
+        worldsConfigurations = new HashMap<>();
+        for (File file : Objects.requireNonNull(worldsMapFolder.listFiles())) {
+            if (file.getName().endsWith("_world.yml")) {
+                worldsConfigurations.put(file.getName().substring(0, file.getName().length() - 10)
+                        , YamlConfiguration.loadConfiguration(file));
             }
         }
+        commands = Arrays.asList(
+                new CreateCommand(this),
+                new DeleteCommand(this),
+                new GuiCommand(this),
+                new ListCommand(this)
+        );
 
+        new WorldListeners(plugin, this);
+
+        for (String name : worldsConfigurations.keySet()) {
+            loadWorld(name);
+        }
+
+
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return ModulesManager.WORLDS.getName();
     }
 
     public Collection<String> getWorlds() {
@@ -193,8 +200,4 @@ public class WorldManager implements IModule {
         return commands;
     }
 
-    @Override
-    public String getName() {
-        return "worlds";
-    }
 }

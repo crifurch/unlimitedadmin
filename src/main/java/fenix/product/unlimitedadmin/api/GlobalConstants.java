@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin;
+package fenix.product.unlimitedadmin.api;
 
 public class GlobalConstants {
     public static final String defaultEntryName = "__main__";

@@ -1,6 +1,6 @@
 package fenix.product.unlimitedadmin.modules.spawn.commands;
 
-import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.api.GlobalConstants;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;

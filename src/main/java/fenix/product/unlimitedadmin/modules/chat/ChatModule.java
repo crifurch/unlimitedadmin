@@ -1,11 +1,12 @@
 package fenix.product.unlimitedadmin.modules.chat;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.modules.chat.commands.MuteCommand;
@@ -43,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
+
 //todo custom channels
 public class ChatModule implements IModule {
 
@@ -102,6 +104,11 @@ public class ChatModule implements IModule {
 
     }
 
+    @Override
+    public @NotNull String getName() {
+        return ModulesManager.CHAT.getName();
+    }
+
     public static IChatChanel unwrapChannel(IChatChanel chatChanel) {
         if (chatChanel instanceof DublicateChildWrapper) {
             return unwrapChannel(((DublicateChildWrapper) chatChanel).getChild());
@@ -133,11 +140,6 @@ public class ChatModule implements IModule {
             if (o.getChannelPrefix() == null) return 0;
             return -o.getChannelPrefix().length();
         }));
-    }
-
-    @Override
-    public String getName() {
-        return "chat";
     }
 
     @Override

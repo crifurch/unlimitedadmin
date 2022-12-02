@@ -1,6 +1,6 @@
 package fenix.product.unlimitedadmin.modules.home.data;
 
-import fenix.product.unlimitedadmin.GlobalConstants;
+import fenix.product.unlimitedadmin.api.GlobalConstants;
 import org.bukkit.Location;
 
 import java.util.List;

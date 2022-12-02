@@ -4,7 +4,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
+import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 public class CreateCommand implements ICommand {
-    private final WorldManager manager;
+    private final WorldsModule manager;
     private static final Map<String, World.Environment> supportedEnvironment;
     private boolean isBusy = false;
 
@@ -39,7 +39,7 @@ public class CreateCommand implements ICommand {
         return ("Usage /una " + manager.getName() + " create <name> <NORMAL|END|NETHER> ");
     }
 
-    public CreateCommand(WorldManager manager) {
+    public CreateCommand(WorldsModule manager) {
         this.manager = manager;
     }
 

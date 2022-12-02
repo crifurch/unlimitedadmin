@@ -6,9 +6,3 @@ prefix: UnlimitedAdmin
 softdepend: [ Vault ]
 authors: [ FenixOfDeath ]
 description: This plugin created for managment your servers and a have lot usefull utils, it contains modules that can be off if it not need
-commands:
-  unadmin:
-    description: commands list
-    usage: /una <module>
-    aliases:
-      - una

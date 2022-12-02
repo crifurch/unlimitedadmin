@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.world.commands;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.utils.CollectionUtils;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
+import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ListCommand implements ICommand {
-    private final WorldManager manager;
+    private final WorldsModule manager;
 
-    public ListCommand(WorldManager manager) {
+    public ListCommand(WorldsModule manager) {
         this.manager = manager;
     }
 

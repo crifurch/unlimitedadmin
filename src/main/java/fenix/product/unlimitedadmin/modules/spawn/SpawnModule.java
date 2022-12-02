@@ -1,8 +1,9 @@
 package fenix.product.unlimitedadmin.modules.spawn;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.spawn.commands.DelSpawnCommand;
@@ -44,8 +45,8 @@ public class SpawnModule implements IModule {
     }
 
     @Override
-    public String getName() {
-        return "spawn";
+    public @NotNull String getName() {
+        return ModulesManager.SPAWN.getName();
     }
 
     public void setSpawn(@NotNull String name, @NotNull Location position) {

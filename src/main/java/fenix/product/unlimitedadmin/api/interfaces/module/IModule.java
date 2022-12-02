@@ -1,6 +1,8 @@
-package fenix.product.unlimitedadmin.api.interfaces;
+package fenix.product.unlimitedadmin.api.interfaces.module;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
+import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.ICommandGroup;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;

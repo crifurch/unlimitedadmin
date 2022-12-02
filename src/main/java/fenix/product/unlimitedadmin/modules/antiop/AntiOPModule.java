@@ -1,8 +1,9 @@
 package fenix.product.unlimitedadmin.modules.antiop;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOPGroupCommand;
@@ -46,7 +47,7 @@ public class AntiOPModule implements IModule, Listener {
 
     @Override
     public @NotNull String getName() {
-        return "antiop";
+        return ModulesManager.ANTIOP.getName();
     }
 
     @EventHandler

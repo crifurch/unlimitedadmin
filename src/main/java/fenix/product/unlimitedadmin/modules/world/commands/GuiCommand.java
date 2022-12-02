@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.world.commands;
 
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
+import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import fenix.product.unlimitedadmin.modules.world.gui.WorldManagerGui;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
@@ -12,9 +12,9 @@ import java.util.List;
 
 public class GuiCommand implements ICommand {
 
-    private final WorldManager manager;
+    private final WorldsModule manager;
 
-    public GuiCommand(WorldManager manager) {
+    public GuiCommand(WorldsModule manager) {
         this.manager = manager;
     }
 

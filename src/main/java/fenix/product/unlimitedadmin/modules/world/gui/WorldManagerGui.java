@@ -1,7 +1,7 @@
 package fenix.product.unlimitedadmin.modules.world.gui;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
+import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -19,11 +19,11 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class WorldManagerGui implements Listener {
-    private final WorldManager manager;
+    private final WorldsModule manager;
     private final Inventory inv;
     private HumanEntity entity;
 
-    public WorldManagerGui(WorldManager manager) {
+    public WorldManagerGui(WorldsModule manager) {
         this.manager = manager;
         // Create a new inventory, with no owner (as this isn't a real inventory), a size of nine, called example
         inv = Bukkit.createInventory(null, 36);

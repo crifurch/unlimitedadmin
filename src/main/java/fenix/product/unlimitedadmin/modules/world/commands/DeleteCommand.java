@@ -4,7 +4,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
+import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class DeleteCommand implements ICommand {
-    private final WorldManager manager;
+    private final WorldsModule manager;
     private boolean isBusy = false;
 
-    public DeleteCommand(WorldManager manager) {
+    public DeleteCommand(WorldsModule manager) {
         this.manager = manager;
     }
 

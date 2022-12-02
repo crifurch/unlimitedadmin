@@ -2,37 +2,25 @@ package fenix.product.unlimitedadmin;
 
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.ModuleConfig;
+import fenix.product.unlimitedadmin.api.events.ExternalModuleInitEvent;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.IModule;
+import fenix.product.unlimitedadmin.api.interfaces.ICommandGroup;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.managers.CustomCommandsManager;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
-import fenix.product.unlimitedadmin.modules.antiop.AntiOPModule;
-import fenix.product.unlimitedadmin.modules.chat.ChatModule;
-import fenix.product.unlimitedadmin.modules.core.UnlimitedAdminExecutor;
-import fenix.product.unlimitedadmin.modules.home.HomeModule;
-import fenix.product.unlimitedadmin.modules.maintain.MaintainModule;
-import fenix.product.unlimitedadmin.modules.player_status.PlayerStatusModule;
 import fenix.product.unlimitedadmin.modules.playersmap.PlayersMapModule;
-import fenix.product.unlimitedadmin.modules.shop.ShopModule;
-import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
-import fenix.product.unlimitedadmin.modules.tablist.TabListModule;
-import fenix.product.unlimitedadmin.modules.teleporting.TeleportingModule;
-import fenix.product.unlimitedadmin.modules.world.WorldManager;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class UnlimitedAdmin extends JavaPlugin {
     private static UnlimitedAdmin INSTANCE;
-
-
-
     private final List<IModule> modules = new ArrayList<>();
-    private final List<IModule> rawModules = new ArrayList<>();
 
     public static UnlimitedAdmin getInstance() {
         return INSTANCE;
@@ -45,68 +33,24 @@ public final class UnlimitedAdmin extends JavaPlugin {
         CustomCommandsManager.init(this);
         UnlimitedAdminConfig.load();
         LangConfig.load();
-        new UnlimitedAdminExecutor(this);
-        loadModules();
-
-
+        Bukkit.getPluginManager().callEvent(new ExternalModuleInitEvent());
+        ModulesManager.loadModules();
     }
 
 
     @Override
     public void onDisable() {
+        ModulesManager.unloadModules();
     }
 
-    private void loadModules() {
-        PlayersMapModule playersMapModule = new PlayersMapModule(this);
-        rawModules.add(playersMapModule);
-        //optional modules
-        if (UnlimitedAdminConfig.WORLDS_MODULE_ENABLED.getBoolean()) {
-            modules.add(new WorldManager(this));
-        }
-        if (UnlimitedAdminConfig.MAINTAIN_MODULE_ENABLED.getBoolean()) {
-            modules.add(new MaintainModule(this));
-        }
-        //raw optional nodules
-        if (UnlimitedAdminConfig.TABLIST_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new TabListModule(this));
-        }
-        if (UnlimitedAdminConfig.TELEPORT_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new TeleportingModule(this));
-        }
-        if (UnlimitedAdminConfig.SPAWN_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new SpawnModule(this));
-        }
-        if (UnlimitedAdminConfig.HOME_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new HomeModule(this));
-        }
-        if (UnlimitedAdminConfig.PLAYER_STATUS_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new PlayerStatusModule(this));
-        }
-        if (UnlimitedAdminConfig.SHOP_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new ShopModule(this));
-        }
-        if (UnlimitedAdminConfig.CHAT_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new ChatModule(this));
-        }
-        if (UnlimitedAdminConfig.ANTIOP_MODULE_ENABLED.getBoolean()) {
-            rawModules.add(new AntiOPModule(this));
-        }
-
-
-        for (IModule module : rawModules) {
-            for (ICommand command : module.getCommands()) {
-                final PluginCommand pluginCommand = CustomCommandsManager.getInstance().registerCommand(command);
-                pluginCommand.setExecutor(new CommandExecutor(this, command));
-            }
-        }
-    }
 
     public List<IModule> getModules() {
         return modules;
     }
 
+    @NotNull
     public PlayersMapModule getPlayersMapModule() {
-        return (PlayersMapModule) rawModules.get(0);
+        return (PlayersMapModule) Objects.requireNonNull(ModulesManager.getModule(ModulesManager.PLAYERS_MAP));
     }
 
     public File getModuleFolder(IModule module) {
@@ -142,5 +86,55 @@ public final class UnlimitedAdmin extends JavaPlugin {
         return new ModuleConfig(getModuleConfigFile(module));
     }
 
+    public static class UnlimitedAdminCommand implements ICommandGroup {
+        private final ArrayList<ICommand> commands = new ArrayList<>();
+        private boolean isRegistered = false;
 
+        @Override
+        public @NotNull String getName() {
+            return "unlimitedadmin";
+        }
+
+        @Override
+        public @Nullable List<String> getAliases() {
+            return Arrays.asList("una", "unlimadmin");
+        }
+
+        public void addCommand(ICommand command) {
+            register();
+            if (commands.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) {
+                throw new IllegalArgumentException("Command with name " + command.getName() + " already exists!");
+            }
+            commands.add(command);
+        }
+
+        public void removeCommand(ICommand command) {
+            commands.remove(command);
+            if (commands.isEmpty()) {
+                unregister();
+            }
+        }
+
+        public void register() {
+            if (isRegistered) {
+                return;
+            }
+            isRegistered = true;
+            CustomCommandsManager.getInstance().registerCommand(this);
+            setCommandExecutor(INSTANCE, new CommandExecutor(INSTANCE, this));
+        }
+
+        public void unregister() {
+            if (!isRegistered) {
+                return;
+            }
+            commands.clear();
+            isRegistered = false;
+        }
+
+        @Override
+        public Collection<ICommand> getCommands() {
+            return commands;
+        }
+    }
 }
