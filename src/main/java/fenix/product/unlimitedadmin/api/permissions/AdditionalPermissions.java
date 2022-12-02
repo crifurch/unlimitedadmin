@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.modules.core;
+package fenix.product.unlimitedadmin.api.permissions;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 

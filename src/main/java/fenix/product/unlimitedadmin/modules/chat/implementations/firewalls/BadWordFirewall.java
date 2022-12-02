@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.chat.implementations.firewalls;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
-import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
+import fenix.product.unlimitedadmin.api.permissions.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;

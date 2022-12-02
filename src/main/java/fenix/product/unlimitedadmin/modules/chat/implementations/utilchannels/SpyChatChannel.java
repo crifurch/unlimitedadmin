@@ -1,6 +1,6 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels;
 
-import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
+import fenix.product.unlimitedadmin.api.permissions.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;

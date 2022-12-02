@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.api;
+package fenix.product.unlimitedadmin.api.permissions;
 
 public class UnlimitedAdminPermissionsList {
     public static final String ADMIN = "unlimitedadmin.admin";

@@ -2,8 +2,8 @@ package fenix.product.unlimitedadmin.modules.chat;
 
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.ModuleConfig;
-import fenix.product.unlimitedadmin.api.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.api.interfaces.IConfig;
+import fenix.product.unlimitedadmin.api.permissions.UnlimitedAdminPermissionsList;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Arrays;
