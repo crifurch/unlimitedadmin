@@ -5,7 +5,7 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
+import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.api.permissions.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
@@ -39,6 +39,7 @@ import fenix.product.unlimitedadmin.modules.chat.interfaces.ISpiedChat;
 import fenix.product.unlimitedadmin.modules.chat.listeners.ChatMessageListener;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,12 +47,13 @@ import java.util.*;
 import java.util.function.Consumer;
 
 //todo custom channels
-public class ChatModule implements IModule {
+public class ChatModule extends RawModule {
 
 
     final UnlimitedAdmin plugin;
 
     private final List<ICommand> commands = new ArrayList<>();
+    private final List<Listener> listeners = new ArrayList<>();
     private final List<IChatChanel> chatChannels = new ArrayList<>();
     private SpyChatChannel spyChatChannel;
     private LogChatChannel logChatChannel;
@@ -62,7 +64,20 @@ public class ChatModule implements IModule {
         this.plugin = plugin;
         ChatModuleConfig.init(this);
         ChatMuteConfig.init(this);
-        plugin.getServer().getPluginManager().registerEvents(new ChatMessageListener(this), plugin);
+
+
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return ModulesManager.CHAT.getName();
+    }
+
+    @Override
+    public void onEnable() {
+        ChatModuleConfig.init(this);
+        ChatMuteConfig.init(this);
+        listeners.add(new ChatMessageListener(this));
         if (ChatModuleConfig.NOTIFICATIONS_ENABLED.getBoolean()) {
             commands.add(new CancelNotificationCommand(this));
             commands.add(new NotificationsListCommand(this));
@@ -101,12 +116,24 @@ public class ChatModule implements IModule {
         commands.add(new SayLaterCommand(this));
         commands.add(new MuteCommand(this));
         commands.add(new UnmuteCommand(this));
-
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.CHAT.getName();
+    public void onDisable() {
+        BadWordFirewall.unloadBadWords();
+        chatChannels.clear();
+        spyChatChannel = null;
+        logChatChannel = null;
+        for (Notification notification : adsNotifications.values()) {
+            notification.stop();
+        }
+        adsNotifications.clear();
+        answerMap.clear();
+    }
+
+    @Override
+    public Collection<Listener> getListeners() {
+        return listeners;
     }
 
     public static IChatChanel unwrapChannel(IChatChanel chatChanel) {

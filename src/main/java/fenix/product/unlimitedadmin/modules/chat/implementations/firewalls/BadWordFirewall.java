@@ -52,6 +52,10 @@ public class BadWordFirewall extends FirewallChatChannel {
         }
     }
 
+    public static void unloadBadWords() {
+        badWords.clear();
+    }
+
     @Override
     public boolean isBlocked(ChatMessageSender sender, String message) {
         if (sender.getPermissionStatus(UnlimitedAdminPermissionsList.CHAT_BADWORDS_BYPASS) == PermissionStatus.PERMISSION_TRUE) {

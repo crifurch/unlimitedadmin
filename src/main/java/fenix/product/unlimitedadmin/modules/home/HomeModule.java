@@ -188,7 +188,7 @@ public class HomeModule extends RawModule {
             if (playerUUID1 != null) {
                 homes = getOwnerHomes(player);
                 for (Home i : homes) {
-                    if (name.equals(GlobalConstants.defaultEntryName) && i.isParticipant(player.toString())) {
+                    if (name.equals(GlobalConstants.defaultEntryName) && i.isParticipant(Objects.requireNonNull(player).toString())) {
                         return i;
                     }
                 }
