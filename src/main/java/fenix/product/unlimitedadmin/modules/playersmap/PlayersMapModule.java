@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.playersmap;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.modules.AdminModule;
+import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.playersmap.data.CachedPlayer;
 import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
@@ -24,37 +25,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.bukkit.Bukkit.getServer;
-
 public class PlayersMapModule extends AdminModule implements Listener {
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    private final List<CachedPlayer> playerMap = new ArrayList<>();
+    private final ArrayList<CachedPlayer> playerMap = new ArrayList<>();
     private final File mapFile;
     protected final File playerDataFolder;
 
     public PlayersMapModule(UnlimitedAdmin plugin) {
-        mapFile = new File(plugin.getDataFolder().getAbsolutePath() + "/playerMap.csv");
-        playerDataFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/playersData");
-        if (!mapFile.exists()) {
-            try {
-                //noinspection ResultOfMethodCallIgnored
-                mapFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        mapFile = FileUtils.getFileFromList(plugin.getDataFolder(), "playerMap.csv");
+        playerDataFolder = new File(plugin.getDataFolder(), "playersData");
         if (!playerDataFolder.exists()) {
             //noinspection ResultOfMethodCallIgnored
             playerDataFolder.mkdir();
         }
-        try {
-            load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
@@ -64,7 +49,21 @@ public class PlayersMapModule extends AdminModule implements Listener {
 
     @Override
     public void onEnable() {
+        try {
+            load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void onDisable() {
+        playerMap.clear();
+    }
+
+    @Override
+    public Collection<Listener> getListeners() {
+        return Collections.singleton(this);
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR)
@@ -206,8 +205,4 @@ public class PlayersMapModule extends AdminModule implements Listener {
     }
 
 
-    @Override
-    public void onDisable() {
-
-    }
 }

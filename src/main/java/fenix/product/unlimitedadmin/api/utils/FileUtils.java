@@ -86,7 +86,7 @@ public class FileUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static File getFileFromList(File parent, List<String> children, boolean create) {
+    public static File getFileFromList(File parent, boolean create, String... children) {
         File result = parent;
         for (String i : children) {
             result = new File(result, i);
@@ -102,8 +102,8 @@ public class FileUtils {
         return result;
     }
 
-    public static File getFileFromList(File parent, List<String> children) {
-        return getFileFromList(parent, children, true);
+    public static File getFileFromList(File parent, String... children) {
+        return getFileFromList(parent, true, children);
     }
 
     private static class CopyDirFileVisitor extends SimpleFileVisitor<Path> {
