@@ -62,10 +62,6 @@ public class ChatModule extends RawModule {
 
     public ChatModule(@NotNull UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        ChatModuleConfig.init(this);
-        ChatMuteConfig.init(this);
-
-
     }
 
     @Override
