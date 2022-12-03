@@ -34,7 +34,7 @@ public class AntiOPModule extends RawModule implements Listener {
     final UnlimitedAdmin plugin;
     private File logFile;
 
-    private List<ICommand> commands;
+    private Collection<ICommand> commands;
 
     public AntiOPModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
@@ -61,7 +61,7 @@ public class AntiOPModule extends RawModule implements Listener {
     }
 
     @Override
-    public @NotNull List<ICommand> getCommands() {
+    public @NotNull Collection<ICommand> getCommands() {
         return commands;
     }
 
