@@ -3,8 +3,8 @@ package fenix.product.unlimitedadmin.modules.antiop;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
+import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOPGroupCommand;
 import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOpDeopCommand;
@@ -26,18 +26,29 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-public class AntiOPModule implements IModule, Listener {
+public class AntiOPModule extends RawModule implements Listener {
     final UnlimitedAdmin plugin;
     private File logFile;
 
-    private final List<ICommand> commands;
+    private List<ICommand> commands;
 
     public AntiOPModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return ModulesManager.ANTIOP.getName();
+    }
+
+
+    @Override
+    public void onEnable() {
         AntiOPConfig.load();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         commands = Arrays.asList(
                 new AntiOPGroupCommand(this),
                 new AntiOpDeopCommand(),
@@ -46,8 +57,17 @@ public class AntiOPModule implements IModule, Listener {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.ANTIOP.getName();
+    public void onDisable() {
+    }
+
+    @Override
+    public @NotNull List<ICommand> getCommands() {
+        return commands;
+    }
+
+    @Override
+    public Collection<Listener> getListeners() {
+        return Collections.singletonList(this);
     }
 
     @EventHandler
@@ -103,11 +123,5 @@ public class AntiOPModule implements IModule, Listener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    @Override
-    public @NotNull List<ICommand> getCommands() {
-        return commands;
     }
 }
