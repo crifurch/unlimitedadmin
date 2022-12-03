@@ -8,8 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
-import java.util.logging.Level;
-
 public class WorldListeners implements Listener {
     final UnlimitedAdmin plugin;
     final WorldsModule manager;
@@ -17,7 +15,6 @@ public class WorldListeners implements Listener {
     public WorldListeners(UnlimitedAdmin plugin, WorldsModule manager) {
         this.plugin = plugin;
         this.manager = manager;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
@@ -25,7 +22,7 @@ public class WorldListeners implements Listener {
         World world = event.getWorld();
         final String s = manager.loadWorld(world.getName());
         if (s != null) {
-            plugin.getLogger().log(Level.WARNING, s);
+            plugin.getLogger().info(s);
         }
     }
 

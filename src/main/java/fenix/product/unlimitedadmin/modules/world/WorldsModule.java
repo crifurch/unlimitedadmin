@@ -3,7 +3,7 @@ package fenix.product.unlimitedadmin.modules.world;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
+import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.modules.world.commands.CreateCommand;
 import fenix.product.unlimitedadmin.modules.world.commands.DeleteCommand;
@@ -17,6 +17,7 @@ import org.bukkit.WorldType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -27,47 +28,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 // todo add load worlds
-public class WorldsModule implements IModule {
+public class WorldsModule extends AdminModule {
     private final UnlimitedAdmin plugin;
     private final File worldsMapFolder;
     private final boolean inited;
-    private final Map<String, FileConfiguration> worldsConfigurations;
-    private final List<ICommand> commands;
+    private final Map<String, FileConfiguration> worldsConfigurations = new HashMap<>();
+    private final ArrayList<ICommand> commands = new ArrayList<>();
+    private final ArrayList<Listener> listeners = new ArrayList<>();
 
 
     public WorldsModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        worldsMapFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/worlds/map");
+        worldsMapFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/" + getName() + "/map");
         if (!worldsMapFolder.exists()) {
             final Logger logger = plugin.getLogger();
-            logger.log(Level.WARNING, "Ok no worlds was created, i will create folder");
             if (!worldsMapFolder.mkdirs()) {
-                logger.log(Level.WARNING, "I believe that folder " + worldsMapFolder.getAbsolutePath() + " will be crated later, disabling module worlds");
+                logger.log(Level.WARNING, "I believe that folder " + worldsMapFolder.getAbsolutePath() + " will be created later, disabling module " + getName());
                 inited = false;
             } else {
                 inited = true;
             }
         } else {
             inited = true;
-        }
-        worldsConfigurations = new HashMap<>();
-        for (File file : Objects.requireNonNull(worldsMapFolder.listFiles())) {
-            if (file.getName().endsWith("_world.yml")) {
-                worldsConfigurations.put(file.getName().substring(0, file.getName().length() - 10)
-                        , YamlConfiguration.loadConfiguration(file));
-            }
-        }
-        commands = Arrays.asList(
-                new CreateCommand(this),
-                new DeleteCommand(this),
-                new GuiCommand(this),
-                new ListCommand(this)
-        );
-
-        new WorldListeners(plugin, this);
-
-        for (String name : worldsConfigurations.keySet()) {
-            loadWorld(name);
         }
 
 
@@ -76,6 +58,42 @@ public class WorldsModule implements IModule {
     @Override
     public @NotNull String getName() {
         return ModulesManager.WORLDS.getName();
+    }
+
+
+    @Override
+    public void onEnable() {
+        for (File file : Objects.requireNonNull(worldsMapFolder.listFiles())) {
+            if (file.getName().endsWith("_world.yml")) {
+                worldsConfigurations.put(file.getName().substring(0, file.getName().length() - 10)
+                        , YamlConfiguration.loadConfiguration(file));
+            }
+        }
+        commands.add(new CreateCommand(this));
+        commands.add(new DeleteCommand(this));
+        commands.add(new GuiCommand(this));
+        commands.add(new ListCommand(this));
+
+        listeners.add(new WorldListeners(plugin, this));
+
+        for (String name : worldsConfigurations.keySet()) {
+            loadWorld(name);
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        worldsConfigurations.clear();
+    }
+
+    @Override
+    public @NotNull List<ICommand> getCommands() {
+        return commands;
+    }
+
+    @Override
+    public Collection<Listener> getListeners() {
+        return listeners;
     }
 
     public Collection<String> getWorlds() {
@@ -174,10 +192,10 @@ public class WorldsModule implements IModule {
     @Nullable
     public String loadWorld(String name) {
         if (plugin.getServer().getWorlds().stream().anyMatch(world -> world.getName().equals(name))) {
-            return "World loaded now";
+            return "World " + name + "was loaded";
         }
         if (!worldsConfigurations.containsKey(name)) {
-            return "Unknown world";
+            return "Unknown world " + name;
         }
 
         final FileConfiguration world = worldsConfigurations.get(name);
@@ -195,9 +213,5 @@ public class WorldsModule implements IModule {
         }
     }
 
-    @Override
-    public @NotNull List<ICommand> getCommands() {
-        return commands;
-    }
 
 }
