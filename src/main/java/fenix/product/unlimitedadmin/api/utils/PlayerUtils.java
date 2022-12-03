@@ -141,7 +141,8 @@ public class PlayerUtils {
         final ListTag<CompoundTag> attributes = (ListTag<CompoundTag>) compoundTag.getListTag("Attributes");
         AtomicReference<Double> health = new AtomicReference<>((double) 0);
         attributes.forEach(entries -> {
-            if (entries.containsKey("Name") && entries.getString("Name").equals(Attribute.GENERIC_MAX_HEALTH.getKey().asString())) {
+            //todo check if this is the correct attribute
+            if (entries.containsKey("Name") && entries.getString("Name").equals(Attribute.GENERIC_MAX_HEALTH.toString())) {
                 health.updateAndGet(v -> v + entries.getDouble("Base"));
                 if (withModifiers && entries.containsKey("Modifiers")) {
                     final ListTag<CompoundTag> modifiers = (ListTag<CompoundTag>) entries.getListTag("Modifiers");

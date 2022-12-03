@@ -3,8 +3,8 @@ package fenix.product.unlimitedadmin.api.utils;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

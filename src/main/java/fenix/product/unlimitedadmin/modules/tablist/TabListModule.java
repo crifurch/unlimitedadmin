@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +28,7 @@ public class TabListModule extends AdminModule implements Listener {
     @Override
     public void onEnable() {
         TabListConfig.load();
+        Bukkit.getOnlinePlayers().forEach(this::updateTabList);
     }
 
     @Override

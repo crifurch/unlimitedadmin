@@ -83,7 +83,7 @@ public class WorldManagerGui implements Listener {
 
         final Player p = (Player) e.getWhoClicked();
 
-        // Using slots click is a best option for your inventory click's
+        // Using slots click is the best option for your inventory click's
         p.sendMessage("You clicked at slot " + e.getRawSlot());
     }
 
@@ -99,7 +99,7 @@ public class WorldManagerGui implements Listener {
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent e) {
         if (e.getPlayer().getUniqueId().equals(entity.getUniqueId())) {
-            inv.close();
+            inv.clear();
         }
     }
 }
