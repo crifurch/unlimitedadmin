@@ -12,21 +12,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum MaintainModuleConfig {
-    IN_MAINTAIN("in_maintain", false, "is server in maintain(kick all players without permission or if not op)", false),
-    LOCKED_WORLDS("locked_world", new ArrayList<String>(), "list of locked worlds(teleport to main world all players without permission or if not op)", false);
+    IN_MAINTAIN("in_maintain", false, "is server in maintain(kick all players without permission or if not op)"),
+    LOCKED_WORLDS("locked_world", new ArrayList<String>(), "list of locked worlds(teleport to main world all players without permission or if not op)");
 
     private final Object value;
     private final String path;
     private final String description;
-    private final boolean optional;
     private static YamlConfiguration cfg;
     private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("maintain", "config.yml"));
 
-    MaintainModuleConfig(String path, Object val, String description, boolean optional) {
+    MaintainModuleConfig(String path, Object val, String description) {
         this.path = path;
         this.value = val;
         this.description = description;
-        this.optional = optional;
     }
 
     public String getPath() {

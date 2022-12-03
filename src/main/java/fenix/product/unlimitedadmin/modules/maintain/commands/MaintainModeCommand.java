@@ -25,7 +25,7 @@ public class MaintainModeCommand implements ICommand {
 
     @Override
     public @NotNull String getName() {
-        return "maintaincemode";
+        return "mode";
     }
 
     @Override

@@ -4,8 +4,8 @@ import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
 import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
+import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -21,14 +21,10 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.bukkit.Bukkit.getServer;
-
-public class MaintainModule implements IModule, Listener {
+public class MaintainModule extends AdminModule implements Listener {
     private static final String bypassPermission = "unlimitedadmin.maintain.bypass";
 
     private final List<ICommand> commands = new ArrayList<>();
@@ -36,10 +32,6 @@ public class MaintainModule implements IModule, Listener {
 
     public MaintainModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        getServer().getPluginManager().registerEvents(this, plugin);
-        commands.add(new MaintainModeCommand(this));
-        commands.add(new LockWorldCommand(this));
-        MaintainModuleConfig.load();
     }
 
     @Override
@@ -48,8 +40,25 @@ public class MaintainModule implements IModule, Listener {
     }
 
     @Override
+    public void onEnable() {
+        MaintainModuleConfig.load();
+        commands.add(new MaintainModeCommand(this));
+        commands.add(new LockWorldCommand(this));
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
+
+    @Override
     public @NotNull List<ICommand> getCommands() {
         return commands;
+    }
+
+    @Override
+    public Collection<Listener> getListeners() {
+        return Collections.singletonList(this);
     }
 
     public void setMaintainMode(boolean mode) {
