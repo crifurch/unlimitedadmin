@@ -85,7 +85,8 @@ public enum ModulesManager implements IModuleDefinition {
         if (loadedModules.isEmpty()) {
             throw new IllegalStateException("Modules not loaded");
         }
-        for (IModuleDefinition module : loadedModules.keySet()) {
+        final ArrayList<IModuleDefinition> iModuleDefinitions = new ArrayList<>(loadedModules.keySet());
+        for (IModuleDefinition module : iModuleDefinitions) {
             try {
                 disableModule(module);
             } catch (Exception e) {
