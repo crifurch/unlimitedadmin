@@ -5,12 +5,26 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 public class CommandArgumentExtractor {
+    final ArrayList<String> args;
+
+    public CommandArgumentExtractor(Collection<String> args) {
+        this.args = new ArrayList<>(args);
+    }
+
+
+    public String getArg(int index) {
+        return args.get(index);
+    }
+
+
     @Nullable
-    public static <T> T extractArgument(List<String> args, int index, Class<T> type) {
+    public <T> T get(List<String> args, int index, Class<T> type) {
         if (args.size() <= index) {
             return null;
         }
@@ -50,5 +64,9 @@ public class CommandArgumentExtractor {
             return null;
         }
         return null;
+    }
+
+    public int count() {
+        return args.size();
     }
 }
