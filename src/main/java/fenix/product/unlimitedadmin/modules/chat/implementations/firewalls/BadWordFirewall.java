@@ -1,8 +1,8 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.firewalls;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.permissions.UnlimitedAdminPermissionsList;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
@@ -31,7 +31,7 @@ public class BadWordFirewall extends FirewallChatChannel {
 
     public static void loadBadWords(ChatModule chatModule) {
         if (badWordsFile == null) {
-            badWordsFile = UnlimitedAdmin.getInstance().getModuleFile(chatModule, "badwords.txt");
+            badWordsFile = PluginFileProvider.UnlimitedAdmin.getModuleFile(chatModule.getDefinition(), "badwords.txt");
         }
         badWords.clear();
         try {

@@ -1,13 +1,12 @@
 package fenix.product.unlimitedadmin.modules.spawn;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.ModulesManager;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 public enum SpawnModuleConfig {
@@ -19,14 +18,12 @@ public enum SpawnModuleConfig {
     PREFER_TELEPORT_ON_DEATH("prefer_teleport_on_death", true, "if player died and respawned, he teleport to spawn", false);
 
 
-
-
     private final Object value;
     private final String path;
     private final String description;
     private final boolean optional;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("spawn", "config.yml"));
+    private static final File f = PluginFileProvider.UnlimitedAdmin.getModuleConfigFile(ModulesManager.SPAWN);
 
     SpawnModuleConfig(String path, Object val, String description, boolean optional) {
         this.path = path;

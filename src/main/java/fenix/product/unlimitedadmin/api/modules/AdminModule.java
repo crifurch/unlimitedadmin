@@ -10,6 +10,11 @@ import java.util.Collection;
 public abstract class AdminModule extends EnableStateProvider implements IModule, ICommandGroup {
 
     @Override
+    public @NotNull String getName() {
+        return IModule.super.getName();
+    }
+
+    @Override
     public @NotNull Collection<ICommand> getCommands() {
         return IModule.super.getCommands();
     }

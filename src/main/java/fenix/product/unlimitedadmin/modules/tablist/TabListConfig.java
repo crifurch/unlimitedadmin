@@ -1,13 +1,12 @@
 package fenix.product.unlimitedadmin.modules.tablist;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.ModulesManager;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 public enum TabListConfig {
@@ -19,7 +18,7 @@ public enum TabListConfig {
     private final String description;
     private final boolean optional;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("tablist", "config.yml"));
+    private static final File f = PluginFileProvider.UnlimitedAdmin.getModuleConfigFile(ModulesManager.TABLIST);
 
     TabListConfig(String path, Object val, String description, boolean optional) {
         this.path = path;

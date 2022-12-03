@@ -1,6 +1,6 @@
 package fenix.product.unlimitedadmin.modules.chat.implementations.utilchannels;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.interfaces.IChatChanel;
@@ -51,20 +51,8 @@ public class LogChatChannel implements ISubhandlerChannel {
         DateTimeFormatter dtFile = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime now = LocalDateTime.now();
         String logFileName = dtFile.format(now) + ".log";
-        if (logFile == null || !logFile.getName().equals(logFileName) || !logFile.exists()) {
-            logFile = new File(UnlimitedAdmin.getInstance().getModuleFolder(chatModule), "logs");
-            if (!logFile.exists()) {
-                logFile.mkdirs();
-            }
-            logFile = new File(logFile, logFileName);
-            try {
-                logFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        logFile = PluginFileProvider.UnlimitedAdmin.getModuleFile(chatModule.getDefinition(), "logs", logFileName);
         logFile.setWritable(true);
-
         String formatMessage = pattern.matcher(message).replaceAll("");
         String logMessage = dtf.format(now) + " " + logPrefix + " " + formatMessage;
         try {

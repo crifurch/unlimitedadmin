@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.world;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.modules.world.commands.CreateCommand;
@@ -56,8 +57,8 @@ public class WorldsModule extends AdminModule {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.WORLDS.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.WORLDS;
     }
 
 

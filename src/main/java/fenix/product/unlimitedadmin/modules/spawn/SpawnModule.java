@@ -3,7 +3,9 @@ package fenix.product.unlimitedadmin.modules.spawn;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.spawn.commands.DelSpawnCommand;
 import fenix.product.unlimitedadmin.modules.spawn.commands.ListSpawnCommand;
@@ -33,14 +35,14 @@ public class SpawnModule extends RawModule {
 
     public SpawnModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        f = plugin.getModuleConfigFile(this, "spawns");
+        f = PluginFileProvider.UnlimitedAdmin.getModuleConfigFile(getDefinition(), "spawns");
 
 
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.SPAWN.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.SPAWN;
     }
 
     @Override

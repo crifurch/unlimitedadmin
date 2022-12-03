@@ -1,7 +1,8 @@
 package fenix.product.unlimitedadmin.modules.shop;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import fenix.product.unlimitedadmin.modules.shop.data.CommandTemplate;
 import fenix.product.unlimitedadmin.modules.shop.data.CommandValueTemplate;
 import org.bukkit.Bukkit;
@@ -13,14 +14,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class CommandsShopConfig {
 
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("donation_shop", "commands.yml"));
+    private static final File f = PluginFileProvider.UnlimitedAdmin.getModuleFile(
+            ModulesManager.SHOP, "donation_shop", "commands.yml");
     private static YamlConfiguration cfg;
     private static final List<CommandTemplate> templates = new ArrayList<>();
 

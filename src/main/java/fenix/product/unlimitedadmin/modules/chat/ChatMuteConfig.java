@@ -1,8 +1,8 @@
 package fenix.product.unlimitedadmin.modules.chat;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.ModuleConfig;
 import fenix.product.unlimitedadmin.api.interfaces.IConfig;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import fenix.product.unlimitedadmin.modules.chat.data.Ignore;
 import fenix.product.unlimitedadmin.modules.chat.data.Mute;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,26 +20,32 @@ public enum ChatMuteConfig implements IConfig {
     private final Object value;
     private final String path;
     private final String description;
-    private final boolean optional;
-
-    ChatMuteConfig(String path, Object value, String description, boolean optional) {
-        this.value = value;
-        this.path = path;
-        this.description = description;
-        this.optional = optional;
-    }
 
     ChatMuteConfig(String path, Object value, String description) {
         this.value = value;
         this.path = path;
         this.description = description;
-        this.optional = false;
     }
 
     public static void init(ChatModule module) {
-        final File moduleConfigFile = UnlimitedAdmin.getInstance().getModuleConfigFile(module, "mute");
+        final File moduleConfigFile = PluginFileProvider.UnlimitedAdmin.getModuleConfigFile(module.getDefinition(), "mute");
         config = new ModuleConfig(moduleConfigFile);
         config.load(Arrays.asList(values()));
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public Object getDefaultValue() {
+        return value;
     }
 
     @Nullable
@@ -90,24 +96,6 @@ public enum ChatMuteConfig implements IConfig {
         return config.getConfigurationSection(getPath());
     }
 
-    @Override
-    public String getPath() {
-        return path;
-    }
 
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Object getDefaultValue() {
-        return value;
-    }
-
-    @Override
-    public boolean isOptional() {
-        return optional;
-    }
 }

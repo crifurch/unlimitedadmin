@@ -55,7 +55,7 @@ public class PlaceHolderUtils {
         if (HookManager.checkPlaceholderAPI() && entity instanceof Player) {
             try {
                 final Class<?> aClass = ClassLoader.getSystemClassLoader().loadClass("me.clip.placeholderapi.PlaceholderAPI");
-                result = (String) aClass.getMethod("setPlaceholders", Player.class, String.class).invoke(null, (Player) entity, format);
+                result = (String) aClass.getMethod("setPlaceholders", Player.class, String.class).invoke(null, entity, format);
             } catch (Exception e) {
                 e.printStackTrace();
             }

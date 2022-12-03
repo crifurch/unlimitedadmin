@@ -1,4 +1,4 @@
-package fenix.product.unlimitedadmin.api.managers;
+package fenix.product.unlimitedadmin.api.providers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -8,25 +8,37 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class ServerDataManager {
+public class ServerDataProvider {
     private static String mainWorldName;
     private static Boolean isOnlineMode;
 
+    private static final ArrayList<String> serverFields = new ArrayList<>();
+
+    static {
+        File file = new File("server.properties");
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    if (line.startsWith("#")) continue;
+                    serverFields.add(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Nullable
     public static String getServerProperty(String key) {
-        File file = new File("server.properties");
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith(key)) {
-                    return line.split("=")[1];
-                }
+        for (String field : serverFields) {
+            if (field.startsWith(key + "=")) {
+                return field.split("=")[1];
             }
-        } catch (Exception e) {
-            //do nothing
         }
         return null;
     }

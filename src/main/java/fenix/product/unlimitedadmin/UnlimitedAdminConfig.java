@@ -1,11 +1,10 @@
 package fenix.product.unlimitedadmin;
 
-import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 
 public enum UnlimitedAdminConfig {
     WORLDS_MODULE_ENABLED("modules.worldManager", true, "WorldManager Module provide abilities to create custom worlds"),
@@ -26,7 +25,7 @@ public enum UnlimitedAdminConfig {
     private final String path;
     private final String description;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Collections.singletonList("config.yml"));
+    private static final File f = PluginFileProvider.UnlimitedAdmin.getPluginConfigFile();
 
     UnlimitedAdminConfig(String path, Object val, String description) {
         this.path = path;

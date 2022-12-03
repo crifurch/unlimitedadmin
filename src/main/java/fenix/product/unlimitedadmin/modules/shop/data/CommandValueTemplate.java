@@ -8,7 +8,7 @@ public class CommandValueTemplate {
     public static CommandValueTemplate OTHER = new CommandValueTemplate(null, null);
 
     private final String template;
-    private String value;
+    private final String value;
 
 
     CommandValueTemplate(String template, String value) {

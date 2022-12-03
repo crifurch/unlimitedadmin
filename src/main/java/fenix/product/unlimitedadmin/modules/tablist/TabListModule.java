@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.tablist;
 
 import fenix.product.unlimitedadmin.ModulesManager;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ public class TabListModule extends AdminModule implements Listener {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.TABLIST.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.TABLIST;
     }
 
 

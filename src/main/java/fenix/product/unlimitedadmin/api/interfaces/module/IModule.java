@@ -9,7 +9,11 @@ import java.util.Collections;
 
 public interface IModule {
     @NotNull
-    String getName();
+    IModuleDefinition getDefinition();
+
+    default String getName() {
+        return getDefinition().getName();
+    }
 
     @NotNull
     default Collection<ICommand> getCommands() {

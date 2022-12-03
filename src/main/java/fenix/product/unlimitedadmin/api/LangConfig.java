@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 
 public enum LangConfig {
     ERROR_WHILE_COMMAND("command.errorWhileExecute", "Error when executing command"),
@@ -58,7 +57,7 @@ public enum LangConfig {
     private final String value;
     private final String path;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Collections.singletonList("lang.yml"));
+    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), "lang.yml");
 
     LangConfig(String path, String val) {
         this.path = path;

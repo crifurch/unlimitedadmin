@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.player_status;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.modules.player_status.commands.*;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +22,8 @@ public class PlayerStatusModule extends RawModule {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.PLAYER_STATUS.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.PLAYER_STATUS;
     }
 
     @Override

@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.teleporting;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.modules.teleporting.commands.TpCommand;
 import fenix.product.unlimitedadmin.modules.teleporting.commands.TpPosCommand;
@@ -22,8 +23,8 @@ public class TeleportingModule extends RawModule {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.TELEPORT.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.TELEPORT;
     }
 
 

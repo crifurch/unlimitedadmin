@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.playersmap;
 
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
@@ -43,8 +44,8 @@ public class PlayersMapModule extends AdminModule implements Listener {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.PLAYERS_MAP.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.PLAYERS_MAP;
     }
 
     @Override

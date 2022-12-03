@@ -1,12 +1,11 @@
 package fenix.product.unlimitedadmin.modules.shop;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.ModulesManager;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public enum ShopModuleConfig {
     SHOP_DONATE_URL("url", "https://api.capscraft.com/shop/donate/%s"),
@@ -17,7 +16,7 @@ public enum ShopModuleConfig {
     private final String value;
     private final String path;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("donation_shop", "config.yml"));
+    private static final File f = PluginFileProvider.UnlimitedAdmin.getModuleConfigFile(ModulesManager.SHOP);
 
     ShopModuleConfig(String path, String value) {
         this.path = path;

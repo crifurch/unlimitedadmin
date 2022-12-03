@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.api.permissions.UnlimitedAdminPermissionsList;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
@@ -65,8 +66,8 @@ public class ChatModule extends RawModule {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.CHAT.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.CHAT;
     }
 
     @Override

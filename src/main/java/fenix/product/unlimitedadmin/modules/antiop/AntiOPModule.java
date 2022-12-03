@@ -3,8 +3,10 @@ package fenix.product.unlimitedadmin.modules.antiop;
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
+import fenix.product.unlimitedadmin.api.providers.ServerDataProvider;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOPGroupCommand;
 import fenix.product.unlimitedadmin.modules.antiop.commands.AntiOpDeopCommand;
@@ -41,8 +43,8 @@ public class AntiOPModule extends RawModule implements Listener {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.ANTIOP.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.ANTIOP;
     }
 
 
@@ -89,7 +91,7 @@ public class AntiOPModule extends RawModule implements Listener {
 
     private void deOP(Player player) {
         if (player.isOp()) {
-            ServerDataManager.setOP(player.getName(), false);
+            ServerDataProvider.setOP(player.getName(), false);
         }
         if (AntiOPConfig.LOG.getBoolean()) {
             logOp(player);
@@ -106,7 +108,7 @@ public class AntiOPModule extends RawModule implements Listener {
 
     private void logOp(Player player) {
         if (logFile == null) {
-            logFile = UnlimitedAdmin.getInstance().getModuleFile(this, "antiop.log");
+            logFile = PluginFileProvider.UnlimitedAdmin.getModuleFile(getDefinition(), "antiop.log");
         }
         try {
             final OutputStreamWriter out = new OutputStreamWriter(Files.newOutputStream(logFile.toPath(), StandardOpenOption.APPEND), StandardCharsets.UTF_8);

@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.antiop.commands;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
+import fenix.product.unlimitedadmin.api.providers.ServerDataProvider;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,13 +28,13 @@ public class AntiOpDeopCommand implements ICommand {
 
     @Override
     public @Nullable List<String> getTabCompletion(CommandSender sender, String[] args, int i) {
-        return new ArrayList<>(ServerDataManager.getAllOPs());
+        return new ArrayList<>(ServerDataProvider.getAllOPs());
     }
 
     @Override
     public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
         for (String player : argsString) {
-            ServerDataManager.setOP(player, false);
+            ServerDataProvider.setOP(player, false);
         }
     }
 

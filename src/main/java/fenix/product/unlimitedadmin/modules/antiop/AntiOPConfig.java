@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin.modules.antiop;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public enum AntiOPConfig {
     private final String path;
     private final String description;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("antiop", "config.yml"));
+    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), ModulesManager.ANTIOP.getName(), "config.yml");
 
     AntiOPConfig(String path, Object val, String description) {
         this.path = path;

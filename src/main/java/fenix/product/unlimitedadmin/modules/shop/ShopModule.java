@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.shop;
 
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.modules.shop.commands.DonateCommand;
 import fenix.product.unlimitedadmin.modules.shop.commands.ShopCommand;
@@ -18,8 +19,8 @@ public class ShopModule extends RawModule {
     private final List<PlayerDonationCache> donationCaches = new ArrayList<>();
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.SHOP.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.SHOP;
     }
 
 

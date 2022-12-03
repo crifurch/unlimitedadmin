@@ -4,8 +4,9 @@ import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.AdminModule;
+import fenix.product.unlimitedadmin.api.providers.ServerDataProvider;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -35,8 +36,8 @@ public class MaintainModule extends AdminModule implements Listener {
     }
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.MAINTAIN.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.MAINTAIN;
     }
 
     @Override
@@ -97,7 +98,7 @@ public class MaintainModule extends AdminModule implements Listener {
                     PermissionsProvider.getInstance().havePermission(event.getPlayer(), bypassPermission) == PermissionStatus.PERMISSION_TRUE) {
                 return;
             }
-            final World world = Bukkit.getWorld(ServerDataManager.getMainWorldName());
+            final World world = Bukkit.getWorld(ServerDataProvider.getMainWorldName());
             if (world == null || lockedWorlds.contains(world)) {
                 event.getPlayer().kickPlayer(LangConfig.WORLD_LOCKED_FOR_ENTERING.getText());
                 return;

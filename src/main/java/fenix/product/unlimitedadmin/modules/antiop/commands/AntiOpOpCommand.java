@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.antiop.commands;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.managers.ServerDataManager;
+import fenix.product.unlimitedadmin.api.providers.ServerDataProvider;
 import fenix.product.unlimitedadmin.modules.antiop.AntiOPConfig;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class AntiOpOpCommand implements ICommand {
                 notAdded.add(player);
                 continue;
             }
-            ServerDataManager.setOP(player, true);
+            ServerDataProvider.setOP(player, true);
         }
         if (!notAdded.isEmpty()) {
             throw new NotifibleException("Players " + String.join(", ", notAdded) + " can't be OP");

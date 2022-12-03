@@ -6,7 +6,9 @@ import fenix.product.unlimitedadmin.api.GlobalConstants;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.interfaces.module.IModuleDefinition;
 import fenix.product.unlimitedadmin.api.modules.RawModule;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.home.commands.DelHomeCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.HomeCommand;
@@ -36,13 +38,13 @@ public class HomeModule extends RawModule {
 
     public HomeModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        f = plugin.getModuleConfigFile(this, "homes");
+        f = PluginFileProvider.UnlimitedAdmin.getModuleConfigFile(getDefinition(), "homes");
     }
 
 
     @Override
-    public @NotNull String getName() {
-        return ModulesManager.HOME.getName();
+    public @NotNull IModuleDefinition getDefinition() {
+        return ModulesManager.HOME;
     }
 
     @Override

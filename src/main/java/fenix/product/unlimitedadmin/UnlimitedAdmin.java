@@ -1,7 +1,6 @@
 package fenix.product.unlimitedadmin;
 
 import fenix.product.unlimitedadmin.api.LangConfig;
-import fenix.product.unlimitedadmin.api.ModuleConfig;
 import fenix.product.unlimitedadmin.api.events.ExternalModuleInitEvent;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.interfaces.ICommandGroup;
@@ -14,8 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public final class UnlimitedAdmin extends JavaPlugin {
@@ -25,7 +22,6 @@ public final class UnlimitedAdmin extends JavaPlugin {
     public static UnlimitedAdmin getInstance() {
         return INSTANCE;
     }
-
 
     @Override
     public void onEnable() {
@@ -44,47 +40,13 @@ public final class UnlimitedAdmin extends JavaPlugin {
     }
 
 
-    public List<IModule> getModules() {
-        return modules;
-    }
-
     @NotNull
     public PlayersMapModule getPlayersMapModule() {
         return (PlayersMapModule) Objects.requireNonNull(ModulesManager.getModule(ModulesManager.PLAYERS_MAP));
     }
 
-    public File getModuleFolder(IModule module) {
-        return new File(getDataFolder(), module.getName());
-    }
 
-    public File getModuleConfigFile(IModule module) {
-        return getModuleConfigFile(module, "config");
-    }
 
-    public File getModuleConfigFile(IModule module, String name) {
-        return getModuleFile(module, name + ".yml");
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public File getModuleFile(IModule module, String name) {
-        final File moduleFolder = getModuleFolder(module);
-        if (!moduleFolder.exists()) {
-            moduleFolder.mkdirs();
-        }
-        final File config = new File(moduleFolder, name);
-        if (!config.exists()) {
-            try {
-                config.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return config;
-    }
-
-    public ModuleConfig getModuleConfig(IModule module) {
-        return new ModuleConfig(getModuleConfigFile(module));
-    }
 
     public static class UnlimitedAdminCommand implements ICommandGroup {
         private final ArrayList<ICommand> commands = new ArrayList<>();

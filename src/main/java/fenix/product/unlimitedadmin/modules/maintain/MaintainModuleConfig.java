@@ -1,5 +1,6 @@
 package fenix.product.unlimitedadmin.modules.maintain;
 
+import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.utils.FileUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,7 +9,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public enum MaintainModuleConfig {
@@ -19,7 +19,7 @@ public enum MaintainModuleConfig {
     private final String path;
     private final String description;
     private static YamlConfiguration cfg;
-    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), Arrays.asList("maintain", "config.yml"));
+    private static final File f = FileUtils.getFileFromList(UnlimitedAdmin.getInstance().getDataFolder(), ModulesManager.MAINTAIN.getName(), "config.yml");
 
     MaintainModuleConfig(String path, Object val, String description) {
         this.path = path;

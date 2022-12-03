@@ -86,6 +86,22 @@ public class FileUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static File getFolderFromList(File parent, boolean create, String... children) {
+        File result = parent;
+        for (String i : children) {
+            result = new File(result, i);
+        }
+        if (create && !result.exists()) {
+            result.mkdirs();
+        }
+        return result;
+    }
+
+    public static File getFolderFromList(File parent, String... children) {
+        return getFolderFromList(parent, true, children);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static File getFileFromList(File parent, boolean create, String... children) {
         File result = parent;
         for (String i : children) {
@@ -105,6 +121,7 @@ public class FileUtils {
     public static File getFileFromList(File parent, String... children) {
         return getFileFromList(parent, true, children);
     }
+
 
     private static class CopyDirFileVisitor extends SimpleFileVisitor<Path> {
 

@@ -13,7 +13,6 @@ public class RGBColors {
 
     public static void load() {
         if (isNotSupported()) {
-            return;
         }
 //        ConfigurationSection configurationSection = Config.RGB_COLORS.getConfigurationSection();
 //

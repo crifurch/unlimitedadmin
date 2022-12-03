@@ -1,8 +1,8 @@
 package fenix.product.unlimitedadmin.modules.home;
 
-import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.ModuleConfig;
 import fenix.product.unlimitedadmin.api.interfaces.IConfig;
+import fenix.product.unlimitedadmin.api.providers.PluginFileProvider;
 
 import java.util.Arrays;
 
@@ -17,7 +17,7 @@ public enum HomeModuleConfig implements IConfig {
     private static ModuleConfig config;
 
     public static void init(HomeModule module) {
-        config = UnlimitedAdmin.getInstance().getModuleConfig(module);
+        config = PluginFileProvider.UnlimitedAdmin.getModuleConfig(module.getDefinition());
         config.load(Arrays.asList(values()));
     }
 
