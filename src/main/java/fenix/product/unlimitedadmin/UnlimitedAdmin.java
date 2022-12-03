@@ -133,7 +133,7 @@ public final class UnlimitedAdmin extends JavaPlugin {
         }
 
         @Override
-        public Collection<ICommand> getCommands() {
+        public @NotNull Collection<ICommand> getCommands() {
             return commands;
         }
     }

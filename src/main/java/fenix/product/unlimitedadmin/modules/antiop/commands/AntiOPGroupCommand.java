@@ -30,7 +30,7 @@ public class AntiOPGroupCommand implements ICommandGroup {
     }
 
     @Override
-    public Collection<ICommand> getCommands() {
+    public @NotNull Collection<ICommand> getCommands() {
         return commands;
     }
 

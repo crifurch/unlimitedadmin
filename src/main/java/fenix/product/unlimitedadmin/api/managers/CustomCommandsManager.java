@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.api.managers;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 
 public class CustomCommandsManager {
     private static CustomCommandsManager INSTANCE;
@@ -46,12 +46,23 @@ public class CustomCommandsManager {
         return command;
     }
 
+    public boolean unregisterCommand(String name) {
+        final Command command = getCommandMap().getCommand(name);
+        if (command != null) {
+            command.unregister(getCommandMap());
+            return true;
+        }
+        return false;
+    }
+
     public PluginCommand registerCommand(String... aliases) {
         PluginCommand command = getCommand(aliases[0], plugin);
-
+        final boolean unregisterCommand = unregisterCommand(aliases[0]);
+        if (unregisterCommand) {
+            plugin.getLogger().info("Unregistered command " + aliases[0] + " it can be from another plugin or minecraft");
+        }
         command.setAliases(Arrays.asList(aliases));
         getCommandMap().register(plugin.getDescription().getName(), command);
-        plugin.getLogger().log(Level.INFO, "Success register command " + command.getName());
         return command;
     }
 
@@ -60,7 +71,11 @@ public class CustomCommandsManager {
         if (command.getAliases() != null) {
             aliases.addAll(command.getAliases());
         }
-        return registerCommand(aliases.toArray(new String[0]));
+        final PluginCommand pluginCommand = registerCommand(aliases.toArray(new String[0]));
+        if (pluginCommand != null) {
+            plugin.getLogger().info("Success register UnlimitedAdmin command " + command.getName());
+        }
+        return pluginCommand;
     }
 
     private static CommandMap getCommandMap() {

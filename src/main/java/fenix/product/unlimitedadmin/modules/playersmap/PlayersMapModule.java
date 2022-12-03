@@ -2,7 +2,7 @@ package fenix.product.unlimitedadmin.modules.playersmap;
 
 import fenix.product.unlimitedadmin.ModulesManager;
 import fenix.product.unlimitedadmin.UnlimitedAdmin;
-import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
+import fenix.product.unlimitedadmin.api.modules.AdminModule;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.playersmap.data.CachedPlayer;
 import fenix.product.unlimitedadmin.modules.playersmap.data.PlayerFirstJoinEvent;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class PlayersMapModule implements IModule, Listener {
+public class PlayersMapModule extends AdminModule implements Listener {
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -60,6 +60,11 @@ public class PlayersMapModule implements IModule, Listener {
     @Override
     public @NotNull String getName() {
         return ModulesManager.PLAYERS_MAP.getName();
+    }
+
+    @Override
+    public void onEnable() {
+
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR)
@@ -200,4 +205,9 @@ public class PlayersMapModule implements IModule, Listener {
         return false;
     }
 
+
+    @Override
+    public void onDisable() {
+
+    }
 }

@@ -6,8 +6,7 @@ import fenix.product.unlimitedadmin.api.GlobalConstants;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
-import fenix.product.unlimitedadmin.api.interfaces.module.IModule;
-import fenix.product.unlimitedadmin.api.utils.FileUtils;
+import fenix.product.unlimitedadmin.api.modules.RawModule;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import fenix.product.unlimitedadmin.modules.home.commands.DelHomeCommand;
 import fenix.product.unlimitedadmin.modules.home.commands.HomeCommand;
@@ -19,6 +18,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,31 +26,56 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class HomeModule implements IModule {
+public class HomeModule extends RawModule {
 
     private static YamlConfiguration cfg;
     private static File f;
     final UnlimitedAdmin plugin;
-    private final List<ICommand> commands = new ArrayList<>();
+    private final ArrayList<ICommand> commands = new ArrayList<>();
+    private final ArrayList<Listener> listeners = new ArrayList<>();
 
     public HomeModule(UnlimitedAdmin plugin) {
         this.plugin = plugin;
-        f = FileUtils.getFileFromList(plugin.getModuleFolder(this), Collections.singletonList("homes.yml"));
-        cfg = YamlConfiguration.loadConfiguration(f);
-        HomeModuleConfig.init(this);
-        commands.add(new SetHomeCommand(this));
-        commands.add(new HomeCommand(this));
-        commands.add(new InviteCommand(this));
-        commands.add(new DelHomeCommand(this));
-        if (HomeModuleConfig.PREFERS_TELEPORT_ON_DEATH.getBoolean()) {
-            plugin.getServer().getPluginManager().registerEvents(new HomeDeathListener(this), plugin);
-        }
+        f = plugin.getModuleConfigFile(this, "homes");
     }
 
 
     @Override
     public @NotNull String getName() {
         return ModulesManager.HOME.getName();
+    }
+
+    @Override
+    public void onEnable() {
+        cfg = YamlConfiguration.loadConfiguration(f);
+        HomeModuleConfig.init(this);
+        commands.add(new SetHomeCommand(this));
+        commands.add(new HomeCommand(this));
+        commands.add(new InviteCommand(this));
+        commands.add(new DelHomeCommand(this));
+
+        if (HomeModuleConfig.PREFERS_TELEPORT_ON_DEATH.getBoolean()) {
+            listeners.add(new HomeDeathListener(this));
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        try {
+            cfg.save(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public @NotNull Collection<ICommand> getCommands() {
+        return commands;
+    }
+
+    @Override
+    public @NotNull Collection<Listener> getListeners() {
+        return listeners;
     }
 
     private void writeHomeToConfig(Home home) {
@@ -194,8 +219,5 @@ public class HomeModule implements IModule {
         return owner.getUniqueId() + ":" + name;
     }
 
-    @Override
-    public List<ICommand> getCommands() {
-        return commands;
-    }
+
 }

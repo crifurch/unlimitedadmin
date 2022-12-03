@@ -196,7 +196,7 @@ public class WorldsModule implements IModule {
     }
 
     @Override
-    public List<ICommand> getCommands() {
+    public @NotNull List<ICommand> getCommands() {
         return commands;
     }
 

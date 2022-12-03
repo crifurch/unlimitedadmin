@@ -10,16 +10,8 @@ public interface IModuleDefinition {
     @NotNull
     String getClassPath();
 
-    @NotNull
-    ModuleType getType();
-
     boolean isEnabled();
 
     @Nullable
     IModule getModule();
-
-    enum ModuleType {
-        raw,
-        admin,
-    }
 }

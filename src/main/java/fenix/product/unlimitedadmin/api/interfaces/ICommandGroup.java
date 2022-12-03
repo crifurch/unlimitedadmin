@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.api.interfaces;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsException;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -16,6 +17,7 @@ public interface ICommandGroup extends ICommand {
         return ICommand.super.getUsageText() + "<command>";
     }
 
+    @NotNull
     Collection<ICommand> getCommands();
 
     @Override
