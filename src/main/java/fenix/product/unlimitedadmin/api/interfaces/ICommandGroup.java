@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.api.interfaces;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsException;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,15 +44,15 @@ public interface ICommandGroup extends ICommand {
 
 
     @Override
-    default void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    default void onCommand(CommandSender sender, final CommandArguments args) throws NotifibleException {
         final Collection<ICommand> commands = getCommands();
-        final ICommand command = commands.stream().filter(c -> c.getName().equalsIgnoreCase(argsString.get(0))).findFirst().orElse(null);
+        final ICommand command = commands.stream().filter(c -> c.getName().equalsIgnoreCase(args.get(0))).findFirst().orElse(null);
         if (command == null) {
             throw new CommandNotEnoughArgsException(getUsageText());
         }
-        final List<String> args = argsString.subList(1, argsString.size());
+        CommandArguments newArgs = args.cutFrom(1);
         try {
-            command.assertArgsSize(args);
+            command.assertArgsSize(newArgs);
         } catch (CommandNotEnoughArgsException e) {
             if (!shouldOverrideUsageText()) {
                 throw e;
@@ -59,7 +60,7 @@ public interface ICommandGroup extends ICommand {
             throw new CommandNotEnoughArgsException("/" + getName()
                     + " " + command.getUsageText().substring(1));
         }
-        command.onCommand(sender, args);
+        command.onCommand(sender, newArgs);
     }
 
     default boolean shouldOverrideUsageText() {

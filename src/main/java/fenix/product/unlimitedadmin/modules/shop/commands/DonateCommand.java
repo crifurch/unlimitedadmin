@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.shop.commands;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.shop.ShopModule;
 import fenix.product.unlimitedadmin.modules.shop.ShopModuleConfig;
 import fenix.product.unlimitedadmin.modules.shop.data.PlayerDonationCache;
@@ -46,10 +47,10 @@ public class DonateCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws CommandOnlyForUserException {
         assertSenderIsPlayer(sender);
-        if (argsString.size() > 0) {
-            final String amount = argsString.get(0);
+        if (args.isNotEmpty()) {
+            final String amount = args.get(0);
             sender.sendMessage(ShopModuleConfig.SHOP_DONATE_PAGE_URL.getText(amount));
             return;
         }

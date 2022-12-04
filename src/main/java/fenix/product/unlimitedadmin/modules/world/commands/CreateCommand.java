@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -54,11 +55,11 @@ public class CreateCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
         if (isBusy) {
             throw new CommandErrorException(LangConfig.WORLD_CREATION_BUSY.getText());
         }
-        final String envString = argsString.get(1).toUpperCase();
+        final String envString = args.get(1).toUpperCase();
         World.Environment env = supportedEnvironment.get(envString);
         if (env == null) {
             throw new CommandErrorException(LangConfig.WORLD_UNSUPPORTED_ENVIRONMENT.getText(envString));
@@ -66,15 +67,15 @@ public class CreateCommand implements ICommand {
 
         isBusy = true;
         try {
-            final String error = manager.createWorld(argsString.get(0).toLowerCase(Locale.ROOT), env, WorldType.NORMAL);
+            final String error = manager.createWorld(args.get(0).toLowerCase(Locale.ROOT), env, WorldType.NORMAL);
             if (error != null) {
                 throw new CommandErrorException(error);
             }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.toString());
             isBusy = false;
-            throw new CommandErrorException(LangConfig.WORLD_CREATION_ERROR.getText(argsString.get(0)));
+            throw new CommandErrorException(LangConfig.WORLD_CREATION_ERROR.getText(args.get(0)));
         }
-        sender.sendMessage(LangConfig.WORLD_CREATED.getText(argsString.get(0)));
+        sender.sendMessage(LangConfig.WORLD_CREATED.getText(args.get(0)));
     }
 }

@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,10 +58,11 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
         if (!havePermissions(sender, this.command)) {
             return false;
         }
-        final List<String> argsString = Arrays.asList(args).subList(0, Math.min(args.length, this.command.getMaxArgsSize()));
+        CommandArguments argsObject = new CommandArguments(args);
+        argsObject = argsObject.cut(this.command.getMaxArgsSize());
         try {
-            this.command.assertArgsSize(argsString);
-            this.command.onCommand(sender, argsString);
+            this.command.assertArgsSize(argsObject);
+            this.command.onCommand(sender, argsObject);
         } catch (NotifibleException e) {
             sender.sendMessage(PlaceHolderUtils.replaceColors(e.getMessage()));
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
     }
 
     public boolean havePermissions(@NotNull CommandSender sender, @NotNull ICommand command) {
-        if (havePermissions(sender, command, "")) {
+        if (!command.isAutoSetPermission() || havePermissions(sender, command, "")) {
             return true;
         }
         final List<String> permissions = command.getPermissions();
@@ -117,17 +117,15 @@ public class CommandExecutor implements org.bukkit.command.CommandExecutor {
                 return completions;
             }
             List<String> tabCompletions = executor.command.getTabCompletion(sender, args, args.length - 1);
-            if (tabCompletions == null
-                    && executor.command.isNicknamesCompletionsAllowed()
-            ) {
+            if (tabCompletions == null && executor.command.isNicknamesCompletionsAllowed()) {
                 tabCompletions = Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName)
                         .sorted().collect(Collectors.toList());
                 if (PermissionsProvider.getInstance().havePermission(sender,
                         ICommand.baseCommandPermission + "completion.offline") == PermissionStatus.PERMISSION_TRUE) {
-                    final List<String> allPlayers = executor.plugin.getPlayersMapModule().getPlayers().stream()
-                            .map(cachedPlayer -> cachedPlayer.name).collect(Collectors.toList());
                     final List<String> finalTabCompletions = tabCompletions;
-                    tabCompletions.addAll(allPlayers.stream().filter(s -> !finalTabCompletions.contains(s)).collect(Collectors.toList()));
+                    final List<String> allPlayers = executor.plugin.getPlayersMapModule().getPlayers().stream()
+                            .map(cachedPlayer -> cachedPlayer.name).filter(s -> !finalTabCompletions.contains(s)).collect(Collectors.toList());
+                    tabCompletions.addAll(allPlayers);
                 }
             }
             if (tabCompletions != null) {

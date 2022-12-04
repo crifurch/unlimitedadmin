@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.notifications;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -46,10 +47,10 @@ public class AddNotificationCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        final String name = argsString.get(0);
-        final int interval = (int) Double.parseDouble(argsString.get(1));
-        final String message = String.join(" ", argsString.subList(2, argsString.size()));
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
+        final String name = args.get(0);
+        final int interval = (int) Double.parseDouble(args.get(1));
+        final String message = args.getMessage(2);
         final boolean b = chatModule.addCyclicNotification(name, message, interval);
         if (!b) throw new NotifibleException(LangConfig.NOTIFICATIONS_REMOVE_BEFORE_ADD.getText(name));
     }

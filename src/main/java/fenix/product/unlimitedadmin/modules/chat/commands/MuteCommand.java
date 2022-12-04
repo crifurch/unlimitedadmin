@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.UnlimitedAdmin;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.data.Mute;
 import org.bukkit.command.CommandSender;
@@ -52,15 +53,15 @@ public class MuteCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        String playerName = argsString.get(0);
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
+        String playerName = args.get(0);
         final UUID playerUUID = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(playerName);
         if (playerUUID == null) {
             throw new NotifibleException(LangConfig.NO_SUCH_PLAYER.getText(playerName));
         }
         String channel = "*";
-        if (argsString.size() == 2) {
-            channel = argsString.get(1);
+        if (args.count() == 2) {
+            channel = args.get(1);
         }
         if (channel.equals("all")) {
             channel = "*";

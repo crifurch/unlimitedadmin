@@ -7,6 +7,7 @@ import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.permissions.AdditionalPermissions;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
@@ -57,16 +58,16 @@ public class SpawnCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
         String spawnName = GlobalConstants.defaultEntryName;
         UUID playerUuid = null;
-        if (argsString.size() > 0) {
-            spawnName = argsString.get(0);
+        if (args.isNotEmpty()) {
+            spawnName = args.get(0);
         }
         final PermissionsProvider instance = PermissionsProvider.getInstance();
-        if (argsString.size() > 1) {
+        if (args.count() > 1) {
             assertOtherPermission(sender);
-            UUID player = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(1));
+            UUID player = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(args.get(1));
             if (player == null) {
                 throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText());
             }

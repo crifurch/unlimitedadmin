@@ -6,13 +6,13 @@ import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOtherPermissionsException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.UUID;
 
 public class GetPosCommand implements ICommand {
@@ -22,11 +22,11 @@ public class GetPosCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException, CommandOtherPermissionsException, CommandErrorException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws CommandOnlyForUserException, CommandOtherPermissionsException, CommandErrorException {
         UUID targetPlayer = null;
-        if (argsString.size() > 0) {
+        if (args.isNotEmpty()) {
             assertOtherPermission(sender);
-            targetPlayer = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(0));
+            targetPlayer = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(args.get(0));
             if (targetPlayer == null) {
                 throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText());
             }

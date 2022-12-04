@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsE
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOtherPermissionsException;
 import fenix.product.unlimitedadmin.api.permissions.AdditionalPermissions;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.api.utils.CommandExecutor;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionStatus;
 import fenix.product.unlimitedadmin.integrations.permissions.PermissionsProvider;
@@ -14,8 +15,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
-
 public interface ICommand extends ICommandDataProvider {
 
     default String getUsageText() {
@@ -23,8 +22,7 @@ public interface ICommand extends ICommandDataProvider {
     }
 
 
-    void onCommand(CommandSender sender, List<String> argsString)
-            throws NotifibleException;
+    void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException;
 
     default void setCommandExecutor(JavaPlugin plugin, CommandExecutor executor) {
         final PluginCommand command = plugin.getCommand(getName());
@@ -56,8 +54,8 @@ public interface ICommand extends ICommandDataProvider {
         command.setPermission(permission);
     }
 
-    default void assertArgsSize(List<String> argsString) throws CommandNotEnoughArgsException {
-        if (argsString.size() < getMinArgsSize()) {
+    default void assertArgsSize(CommandArguments args) throws CommandNotEnoughArgsException {
+        if (args.count() < getMinArgsSize()) {
             throw new CommandNotEnoughArgsException(getUsageText());
         }
     }

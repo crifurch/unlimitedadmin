@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.notifications;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,7 @@ public class DeleteNotificationCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        chatModule.deleteNotification(argsString.get(0));
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
+        chatModule.deleteNotification(args.get(0));
     }
 }

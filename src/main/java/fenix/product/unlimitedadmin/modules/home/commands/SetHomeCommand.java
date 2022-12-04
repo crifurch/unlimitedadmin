@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandPermissionException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import fenix.product.unlimitedadmin.modules.home.HomeModuleConfig;
 import fenix.product.unlimitedadmin.modules.home.data.Home;
@@ -32,11 +33,11 @@ public class SetHomeCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws CommandOnlyForUserException, CommandPermissionException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws CommandOnlyForUserException, CommandPermissionException {
         assertSenderIsPlayer(sender);
         String name = GlobalConstants.defaultEntryName;
-        if (argsString.size() > 0) {
-            name = argsString.get(0);
+        if (args.count() > 0) {
+            name = args.get(0);
         }
         final List<Home> homes = module.getOwnerHomes(((Player) sender).getUniqueId());
         int allowedHomes = HomeModuleConfig.HOME_LIMIT.getInt();

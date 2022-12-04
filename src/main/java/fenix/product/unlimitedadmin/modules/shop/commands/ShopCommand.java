@@ -1,6 +1,7 @@
 package fenix.product.unlimitedadmin.modules.shop.commands;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.shop.CommandsShopConfig;
 import fenix.product.unlimitedadmin.modules.shop.ShopModule;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public class ShopCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, CommandArguments args) {
 
     }
 }

@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.privatemessages;
 
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.implementations.channels.PrivateMessageChatChannel;
@@ -35,9 +36,9 @@ public class MsgCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        final String message = String.join(" ", argsString.subList(1, argsString.size()));
-        chatModule.broadcastMessage(ChatMessageSender.fromSender(sender), PrivateMessageChatChannel.prepareMessage(message, argsString.get(0)));
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
+        final String message = args.getMessage(1);
+        chatModule.broadcastMessage(ChatMessageSender.fromSender(sender), PrivateMessageChatChannel.prepareMessage(message, args.get(0)));
     }
 
 

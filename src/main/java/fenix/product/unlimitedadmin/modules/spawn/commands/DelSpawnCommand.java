@@ -4,6 +4,7 @@ import fenix.product.unlimitedadmin.api.GlobalConstants;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -36,10 +37,10 @@ public class DelSpawnCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws CommandErrorException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws CommandErrorException {
         String name = GlobalConstants.defaultEntryName;
-        if (argsString.size() > 0) {
-            name = argsString.get(0);
+        if (args.isNotEmpty()) {
+            name = args.get(0);
         }
         final Set<String> spawns = module.getSpawns();
         if (!spawns.contains(name)) {

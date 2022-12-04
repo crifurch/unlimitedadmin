@@ -5,6 +5,7 @@ import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.api.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -69,13 +70,13 @@ public class TpPosCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
         UUID targetPlayer = null;
-        if (argsString.size() > 4) {
+        if (args.count() > 4) {
             assertOtherPermission(sender);
-            targetPlayer = plugin.getPlayersMapModule().getPlayerUUID(argsString.get(4));
+            targetPlayer = plugin.getPlayersMapModule().getPlayerUUID(args.get(4));
             if (targetPlayer == null) {
-                throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText(argsString.get(4)));
+                throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText(args.get(4)));
             }
         }
         if (targetPlayer == null) {
@@ -86,15 +87,15 @@ public class TpPosCommand implements ICommand {
         final Location location = PlayerUtils.getLocation(targetPlayer);
         try {
             assert location != null;
-            location.setX(mapPos(location.getX(), argsString.get(0)));
-            location.setY(mapPos(location.getY(), argsString.get(1)));
-            location.setZ(mapPos(location.getZ(), argsString.get(2)));
-            if (argsString.size() > 3) {
-                if (!argsString.get(3).equals("current")) {
+            location.setX(mapPos(location.getX(), args.get(0)));
+            location.setY(mapPos(location.getY(), args.get(1)));
+            location.setZ(mapPos(location.getZ(), args.get(2)));
+            if (args.count() > 3) {
+                if (!args.get(3).equals("current")) {
                     final ArrayList<World> worlds = new ArrayList<>(Bukkit.getWorlds());
-                    worlds.removeIf(world -> !world.getName().equals(argsString.get(3)));
+                    worlds.removeIf(world -> !world.getName().equals(args.get(3)));
                     if (worlds.isEmpty()) {
-                        throw new CommandErrorException(LangConfig.NO_SUCH_WORLD.getText(argsString.get(3)));
+                        throw new CommandErrorException(LangConfig.NO_SUCH_WORLD.getText(args.get(3)));
                     }
                     location.setWorld(worlds.get(0));
                 }

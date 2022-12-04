@@ -2,12 +2,12 @@ package fenix.product.unlimitedadmin.modules.spawn.commands;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.utils.CollectionUtils;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.spawn.SpawnModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 public class ListSpawnCommand implements ICommand {
@@ -28,7 +28,7 @@ public class ListSpawnCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, CommandArguments args) {
         final Set<String> spawns = module.getSpawns();
         final String join = CollectionUtils.join(Arrays.asList(spawns.toArray()), "\n");
         sender.sendMessage(join);

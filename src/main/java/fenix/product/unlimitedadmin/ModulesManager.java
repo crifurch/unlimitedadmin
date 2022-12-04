@@ -93,6 +93,7 @@ public enum ModulesManager implements IModuleDefinition {
                 e.printStackTrace();
             }
         }
+        externalValues.clear();
     }
 
     public static void reloadModules() {

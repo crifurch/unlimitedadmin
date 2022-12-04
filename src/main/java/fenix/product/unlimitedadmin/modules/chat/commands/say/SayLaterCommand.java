@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.say;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.api.utils.PlaceHolderUtils;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.ChatModuleConfig;
@@ -46,12 +47,12 @@ public class SayLaterCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
-        int seconds = (int) Double.parseDouble(argsString.get(0));
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
+        int seconds = (int) Double.parseDouble(args.get(0));
         if (seconds > ChatModuleConfig.SAY_MAX_DELAY.getInt()) {
             throw new NotifibleException(LangConfig.MAX_SAY_DELAY_ERROR.getText(ChatModuleConfig.SAY_MAX_DELAY.getInt() + ""));
         }
-        String message = String.join(" ", argsString.subList(1, argsString.size()));
+        String message = args.getMessage(1);
         final ChatMessageSender chatMessageSender = ChatMessageSender.fromSender(sender);
         String prefix = chatMessageSender.replacePlaceholders(ChatModuleConfig.SAY_FORMAT.getString());
         if (ChatModuleConfig.ALLOW_PLAYER_USE_COLOR_CODES.getBoolean()) {

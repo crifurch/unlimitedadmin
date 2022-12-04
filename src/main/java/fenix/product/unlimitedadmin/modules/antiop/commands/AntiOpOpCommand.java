@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.antiop.commands;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.providers.ServerDataProvider;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.antiop.AntiOPConfig;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -28,10 +29,10 @@ public class AntiOpOpCommand implements ICommand {
 
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
         final List<String> ops = new ArrayList<>(AntiOPConfig.OP_LIST.getStringList());
         ArrayList<String> notAdded = new ArrayList<>();
-        for (String player : argsString) {
+        for (String player : args) {
             if (!ops.contains(player)) {
                 notAdded.add(player);
                 continue;

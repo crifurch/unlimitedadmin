@@ -2,6 +2,7 @@ package fenix.product.unlimitedadmin.modules.world.commands;
 
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
 import fenix.product.unlimitedadmin.api.utils.CollectionUtils;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.world.WorldsModule;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -36,12 +37,12 @@ public class ListCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) {
+    public void onCommand(CommandSender sender, CommandArguments args) {
         int wide = 1;
-        if (argsString.size() > 0) {
-            if ("custom".equalsIgnoreCase(argsString.get(0))) {
+        if (args.isNotEmpty()) {
+            if ("custom".equalsIgnoreCase(args.get(0))) {
                 wide = -1;
-            } else if ("standard".equalsIgnoreCase(argsString.get(0))) {
+            } else if ("standard".equalsIgnoreCase(args.get(0))) {
                 wide = 0;
             }
         }

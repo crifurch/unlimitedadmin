@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.maintain.commands;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandNotEnoughArgsException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.maintain.MaintainModule;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -44,9 +45,8 @@ public class MaintainModeCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws CommandNotEnoughArgsException {
-        final String s = argsString.get(0);
-        final boolean aTrue = s.equalsIgnoreCase("1") || s.equalsIgnoreCase("true");
+    public void onCommand(CommandSender sender, CommandArguments args) throws CommandNotEnoughArgsException {
+        final boolean aTrue = Boolean.TRUE.equals(args.get(0, Boolean.class));
         module.setMaintainMode(aTrue);
         if (aTrue) {
             sender.sendMessage(LangConfig.SERVER_IN_MAINTAIN_MODE.getText());

@@ -8,6 +8,7 @@ import fenix.product.unlimitedadmin.api.exceptions.command.CommandErrorException
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandOnlyForUserException;
 import fenix.product.unlimitedadmin.api.exceptions.command.CommandPermissionException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.home.HomeModule;
 import fenix.product.unlimitedadmin.modules.home.data.Home;
 import org.bukkit.command.CommandSender;
@@ -58,21 +59,21 @@ public class HomeCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
         String homeName = GlobalConstants.defaultEntryName;
         UUID homePlayerUuid = null;
         if (sender instanceof Player) {
             homePlayerUuid = ((Player) sender).getUniqueId();
         }
         UUID playerUuid = null;
-        if (argsString.size() > 0) {
-            homeName = argsString.get(0);
+        if (args.count() > 0) {
+            homeName = args.get(0);
         }
-        if (argsString.size() > 1) {
+        if (args.count() > 1) {
             assertOtherPermission(sender);
-            UUID player = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(argsString.get(1));
+            UUID player = UnlimitedAdmin.getInstance().getPlayersMapModule().getPlayerUUID(args.get(1));
             if (player == null) {
-                throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText(argsString.get(1)));
+                throw new CommandErrorException(LangConfig.NO_SUCH_PLAYER.getText(args.get(1)));
             }
             playerUuid = player;
             if (homePlayerUuid == null) {

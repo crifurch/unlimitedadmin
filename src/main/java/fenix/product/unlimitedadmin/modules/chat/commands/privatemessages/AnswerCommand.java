@@ -3,6 +3,7 @@ package fenix.product.unlimitedadmin.modules.chat.commands.privatemessages;
 import fenix.product.unlimitedadmin.api.LangConfig;
 import fenix.product.unlimitedadmin.api.exceptions.NotifibleException;
 import fenix.product.unlimitedadmin.api.interfaces.ICommand;
+import fenix.product.unlimitedadmin.api.utils.CommandArguments;
 import fenix.product.unlimitedadmin.modules.chat.ChatModule;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.ChatMessageSender;
 import fenix.product.unlimitedadmin.modules.chat.data.sender.PlayerMessageSender;
@@ -38,11 +39,11 @@ public class AnswerCommand implements ICommand {
     }
 
     @Override
-    public void onCommand(CommandSender sender, List<String> argsString) throws NotifibleException {
+    public void onCommand(CommandSender sender, CommandArguments args) throws NotifibleException {
         assertSenderIsPlayer(sender);
         Player player = (Player) sender;
-        if (argsString.size() > 0) {
-            String message = String.join(" ", argsString);
+        if (args.count() > 0) {
+            String message = String.join(" ", args);
             final PlayerMessageSender forAnswer = chatModule.getForAnswer(player);
             if (forAnswer == null) {
                 throw new NotifibleException(LangConfig.CHAT_NO_ONE_TO_ANSWER.getText());
