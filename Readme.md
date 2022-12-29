@@ -1,7 +1,7 @@
 # UnlimitedAdmin
 
-Minecraft Bukkit plugin for managing Minecraft server, supports full module splashed system.
-That means plugin not loading unnecessary modules and don't keep it in memory, you use only modules that you are want.
+Minecraft Bukkit plugin for managing Minecraft server, supports the modular system.
+That means that plugin not loading unnecessary modules and don't keep it in memory, you use only modules that you are want.
 Now it support such modules:
 
 * Chat(optional) - Chat management module with different channels, support create custom channels;
